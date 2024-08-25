@@ -30,10 +30,11 @@ public class TelefoneController {
 		
 	}
 	
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<List<Telefone>> listById(@PathVariable Long id){
+	
+	@GetMapping(value = "/{id}", produces = "application/json")
+	public ResponseEntity<List<Telefone>> listById(@PathVariable (value = "id") Long id){
 		
-		List<Telefone> lista = telefoneRepository.listById(id);
+		List<Telefone> lista = telefoneRepository.listName(id);
 		
 		return new ResponseEntity<List<Telefone>>(lista, HttpStatus.OK);
 	}

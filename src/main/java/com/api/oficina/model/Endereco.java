@@ -5,6 +5,8 @@ import java.util.Objects;
 
 import org.hibernate.annotations.ForeignKey;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,6 +32,7 @@ public class Endereco implements Serializable{
 	
 	private String cidade;
 	
+	@JsonIgnore
 	@ForeignKey(name = "id_pessoa")
 	@ManyToOne(optional = false)
 	private Pessoa pessoa;
