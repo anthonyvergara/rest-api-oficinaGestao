@@ -40,7 +40,7 @@ public class Telefone implements Serializable{
 	private Long numero;
 	
 	@JsonIgnore
-	@ForeignKey(name = "id_pessoa")
+	@ForeignKey(name = "idPessoa")
 	@ManyToOne(optional = false)
 	private Pessoa pessoa;
 	
