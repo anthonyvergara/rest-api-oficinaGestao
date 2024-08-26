@@ -6,45 +6,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.oficina.model.DonoOficina;
-import com.api.oficina.repository.DonoOficinaRepository;
-import com.oficina.model.Usuario;
+import com.api.oficina.service.DonoOficinaService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/dono")
 public class DonoOficinaController {
 	
 	@Autowired
-	private DonoOficinaRepository donoOficinaRepo;
+	private DonoOficinaService donoOficinaService;
 
 	
 	@GetMapping(value = "/", produces = "application/json")
-	public ResponseEntity<List<DonoOficina>> listarUsuarios(){
+	public ResponseEntity<List<DonoOficina>> listAll(){
 		
-		List<DonoOficina> user = (List<DonoOficina>) donoOficinaRepo.findAll();
+		List<DonoOficina> lista = donoOficinaService.listAll();
+		HttpStatus status = lista.size() > 0 ? HttpStatus.OK : HttpStatus.NO_CONTENT;
 		
-		return new ResponseEntity(user, HttpStatus.OK);
+		
+		return new ResponseEntity<>(lista, status);
 	}
 	
 	@PostMapping(value = "/")
-	public ResponseEntity<DonoOficina> inserir(@RequestBody DonoOficina dono){
+	public ResponseEntity<DonoOficina> updateDado(@RequestBody @Valid DonoOficina dono){
 		
-		for(int i = 0; i < dono.getEndereco().size(); i++) {
-			dono.getEndereco().get(i).setPessoa(dono);
-		}
-		
-		for (int i = 0; i < dono.getTelefone().size(); i++) {
-			dono.getTelefone().get(i).setPessoa(dono);
-		}
-		
-		return ResponseEntity.ok().body(donoOficinaRepo.save(dono));
-		
+		return ResponseEntity.ok().body(donoOficinaService.updateDados(dono));
 	}
 
 }

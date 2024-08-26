@@ -3,10 +3,12 @@ package com.api.oficina.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class DonoOficina extends Pessoa implements Serializable{
@@ -16,9 +18,11 @@ public class DonoOficina extends Pessoa implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-
+	
+	@NotBlank
 	private String usuario;
 	
+	@NotBlank
 	private String senha;
 	
 
