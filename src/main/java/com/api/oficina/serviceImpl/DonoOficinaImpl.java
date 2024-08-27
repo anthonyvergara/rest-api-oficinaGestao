@@ -36,4 +36,17 @@ public class DonoOficinaImpl implements DonoOficinaService{
 		return donoOficina.save(dono);
 	}
 
+	@Override
+	public DonoOficina save(DonoOficina dono) {
+		for(int i = 0; i < dono.getTelefone().size(); i++){
+			dono.getTelefone().get(i).setPessoa(dono);
+		}
+		for(int i = 0; i < dono.getEndereco().size(); i++){
+			dono.getEndereco().get(i).setPessoa(dono);
+		}
+		
+		this.donoOficina.save(dono);
+		return dono;
+	}
+
 }

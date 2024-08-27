@@ -13,11 +13,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Endereco implements Serializable{
 
 	private static final long serialVersionUID = 1L;
+	
+	public Endereco() {
+		this.setCidade("London");
+	}
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +32,7 @@ public class Endereco implements Serializable{
 	
 	private int numero;
 	
+	@NotBlank
 	@Column(nullable = false)
 	private String postcode;
 	

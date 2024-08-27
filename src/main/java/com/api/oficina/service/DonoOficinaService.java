@@ -10,4 +10,6 @@ public interface DonoOficinaService {
 	
 	public DonoOficina updateDados(DonoOficina dono);
 	
+	public DonoOficina save(DonoOficina dono);
+	
 }

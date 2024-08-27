@@ -1,4 +1,4 @@
-package com.api.oficina.controller;
+	package com.api.oficina.controller;
 
 import java.util.List;
 
@@ -7,12 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.oficina.model.DonoOficina;
-import com.api.oficina.service.DonoOficinaService;
+import com.api.oficina.serviceImpl.DonoOficinaImpl;
 
 import jakarta.validation.Valid;
 
@@ -21,10 +22,10 @@ import jakarta.validation.Valid;
 public class DonoOficinaController {
 	
 	@Autowired
-	private DonoOficinaService donoOficinaService;
+	private DonoOficinaImpl donoOficinaService;
 
 	
-	@GetMapping(value = "/", produces = "application/json")
+	@GetMapping(value = "", produces = "application/json")
 	public ResponseEntity<List<DonoOficina>> listAll(){
 		
 		List<DonoOficina> lista = donoOficinaService.listAll();
@@ -34,10 +35,16 @@ public class DonoOficinaController {
 		return new ResponseEntity<>(lista, status);
 	}
 	
-	@PostMapping(value = "/")
-	public ResponseEntity<DonoOficina> updateDado(@RequestBody @Valid DonoOficina dono){
+	@PutMapping(value = "")
+	public ResponseEntity<DonoOficina> updateDados(@RequestBody @Valid DonoOficina dono){
 		
 		return ResponseEntity.ok().body(donoOficinaService.updateDados(dono));
+	}
+	
+	@PostMapping(value = "")
+	public ResponseEntity<DonoOficina> saveDados(@RequestBody @Valid DonoOficina dono){
+		
+		return ResponseEntity.ok().body(donoOficinaService.save(dono));
 	}
 
 }
