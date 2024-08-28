@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.api.oficina.model.Endereco;
+import com.api.oficina.model.Pessoa;
 import com.api.oficina.repository.EnderecoRepository;
 import com.api.oficina.service.EnderecoService;
 
@@ -34,21 +35,24 @@ public class EnderecoServiceImpl implements EnderecoService{
 
 	@Override
 	public Endereco save(Endereco endereco, Long idPessoa) {
-		List<Endereco> listaPessoa = enderecoRepository.listById(idPessoa);
-		if(listaPessoa.isEmpty()) {
+		Pessoa pessoa = this.enderecoRepository.findPessoaId(idPessoa);
+		if(pessoa == null) {
 			throw new RuntimeException();
 		}else {
-			endereco.setPessoa(listaPessoa.get(0).getPessoa());
+			endereco.setPessoa(pessoa);
 			return this.enderecoRepository.save(endereco);
 		}
 	}
 
 	@Override
 	public Endereco update(Endereco endereco) {
-		Optional<Endereco> lista = this.enderecoRepository.findById(endereco.getId_endereco());
-		endereco.setPessoa(lista.get().getPessoa());
-		enderecoRepository.save(endereco);
-		return endereco;
+		Optional<Endereco> end = this.enderecoRepository.findById(endereco.getId_endereco());
+		if(end.isEmpty()) {
+			throw new RuntimeException();
+		}else {
+			endereco.setPessoa(end.get().getPessoa());
+			return this.enderecoRepository.save(endereco);
+		}
 	}
 
 	@Override

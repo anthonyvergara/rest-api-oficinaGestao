@@ -37,8 +37,8 @@ public class EnderecoController {
 		return new ResponseEntity<List<Endereco>>(enderecoService.listById(id), HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "/dono/{id}")
-	public ResponseEntity<Endereco> addEndereco(@RequestBody Endereco endereco, @PathVariable(value = "id") Long id){
+	@PostMapping(value = "/pessoa/{idPessoa}")
+	public ResponseEntity<Endereco> addEndereco(@RequestBody Endereco endereco, @PathVariable(value = "idPessoa") Long id){
 
 		return new ResponseEntity<Endereco>(this.enderecoService.save(endereco, id),HttpStatus.OK);
 	}

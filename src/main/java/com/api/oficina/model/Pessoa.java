@@ -8,6 +8,8 @@ import java.util.Objects;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,6 +27,10 @@ import jakarta.validation.constraints.NotEmpty;
 public class Pessoa implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
+	
+	public Pessoa() {
+		this.setDataNascimento(LocalDate.now());
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,17 +41,17 @@ public class Pessoa implements Serializable{
 	
 	private String sobrenome;
 	
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private LocalDate dataNascimento;
 	
 	@NotEmpty
 	@Email
 	private String email;
 	
-	@OneToMany(mappedBy = "pessoa", orphanRemoval = true, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
 	private List<Endereco> endereco = new ArrayList<Endereco>();
 	
-	@OneToMany(mappedBy = "pessoa", orphanRemoval = true, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
 	private List<Telefone> telefone = new ArrayList<Telefone>();
 
 	public Long getId() {
