@@ -31,8 +31,8 @@ public class EnderecoController {
 		
 	}
 	
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<List<Endereco>> listById(@PathVariable (value = "id") Long id){
+	@GetMapping(value = "/{idPessoa}")
+	public ResponseEntity<List<Endereco>> listById(@PathVariable (value = "idPessoa") Long id){
 		
 		return new ResponseEntity<List<Endereco>>(enderecoService.listById(id), HttpStatus.OK);
 	}

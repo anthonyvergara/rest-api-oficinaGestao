@@ -1,13 +1,16 @@
 package com.api.oficina.model;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
@@ -25,6 +28,9 @@ public class DonoOficina extends Pessoa implements Serializable{
 	@NotBlank
 	private String senha;
 	
+	@JsonIgnore
+	@ManyToMany(mappedBy = "donoOficina")
+	private List<Oficina> oficina;
 
 	public Long getId() {
 		return id;
@@ -48,6 +54,14 @@ public class DonoOficina extends Pessoa implements Serializable{
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+	
+	public List<Oficina> getOficina() {
+		return oficina;
+	}
+
+	public void setOficina(List<Oficina> oficina) {
+		this.oficina = oficina;
 	}
 
 	
