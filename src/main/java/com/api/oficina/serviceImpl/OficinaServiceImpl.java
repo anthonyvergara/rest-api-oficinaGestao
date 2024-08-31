@@ -40,26 +40,25 @@ public class OficinaServiceImpl implements OficinaService{
 	}
 
 	@Override
-	public Oficina update(Long idOficina, Long idDonoOficina) {
-		Optional<Oficina> oficina = this.oficinaRepository.findById(idOficina);
-		Optional<DonoOficina> donoOficina = this.oficinaRepository.findDonoOficinaById(idDonoOficina);
+	public Oficina update(Oficina oficina) {
 		
-		if(oficina.isEmpty() || donoOficina.isEmpty()) {
+		if(oficina.getNomeOficina().isBlank()) {
 			throw new RuntimeException();
 		}else {
-			List<DonoOficina> addDono = new ArrayList<DonoOficina>();
-			List<DonoOficina> listaDonosCadastrados = oficina.get().getDonoOficina();
-			for(DonoOficina donos : listaDonosCadastrados) {
-				if(donos.equals(donoOficina.get())) {
-					throw new RuntimeException();
-				}
-				addDono.add(donos);
-			}
-			addDono.add(donoOficina.get());
-			
-			oficina.get().setDonoOficina(addDono);
-			return this.oficinaRepository.save(oficina.get());
+			return this.oficinaRepository.save(oficina);
 		}
+	}
+
+	@Override
+	public void deleteDonoFromOficina(Long idOficina, Long idDono) {
+		Optional<Oficina> oficina = this.oficinaRepository.findById(idOficina);
+		for(DonoOficina dono : oficina.get().getDonoOficina()) {
+			if(dono.getId().longValue() == idDono) {
+				oficina.get().getDonoOficina().remove(dono);
+			}
+		}
+		this.oficinaRepository.save(oficina.get());
+		
 	}
 
 }

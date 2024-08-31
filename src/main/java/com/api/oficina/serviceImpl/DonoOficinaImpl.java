@@ -1,6 +1,7 @@
 package com.api.oficina.serviceImpl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,18 @@ public class DonoOficinaImpl implements DonoOficinaService{
 		
 		this.donoOficina.save(dono);
 		return dono;
+	}
+
+	@Override
+	public void deleteById(Long id) {
+		
+		Optional<DonoOficina> dono = this.donoOficina.findById(id);
+		if(dono.isEmpty()) {
+			throw new RuntimeException();
+		}else {
+			this.donoOficina.deleteById(id);
+		}
+		
 	}
 
 }

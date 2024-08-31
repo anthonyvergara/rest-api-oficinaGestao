@@ -8,6 +8,6 @@ public interface OficinaService {
 	
 	public List<Oficina> listAll();
 	public Oficina save(Oficina oficina, Long idDonoOficina);
-	public Oficina update(Long idOficina, Long idDonoOficina);
-
+	public Oficina update(Oficina oficina);
+	public void deleteDonoFromOficina(Long idOficina, Long idDono);
 }

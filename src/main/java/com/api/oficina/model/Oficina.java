@@ -2,8 +2,11 @@ package com.api.oficina.model;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -31,13 +34,13 @@ public class Oficina implements Serializable{
 	
 	private Long vatNumber;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany
 	@JoinTable(
 			name = "oficina_dono",
 			joinColumns = @JoinColumn(name = "oficina_id"),
 			inverseJoinColumns = @JoinColumn(name = "donoOficina_id")
 	)
-	private List<DonoOficina> donoOficina;
+	private List<DonoOficina> donoOficina = new ArrayList<DonoOficina>();
 
 	public Long getId() {
 		return Id;

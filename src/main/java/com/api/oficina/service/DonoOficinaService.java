@@ -12,4 +12,6 @@ public interface DonoOficinaService {
 	
 	public DonoOficina save(DonoOficina dono);
 	
+	public void deleteById(Long id);
+	
 }
