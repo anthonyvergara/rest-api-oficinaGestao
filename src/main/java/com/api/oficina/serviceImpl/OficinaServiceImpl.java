@@ -29,7 +29,7 @@ public class OficinaServiceImpl implements OficinaService{
 		
 		Optional<DonoOficina> dono = this.oficinaRepository.findDonoOficinaById(idDonoOficina);
 		
-		if(dono.isEmpty()) {
+		if(dono.isEmpty() || oficina.getNomeOficina().isBlank()) {
 			throw new RuntimeException();
 		}else {
 			List<DonoOficina> listaDono = new ArrayList<DonoOficina>();
@@ -52,12 +52,18 @@ public class OficinaServiceImpl implements OficinaService{
 	@Override
 	public void deleteDonoFromOficina(Long idOficina, Long idDono) {
 		Optional<Oficina> oficina = this.oficinaRepository.findById(idOficina);
-		for(DonoOficina dono : oficina.get().getDonoOficina()) {
-			if(dono.getId().longValue() == idDono) {
-				oficina.get().getDonoOficina().remove(dono);
+		Optional<DonoOficina> dono = this.oficinaRepository.findDonoOficinaById(idDono);
+		
+		if(oficina.isEmpty() || dono.isEmpty()) {
+			throw new RuntimeException();
+		}else {
+			for(DonoOficina d : oficina.get().getDonoOficina()) {
+				if(d.getId().longValue() == idDono) {
+					oficina.get().getDonoOficina().remove(d);
+				}
 			}
+			this.oficinaRepository.save(oficina.get());
 		}
-		this.oficinaRepository.save(oficina.get());
 		
 	}
 
