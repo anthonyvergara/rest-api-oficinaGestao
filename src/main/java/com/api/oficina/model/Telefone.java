@@ -24,7 +24,7 @@ public class Telefone implements Serializable{
 		this.setDdd(44);
 		this.setCountry("UK");
 	}
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id_telefone;

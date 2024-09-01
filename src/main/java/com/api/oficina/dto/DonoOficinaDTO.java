@@ -1,64 +1,77 @@
 package com.api.oficina.dto;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
+
 import com.api.oficina.model.DonoOficina;
-import com.api.oficina.model.Oficina;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class DonoOficinaDTO {
 	
-	private Long id;
+	private String nome;
+	private String sobrenome;
 	private String usuario;
-	private String senha;
-	private List<DonoOficinaDTO> oficina = new ArrayList<DonoOficinaDTO>();
-	private String nomeOficina;
-	
-	public DonoOficinaDTO() {}
-	
-	public DonoOficinaDTO(DonoOficinaDTO oficina) {
-		this.oficina.add(oficina);
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private LocalDate dataNascimento;
+	private String email;
+
+	public static DonoOficinaDTO convert(DonoOficina dono) {
+		DonoOficinaDTO dto = new DonoOficinaDTO();
+		
+		BeanUtils.copyProperties(dono, dto,"senha","oficina");
+		return dto;
 	}
 	
-	public DonoOficinaDTO(Long id, String usuario, List<DonoOficinaDTO> oficina) {
-		this.id = id;
-		this.usuario = usuario;
-		this.oficina = oficina;
+	public static List<DonoOficinaDTO> convertList(List<DonoOficina> dono){
+		List<DonoOficinaDTO> listDTO = new ArrayList<DonoOficinaDTO>();
+		
+		dono.forEach(value ->{
+			listDTO.add(DonoOficinaDTO.convert(value));
+		});
+		return listDTO;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public String getSobrenome() {
+		return sobrenome;
 	}
 	
-	public static List<DonoOficinaDTO> convertObject(List<DonoOficina> dono) {
-		List<DonoOficinaDTO> lista = new ArrayList<DonoOficinaDTO>();
-		List<DonoOficinaDTO> oficinas = new ArrayList<DonoOficinaDTO>();
-		for(DonoOficina d : dono) {
-			
-			for(Oficina o : d.getOficina()) {
-				if(o != null) {
-					DonoOficinaDTO dd = new DonoOficinaDTO();
-					dd.nomeOficina = o.getNomeOficina();
-					oficinas.add(dd);
-				}
-			}
-			
-			lista.add(new DonoOficinaDTO(d.getId(), d.getUsuario(), oficinas));
-		}
-		return lista;
-	}
-	
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
 	public String getUsuario() {
 		return usuario;
 	}
-	public String getSenha() {
-		return senha;
+
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
-	public List<DonoOficinaDTO> getOficina() {
-		return oficina;
+
+	public void setSobrenome(String sobrenome) {
+		this.sobrenome = sobrenome;
 	}
-	
-	
+
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
+
+	public LocalDate getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(LocalDate dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 }

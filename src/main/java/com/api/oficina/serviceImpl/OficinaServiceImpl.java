@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.api.oficina.dto.OficinaDTO;
 import com.api.oficina.model.DonoOficina;
 import com.api.oficina.model.Oficina;
 import com.api.oficina.repository.OficinaRepository;
@@ -19,13 +20,14 @@ public class OficinaServiceImpl implements OficinaService{
 	private OficinaRepository oficinaRepository;
 
 	@Override
-	public List<Oficina> listAll() {
+	public List<OficinaDTO> listAll() {
 		List<Oficina> lista = (List<Oficina>) this.oficinaRepository.findAll();
-		return lista;
+		
+		return OficinaDTO.convertList(lista);
 	}
 
 	@Override
-	public Oficina save(Oficina oficina, Long idDonoOficina) {
+	public OficinaDTO save(Oficina oficina, Long idDonoOficina) {
 		
 		Optional<DonoOficina> dono = this.oficinaRepository.findDonoOficinaById(idDonoOficina);
 		
@@ -35,17 +37,19 @@ public class OficinaServiceImpl implements OficinaService{
 			List<DonoOficina> listaDono = new ArrayList<DonoOficina>();
 			listaDono.add(dono.get());
 			oficina.setDonoOficina(listaDono);
-			return this.oficinaRepository.save(oficina);
+			this.oficinaRepository.save(oficina);
+			return OficinaDTO.convert(oficina);
 		}
 	}
 
 	@Override
-	public Oficina update(Oficina oficina) {
+	public OficinaDTO update(Oficina oficina) {
 		
 		if(oficina.getNomeOficina().isBlank()) {
 			throw new RuntimeException();
 		}else {
-			return this.oficinaRepository.save(oficina);
+			this.oficinaRepository.save(oficina);
+			return OficinaDTO.convert(oficina);
 		}
 	}
 

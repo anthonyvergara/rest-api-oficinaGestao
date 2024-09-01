@@ -2,15 +2,16 @@ package com.api.oficina.service;
 
 import java.util.List;
 
+import com.api.oficina.dto.DonoOficinaDTO;
 import com.api.oficina.model.DonoOficina;
 
 public interface DonoOficinaService {
 	
-	public List<DonoOficina> listAll();
+	public List<DonoOficinaDTO> listAll();
 	
-	public DonoOficina updateDados(DonoOficina dono);
+	public DonoOficinaDTO updateDados(DonoOficina dono);
 	
-	public DonoOficina save(DonoOficina dono);
+	public DonoOficinaDTO save(DonoOficina dono);
 	
 	public void deleteById(Long id);
 	

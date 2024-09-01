@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.oficina.dto.OficinaDTO;
 import com.api.oficina.model.Oficina;
 import com.api.oficina.serviceImpl.OficinaServiceImpl;
 
@@ -26,19 +27,19 @@ public class OficinaController {
 	
 	
 	@GetMapping(value = "")
-	public ResponseEntity<List<Oficina>> listAll(){
-		return new ResponseEntity<List<Oficina>>(this.oficinaService.listAll(),HttpStatus.OK);
+	public ResponseEntity<List<OficinaDTO>> listAll(){
+		return new ResponseEntity<List<OficinaDTO>>(this.oficinaService.listAll(),HttpStatus.OK);
 	}
 	
 	@PostMapping(value = "/donoOficina/{idDonoOficina}")
-	public ResponseEntity<Oficina> save(@RequestBody Oficina oficina, @PathVariable(value = "idDonoOficina") Long id){
-		return new ResponseEntity<Oficina>(this.oficinaService.save(oficina, id),HttpStatus.OK);
+	public ResponseEntity<OficinaDTO> save(@RequestBody Oficina oficina, @PathVariable(value = "idDonoOficina") Long id){
+		return new ResponseEntity<OficinaDTO>(this.oficinaService.save(oficina, id),HttpStatus.OK);
 	}
 	
 	@PutMapping(value = "")
-	public ResponseEntity<Oficina> update(@RequestBody Oficina oficina){
+	public ResponseEntity<OficinaDTO> update(@RequestBody Oficina oficina){
 		
-		return new ResponseEntity<Oficina>(this.oficinaService.update(oficina),HttpStatus.OK);
+		return new ResponseEntity<OficinaDTO>(this.oficinaService.update(oficina),HttpStatus.OK);
 	}
 	
 	@DeleteMapping(value = "/{idOficina}/dono/{idDono}")

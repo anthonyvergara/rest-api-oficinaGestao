@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.api.oficina.dto.DonoOficinaDTO;
 import com.api.oficina.model.DonoOficina;
 import com.api.oficina.repository.DonoOficinaRepository;
 import com.api.oficina.service.DonoOficinaService;
@@ -17,15 +18,14 @@ public class DonoOficinaImpl implements DonoOficinaService{
 	private DonoOficinaRepository donoOficina;
 	
 	@Override
-	public List<DonoOficina> listAll() {
+	public List<DonoOficinaDTO> listAll() {
 		
-		List<DonoOficina> list = (List<DonoOficina>) donoOficina.findAll();
-		
-		return list;
+		List<DonoOficinaDTO> listDTO = DonoOficinaDTO.convertList((List<DonoOficina>) this.donoOficina.findAll());
+		return listDTO;
 	}
 
 	@Override
-	public DonoOficina updateDados(DonoOficina dono) {
+	public DonoOficinaDTO updateDados(DonoOficina dono) {
 		
 		for(int i = 0; i < dono.getTelefone().size(); i++){
 			dono.getTelefone().get(i).setPessoa(dono);
@@ -33,12 +33,13 @@ public class DonoOficinaImpl implements DonoOficinaService{
 		for(int i = 0; i < dono.getEndereco().size(); i++){
 			dono.getEndereco().get(i).setPessoa(dono);
 		}
+		donoOficina.save(dono);
 		
-		return donoOficina.save(dono);
+		return DonoOficinaDTO.convert(dono);
 	}
 
 	@Override
-	public DonoOficina save(DonoOficina dono) {
+	public DonoOficinaDTO save(DonoOficina dono) {
 		for(int i = 0; i < dono.getTelefone().size(); i++){
 			dono.getTelefone().get(i).setPessoa(dono);
 		}
@@ -47,7 +48,7 @@ public class DonoOficinaImpl implements DonoOficinaService{
 		}
 		
 		this.donoOficina.save(dono);
-		return dono;
+		return DonoOficinaDTO.convert(dono);
 	}
 
 	@Override

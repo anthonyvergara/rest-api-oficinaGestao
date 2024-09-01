@@ -30,17 +30,17 @@ public class DonoOficinaController {
 	
 	@GetMapping(value = "", produces = "application/json")
 	public ResponseEntity<List<DonoOficinaDTO>> listAll(){
-		return new ResponseEntity<>(DonoOficinaDTO.convertObject(this.donoOficinaService.listAll()), HttpStatus.OK);
+		return new ResponseEntity<>(this.donoOficinaService.listAll(), HttpStatus.OK);
 	}
 	
 	@PutMapping(value = "")
-	public ResponseEntity<DonoOficina> updateDados(@RequestBody @Valid DonoOficina dono){
+	public ResponseEntity<DonoOficinaDTO> updateDados(@RequestBody @Valid DonoOficina dono){
 		
 		return ResponseEntity.ok().body(donoOficinaService.updateDados(dono));
 	}
 	
 	@PostMapping(value = "")
-	public ResponseEntity<DonoOficina> saveDados(@RequestBody @Valid DonoOficina dono){
+	public ResponseEntity<DonoOficinaDTO> saveDados(@RequestBody @Valid DonoOficina dono){
 		
 		return ResponseEntity.ok().body(donoOficinaService.save(dono));
 	}
