@@ -3,8 +3,10 @@ package com.api.oficina.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -17,6 +19,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
 
@@ -46,6 +49,9 @@ public class Oficina implements Serializable{
 	
 	@OneToOne(mappedBy = "oficina", cascade = CascadeType.ALL)
 	private OficinaEndereco endereco;
+	
+	@OneToMany(mappedBy = "oficina", cascade = CascadeType.ALL)
+	private Set<Cliente> cliente = new HashSet<Cliente>();
 
 	public Long getId() {
 		return Id;
@@ -85,6 +91,22 @@ public class Oficina implements Serializable{
 
 	public void setDonoOficina(List<DonoOficina> donoOficina) {
 		this.donoOficina = donoOficina;
+	}
+	
+	public OficinaEndereco getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(OficinaEndereco endereco) {
+		this.endereco = endereco;
+	}
+
+	public Set<Cliente> getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Set<Cliente> cliente) {
+		this.cliente = cliente;
 	}
 
 	@Override

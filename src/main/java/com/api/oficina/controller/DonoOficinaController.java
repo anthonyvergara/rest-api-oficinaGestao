@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.oficina.dto.DonoOficinaDTO;
 import com.api.oficina.model.DonoOficina;
 import com.api.oficina.serviceImpl.DonoOficinaImpl;
 
@@ -28,13 +29,8 @@ public class DonoOficinaController {
 
 	
 	@GetMapping(value = "", produces = "application/json")
-	public ResponseEntity<List<DonoOficina>> listAll(){
-		
-		List<DonoOficina> lista = donoOficinaService.listAll();
-		HttpStatus status = lista.size() > 0 ? HttpStatus.OK : HttpStatus.NO_CONTENT;
-		
-		
-		return new ResponseEntity<>(lista, status);
+	public ResponseEntity<List<DonoOficinaDTO>> listAll(){
+		return new ResponseEntity<>(DonoOficinaDTO.convertObject(this.donoOficinaService.listAll()), HttpStatus.OK);
 	}
 	
 	@PutMapping(value = "")

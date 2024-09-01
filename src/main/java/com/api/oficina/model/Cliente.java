@@ -3,10 +3,15 @@ package com.api.oficina.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+import org.hibernate.annotations.ForeignKey;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Cliente extends Pessoa implements Serializable{
@@ -22,6 +27,11 @@ public class Cliente extends Pessoa implements Serializable{
 	private Long numeroPassaporte;
 	
 	private Long numeroRg;
+	
+	@JsonIgnore
+	@ForeignKey(name = "id_oficina")
+	@ManyToOne(optional = false)
+	private Oficina oficina;
 	
 	public Long getId() {
 		return id;
@@ -53,6 +63,14 @@ public class Cliente extends Pessoa implements Serializable{
 
 	public void setNumeroRg(Long numeroRg) {
 		this.numeroRg = numeroRg;
+	}
+	
+	public Oficina getOficina() {
+		return oficina;
+	}
+
+	public void setOficina(Oficina oficina) {
+		this.oficina = oficina;
 	}
 
 	@Override
