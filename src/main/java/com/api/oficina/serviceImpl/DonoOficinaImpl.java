@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.api.oficina.dto.DonoOficinaDTO;
+import com.api.oficina.dto.Dto;
 import com.api.oficina.model.DonoOficina;
 import com.api.oficina.repository.DonoOficinaRepository;
 import com.api.oficina.service.DonoOficinaService;
@@ -14,14 +15,20 @@ import com.api.oficina.service.DonoOficinaService;
 @Service
 public class DonoOficinaImpl implements DonoOficinaService{
 
-	@Autowired
-	private DonoOficinaRepository donoOficina;
+	private final DonoOficinaRepository donoOficina;
+	private final Dto dto;
+	
+	public DonoOficinaImpl(DonoOficinaRepository donoOficina, DonoOficinaDTO donoOficinaDTO) {
+		this.donoOficina = donoOficina;
+		this.dto = donoOficinaDTO;
+	}
 	
 	@Override
 	public List<DonoOficinaDTO> listAll() {
 		
-		List<DonoOficinaDTO> listDTO = DonoOficinaDTO.convertList((List<DonoOficina>) this.donoOficina.findAll());
-		return listDTO;
+		List<DonoOficina> listDTO = (List<DonoOficina>) this.donoOficina.findAll();
+		
+		return this.dto.listToDto(listDTO);
 	}
 
 	@Override
@@ -35,7 +42,7 @@ public class DonoOficinaImpl implements DonoOficinaService{
 		}
 		donoOficina.save(dono);
 		
-		return DonoOficinaDTO.convert(dono);
+		return (DonoOficinaDTO) this.dto.convertToDto(dono);
 	}
 
 	@Override
@@ -48,7 +55,7 @@ public class DonoOficinaImpl implements DonoOficinaService{
 		}
 		
 		this.donoOficina.save(dono);
-		return DonoOficinaDTO.convert(dono);
+		return (DonoOficinaDTO) this.dto.convertToDto(dono);
 	}
 
 	@Override

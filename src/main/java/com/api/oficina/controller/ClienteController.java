@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.oficina.dto.ClienteDTO;
 import com.api.oficina.model.Cliente;
 import com.api.oficina.service.ClienteService;
 
@@ -21,23 +22,26 @@ import com.api.oficina.service.ClienteService;
 @RequestMapping(value = "/cliente")
 public class ClienteController {
 	
-	@Autowired
 	private ClienteService clienteService;
 	
+	public ClienteController(ClienteService clienteService) {
+		this.clienteService = clienteService;
+	}
+	
 	@GetMapping(value = "")
-	public ResponseEntity<List<Cliente>> listAll(){
-		return new ResponseEntity<List<Cliente>>(this.clienteService.listAll(), HttpStatus.OK);
+	public ResponseEntity<List<ClienteDTO>> listAll(){
+		return new ResponseEntity<List<ClienteDTO>>(this.clienteService.listAll(), HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Cliente>findById(@PathVariable(value = "id") Long id){
+	public ResponseEntity<ClienteDTO>findById(@PathVariable(value = "id") Long id){
 		
-		return new ResponseEntity<Cliente>(this.clienteService.findById(id),HttpStatus.OK);
+		return new ResponseEntity<ClienteDTO>(this.clienteService.findById(id),HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "")
-	public ResponseEntity<Cliente> save(@RequestBody Cliente cliente){
-		return new ResponseEntity<Cliente>(this.clienteService.save(cliente),HttpStatus.OK);
+	@PostMapping(value = "/oficina/{idOficina}")
+	public ResponseEntity<ClienteDTO> save(@RequestBody Cliente cliente, @PathVariable(value = "idOficina") Long id){
+		return new ResponseEntity<ClienteDTO>(this.clienteService.save(cliente, id),HttpStatus.OK);
 	}
 	
 	@DeleteMapping(value = "/{id}")
@@ -47,7 +51,7 @@ public class ClienteController {
 	}
 	
 	@PutMapping(value = "")
-	public ResponseEntity<Cliente> update(@RequestBody Cliente cliente){
-		return new ResponseEntity<Cliente>(this.clienteService.update(cliente),HttpStatus.OK);
+	public ResponseEntity<ClienteDTO> update(@RequestBody Cliente cliente){
+		return new ResponseEntity<ClienteDTO>(this.clienteService.update(cliente),HttpStatus.OK);
 	}
 }

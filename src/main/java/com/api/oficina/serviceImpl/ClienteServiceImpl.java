@@ -3,49 +3,72 @@ package com.api.oficina.serviceImpl;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.api.oficina.dto.ClienteDTO;
+import com.api.oficina.dto.Dto;
 import com.api.oficina.model.Cliente;
+import com.api.oficina.model.Oficina;
 import com.api.oficina.repository.ClienteRepository;
+import com.api.oficina.repository.OficinaRepository;
 import com.api.oficina.service.ClienteService;
 
 @Service
 public class ClienteServiceImpl implements ClienteService{
 	
-	@Autowired
-	private ClienteRepository clienteRepository;
-
+	private final OficinaRepository oficinaRepository;
+	private final ClienteRepository clienteRepository;
+	private final Dto dto;
+	
+	public ClienteServiceImpl(OficinaRepository oficina, ClienteRepository clienteRepository, ClienteDTO clienteDTO) {
+		this.oficinaRepository = oficina;
+		this.clienteRepository = clienteRepository;
+		this.dto = clienteDTO;
+	}
+	
 	@Override
-	public List<Cliente> listAll() {
+	public List<ClienteDTO> listAll() {
 		List<Cliente> cliente = (List<Cliente>) this.clienteRepository.findAll();
-		return cliente;
+		
+		return dto.listToDto(cliente);
 	}
 
 	@Override
-	public Cliente save(Cliente cliente) {
-		for(int i = 0; i< cliente.getEndereco().size(); i++) {
-			cliente.getEndereco().get(i).setPessoa(cliente);
-		}
-		for(int i = 0; i< cliente.getTelefone().size(); i++) {
-			cliente.getTelefone().get(i).setPessoa(cliente);
+	public ClienteDTO save(Cliente cliente, Long idOficina) {
+		
+		Optional<Oficina> findOficina = this.oficinaRepository.findById(idOficina);
+		
+		if(findOficina.isEmpty()) {
+			throw new RuntimeException();
+		}else {
+			cliente.setOficina(findOficina.get());
+			
+			for(int i = 0; i< cliente.getEndereco().size(); i++) {
+				cliente.getEndereco().get(i).setPessoa(cliente);
+			}
+			for(int i = 0; i< cliente.getTelefone().size(); i++) {
+				cliente.getTelefone().get(i).setPessoa(cliente);
+			}
 		}
 		
-		return this.clienteRepository.save(cliente);
+		this.clienteRepository.save(cliente);
+		return (ClienteDTO) dto.convertToDto(findOficina);
 	}
 
 	@Override
-	public Cliente findById(Long id) {
+	public ClienteDTO findById(Long id) {
 		
 		Optional<Cliente> find = this.clienteRepository.findById(id);
 		if(find.isEmpty()) {
 			throw new RuntimeException();
+		}else {
+			return (ClienteDTO) dto.convertToDto(find.get());
 		}
-		return find.get();
+		
 	}
 
 	@Override
-	public Cliente update(Cliente cliente) {
+	public ClienteDTO update(Cliente cliente) {
 		
 		for(int i = 0; i<cliente.getTelefone().size(); i++) {
 			cliente.getTelefone().get(i).setPessoa(cliente);
@@ -53,8 +76,9 @@ public class ClienteServiceImpl implements ClienteService{
 		for(int i = 0; i<cliente.getEndereco().size(); i++) {
 			cliente.getEndereco().get(i).setPessoa(cliente);
 		}
+		this.clienteRepository.save(cliente);
 		
-		return this.clienteRepository.save(cliente);
+		return (ClienteDTO) dto.convertToDto(cliente);
 	}
 
 	@Override

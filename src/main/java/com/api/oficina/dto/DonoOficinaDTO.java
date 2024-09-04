@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Component;
 
 import com.api.oficina.model.DonoOficina;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class DonoOficinaDTO {
+@Component
+public class DonoOficinaDTO implements Dto<DonoOficinaDTO,DonoOficina>{
 	
 	private String nome;
 	private String sobrenome;
@@ -17,19 +19,20 @@ public class DonoOficinaDTO {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private LocalDate dataNascimento;
 	private String email;
-
-	public static DonoOficinaDTO convert(DonoOficina dono) {
-		DonoOficinaDTO dto = new DonoOficinaDTO();
-		
-		BeanUtils.copyProperties(dono, dto,"senha","oficina");
-		return dto;
-	}
 	
-	public static List<DonoOficinaDTO> convertList(List<DonoOficina> dono){
+
+	@Override
+	public DonoOficinaDTO convertToDto(DonoOficina dono) {
+		BeanUtils.copyProperties(dono, this,"senha");
+		return this;
+	}
+
+	@Override
+	public List<DonoOficinaDTO> listToDto(List<DonoOficina> dono) {
 		List<DonoOficinaDTO> listDTO = new ArrayList<DonoOficinaDTO>();
 		
 		dono.forEach(value ->{
-			listDTO.add(DonoOficinaDTO.convert(value));
+			listDTO.add(this.convertToDto(value));
 		});
 		return listDTO;
 	}

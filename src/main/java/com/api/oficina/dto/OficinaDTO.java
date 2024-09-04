@@ -4,29 +4,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Component;
 
 import com.api.oficina.model.Oficina;
 
-public class OficinaDTO {
+@Component
+public class OficinaDTO implements Dto<OficinaDTO, Oficina>{
 	
 	private String nomeOficina;
 	private Long companyNumber;
 	private Long vatNumber;
 
-	public static OficinaDTO convert(Oficina oficina) {
-		OficinaDTO dto = new OficinaDTO();
-		BeanUtils.copyProperties(oficina, dto);
-		return dto;
-	}
-	
-	public static List<OficinaDTO> convertList(List<Oficina> oficina){
-		List<OficinaDTO> dto = new ArrayList<OficinaDTO>();
-		oficina.forEach(value ->{
-			dto.add(OficinaDTO.convert(value));
-		});
-		return dto;
+
+	@Override
+	public OficinaDTO convertToDto(Oficina oficina) {
+		BeanUtils.copyProperties(oficina, this);
+		return this;
 	}
 
+	@Override
+	public List<OficinaDTO> listToDto(List<Oficina> oficina) {
+		List<OficinaDTO> lista = new ArrayList<OficinaDTO>();
+		
+		oficina.forEach(value ->{
+			lista.add(this.convertToDto(value));
+		});
+		return lista;
+	}
+	
 	public String getNomeOficina() {
 		return nomeOficina;
 	}

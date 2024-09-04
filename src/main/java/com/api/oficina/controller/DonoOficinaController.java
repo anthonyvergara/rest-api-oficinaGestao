@@ -24,8 +24,11 @@ import jakarta.validation.Valid;
 @RequestMapping(value = "/dono")
 public class DonoOficinaController {
 	
-	@Autowired
-	private DonoOficinaImpl donoOficinaService;
+	private final DonoOficinaImpl donoOficinaService;
+	
+	public DonoOficinaController(DonoOficinaImpl donoOficinaService) {
+		this.donoOficinaService = donoOficinaService;
+	}
 
 	
 	@GetMapping(value = "", produces = "application/json")

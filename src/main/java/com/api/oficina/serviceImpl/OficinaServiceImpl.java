@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.api.oficina.dto.Dto;
 import com.api.oficina.dto.OficinaDTO;
 import com.api.oficina.model.DonoOficina;
 import com.api.oficina.model.Oficina;
@@ -16,14 +17,19 @@ import com.api.oficina.service.OficinaService;
 @Service
 public class OficinaServiceImpl implements OficinaService{
 	
-	@Autowired
-	private OficinaRepository oficinaRepository;
+	private final OficinaRepository oficinaRepository;
+	private final Dto dto;
+	
+	public OficinaServiceImpl(OficinaRepository oficinaRepository, OficinaDTO oficinaDTO) {
+		this.oficinaRepository = oficinaRepository;
+		this.dto = oficinaDTO;
+	}
 
 	@Override
 	public List<OficinaDTO> listAll() {
 		List<Oficina> lista = (List<Oficina>) this.oficinaRepository.findAll();
 		
-		return OficinaDTO.convertList(lista);
+		return this.dto.listToDto(lista);
 	}
 
 	@Override
@@ -38,7 +44,8 @@ public class OficinaServiceImpl implements OficinaService{
 			listaDono.add(dono.get());
 			oficina.setDonoOficina(listaDono);
 			this.oficinaRepository.save(oficina);
-			return OficinaDTO.convert(oficina);
+			
+			return (OficinaDTO)this.dto.convertToDto(oficina);
 		}
 	}
 
@@ -49,7 +56,7 @@ public class OficinaServiceImpl implements OficinaService{
 			throw new RuntimeException();
 		}else {
 			this.oficinaRepository.save(oficina);
-			return OficinaDTO.convert(oficina);
+			return (OficinaDTO)this.dto.convertToDto(oficina);
 		}
 	}
 

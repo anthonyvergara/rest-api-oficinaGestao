@@ -46,7 +46,6 @@ public class Pessoa implements Serializable{
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private LocalDate dataNascimento;
 	
-	@NotEmpty
 	@Email
 	private String email;
 	
