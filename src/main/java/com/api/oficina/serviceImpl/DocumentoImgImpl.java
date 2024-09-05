@@ -7,24 +7,25 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.api.oficina.model.DocumentoImg;
 import com.api.oficina.service.DocumentoImgService;
-import com.api.oficina.service.FileUpload;
+
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Service
 public class DocumentoImgImpl implements DocumentoImgService{
 
-	private final AmazonS3 amazonS3;
+	private final S3Client s3Client;
 
-    private String bucketName = "imagensdoc";
+	@Value("${aws.s3.bucket.name}")
+	private String bucketName;
     
-    public DocumentoImgImpl(AmazonS3 amazonS3) {
-    	this.amazonS3 = amazonS3;
+    public DocumentoImgImpl(S3Client s3Client) {
+    	this.s3Client = s3Client;
     }
 	
 	@Override
@@ -35,14 +36,20 @@ public class DocumentoImgImpl implements DocumentoImgService{
 
 	@Override
 	public String save() {
-		File file = new File("/Users/anthonyvergara/Documents/curriculo.pdf");
+		File file = new File("/Users/anthonyvergara/Documents/teste.png");
 		
 		String key = UUID.randomUUID().toString();
 		
-		amazonS3.putObject(bucketName, key, file);
+		InputStream is;
+		try {
+			is = new FileInputStream(file);
+			s3Client.putObject(PutObjectRequest.builder().bucket(bucketName).key(key).build(), software.amazon.awssdk.core.sync.RequestBody.fromInputStream(is, file.length()));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		
-		return "cacaca";
+		return key;
 	}
 
 }
