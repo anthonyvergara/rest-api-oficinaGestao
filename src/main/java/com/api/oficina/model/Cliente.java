@@ -1,6 +1,8 @@
 package com.api.oficina.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.hibernate.annotations.ForeignKey;
@@ -12,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Cliente extends Pessoa implements Serializable{
@@ -32,6 +35,9 @@ public class Cliente extends Pessoa implements Serializable{
 	@ForeignKey(name = "id_oficina")
 	@ManyToOne(optional = false)
 	private Oficina oficina;
+	
+	@OneToMany(mappedBy = "cliente")
+	private List<DocumentoImg> documentos = new ArrayList<>();
 	
 	public Long getId() {
 		return id;
@@ -71,6 +77,14 @@ public class Cliente extends Pessoa implements Serializable{
 
 	public void setOficina(Oficina oficina) {
 		this.oficina = oficina;
+	}
+	
+	public List<DocumentoImg> getDocumentos() {
+		return documentos;
+	}
+
+	public void setDocumentos(List<DocumentoImg> documentos) {
+		this.documentos = documentos;
 	}
 
 	@Override
