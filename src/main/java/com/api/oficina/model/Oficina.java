@@ -52,6 +52,9 @@ public class Oficina implements Serializable{
 	
 	@OneToMany(mappedBy = "oficina", cascade = CascadeType.ALL)
 	private Set<Cliente> cliente = new HashSet<Cliente>();
+	
+	@OneToMany(mappedBy = "id_oficina")
+	private Set<OrdemServico> ordemServico = new HashSet<OrdemServico>();
 
 	public Long getId() {
 		return Id;
@@ -107,6 +110,14 @@ public class Oficina implements Serializable{
 
 	public void setCliente(Set<Cliente> cliente) {
 		this.cliente = cliente;
+	}
+	
+	public Set<OrdemServico> getOrdemServico() {
+		return ordemServico;
+	}
+
+	public void setOrdemServico(Set<OrdemServico> ordemServico) {
+		this.ordemServico = ordemServico;
 	}
 
 	@Override

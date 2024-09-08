@@ -2,8 +2,10 @@ package com.api.oficina.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import org.hibernate.annotations.ForeignKey;
 
@@ -38,6 +40,9 @@ public class Cliente extends Pessoa implements Serializable{
 	
 	@OneToMany(mappedBy = "cliente")
 	private List<DocumentoImg> documentos = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "id_cliente")
+	private Set<OrdemServico> ordemServico = new HashSet<OrdemServico>();
 	
 	public Long getId() {
 		return id;
@@ -85,6 +90,14 @@ public class Cliente extends Pessoa implements Serializable{
 
 	public void setDocumentos(List<DocumentoImg> documentos) {
 		this.documentos = documentos;
+	}
+	
+	public Set<OrdemServico> getOrdemServico() {
+		return ordemServico;
+	}
+
+	public void setOrdemServico(Set<OrdemServico> ordemServico) {
+		this.ordemServico = ordemServico;
 	}
 
 	@Override

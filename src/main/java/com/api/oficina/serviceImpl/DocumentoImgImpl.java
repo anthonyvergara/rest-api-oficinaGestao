@@ -1,8 +1,5 @@
 package com.api.oficina.serviceImpl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -12,7 +9,6 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,9 +20,16 @@ import com.api.oficina.repository.DocumentoImgRepository;
 import com.api.oficina.service.DocumentoImgService;
 
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
+import software.amazon.awssdk.core.ResponseBytes;
+import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Object;
 
 @Service
 public class DocumentoImgImpl implements DocumentoImgService{
@@ -46,7 +49,21 @@ public class DocumentoImgImpl implements DocumentoImgService{
 	
 	@Override
 	public List<DocumentoImg> listAll() {
-		// TODO Auto-generated method stub
+		
+		ListObjectsRequest objects = ListObjectsRequest
+				.builder()
+				.bucket(bucketName)
+				.build();
+		
+		ListObjectsResponse res = s3Client.listObjects(objects);
+		List<S3Object> listObjects = res.contents();
+		
+		for(S3Object docs : listObjects) {
+			System.out.println(docs.key());
+			System.out.println(docs.size());
+			System.out.println(docs.owner());
+		}
+		
 		return null;
 	}
 	
@@ -82,11 +99,16 @@ public class DocumentoImgImpl implements DocumentoImgService{
 	
 	public String upload(MultipartFile file) {
 		
+		
 		String key = UUID.randomUUID().toString();
+		
+		String contentType = file.getContentType();
+		
 		try (InputStream fileInput = file.getInputStream()){
 			s3Client.putObject(PutObjectRequest.builder()
 					.bucket(bucketName)
 					.key(key)
+					.contentType("contentType")
 					.build()
 					, RequestBody.fromInputStream(fileInput,file.getSize()));
 			
@@ -95,6 +117,16 @@ public class DocumentoImgImpl implements DocumentoImgService{
 		}
 		
 		return key;
+	}
+	
+	public byte[] downloadFile() {
+	
+		String key = "81b026b1-b5f6-430b-89cd-98a1a185c5c2";
+		GetObjectRequest s3 = GetObjectRequest.builder().bucket(bucketName).key(key).build();
+		
+		ResponseBytes<GetObjectResponse> objectResponse = s3Client.getObjectAsBytes(s3);	
+		
+		return objectResponse.asByteArray();
 	}
 
 }
