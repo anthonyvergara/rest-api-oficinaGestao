@@ -38,4 +38,5 @@ public class StatusOrdemServico implements Serializable{
 	@OneToOne
 	private OrdemServico ordemServico;
 	
+	//getters and setters
 }
