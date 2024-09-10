@@ -2,7 +2,10 @@ package com.api.oficina.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 import org.hibernate.annotations.ForeignKey;
 
@@ -12,16 +15,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class OrdemServico implements Serializable{
 
 	private static final long serialVersionUID = 1L;
+	
+	public OrdemServico() {
+		this.setDataInicio(dataInicio.now());
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -51,7 +61,16 @@ public class OrdemServico implements Serializable{
 	@JsonIgnore
 	@ForeignKey(name = "id_oficina")
 	@ManyToOne
-	private Cliente oficina;
+	private Oficina oficina;
+	
+	@OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<DetalheServico> detalheServico = new ArrayList<DetalheServico>();
+	
+	@OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Pagamento> pagamento = new ArrayList<Pagamento>();
+	
+	@OneToOne(mappedBy = "ordemServico")
+	private StatusOrdemServico statusOrdemServico;
 
 	public Long getId() {
 		return id;
@@ -119,7 +138,6 @@ public class OrdemServico implements Serializable{
 		this.quantidadeParcelas = quantidadeParcelas;
 	}
 
-
 	public Cliente getCliente() {
 		return cliente;
 	}
@@ -127,13 +145,37 @@ public class OrdemServico implements Serializable{
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
-
-	public Cliente getOficina() {
+	
+	public Oficina getOficina() {
 		return oficina;
 	}
 
-	public void setOficina(Cliente oficina) {
+	public void setOficina(Oficina oficina) {
 		this.oficina = oficina;
+	}
+
+	public StatusOrdemServico getStatusOrdemServico() {
+		return statusOrdemServico;
+	}
+
+	public void setStatusOrdemServico(StatusOrdemServico statusOrdemServico) {
+		this.statusOrdemServico = statusOrdemServico;
+	}
+	
+	public List<DetalheServico> getDetalheServico() {
+		return detalheServico;
+	}
+
+	public void setDetalheServico(List<DetalheServico> detalheServico) {
+		this.detalheServico = detalheServico;
+	}
+
+	public List<Pagamento> getPagamento() {
+		return pagamento;
+	}
+
+	public void setPagamento(List<Pagamento> pagamento) {
+		this.pagamento = pagamento;
 	}
 
 	@Override

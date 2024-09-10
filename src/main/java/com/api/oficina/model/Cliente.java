@@ -41,7 +41,7 @@ public class Cliente extends Pessoa implements Serializable{
 	@OneToMany(mappedBy = "cliente")
 	private List<DocumentoImg> documentos = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "id_cliente")
+	@OneToMany(mappedBy = "cliente")
 	private Set<OrdemServico> ordemServico = new HashSet<OrdemServico>();
 	
 	public Long getId() {

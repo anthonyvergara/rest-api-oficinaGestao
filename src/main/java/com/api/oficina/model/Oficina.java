@@ -53,7 +53,7 @@ public class Oficina implements Serializable{
 	@OneToMany(mappedBy = "oficina", cascade = CascadeType.ALL)
 	private Set<Cliente> cliente = new HashSet<Cliente>();
 	
-	@OneToMany(mappedBy = "id_oficina")
+	@OneToMany(mappedBy = "oficina")
 	private Set<OrdemServico> ordemServico = new HashSet<OrdemServico>();
 
 	public Long getId() {

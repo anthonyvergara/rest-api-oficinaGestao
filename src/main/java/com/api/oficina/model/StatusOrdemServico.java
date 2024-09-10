@@ -3,6 +3,7 @@ package com.api.oficina.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.hibernate.annotations.ForeignKey;
 
@@ -37,6 +38,70 @@ public class StatusOrdemServico implements Serializable{
 	@ForeignKey(name = "id_ordemServico")
 	@OneToOne
 	private OrdemServico ordemServico;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public LocalDateTime getUltimoPagamento() {
+		return ultimoPagamento;
+	}
+
+	public void setUltimoPagamento(LocalDateTime ultimoPagamento) {
+		this.ultimoPagamento = ultimoPagamento;
+	}
+
+	public LocalDate getProximoVencimento() {
+		return proximoVencimento;
+	}
+
+	public void setProximoVencimento(LocalDate proximoVencimento) {
+		this.proximoVencimento = proximoVencimento;
+	}
+
+	public double getSaldoDevedor() {
+		return saldoDevedor;
+	}
+
+	public void setSaldoDevedor(double saldoDevedor) {
+		this.saldoDevedor = saldoDevedor;
+	}
+
+	public double getValorProximaParcela() {
+		return valorProximaParcela;
+	}
+
+	public void setValorProximaParcela(double valorProximaParcela) {
+		this.valorProximaParcela = valorProximaParcela;
+	}
+
+	public OrdemServico getOrdemServico() {
+		return ordemServico;
+	}
+
+	public void setOrdemServico(OrdemServico ordemServico) {
+		this.ordemServico = ordemServico;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StatusOrdemServico other = (StatusOrdemServico) obj;
+		return Objects.equals(id, other.id);
+	}
 	
-	//getters and setters
 }
