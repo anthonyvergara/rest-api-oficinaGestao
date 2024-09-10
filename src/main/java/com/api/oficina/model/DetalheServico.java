@@ -35,7 +35,7 @@ public class DetalheServico implements Serializable{
 	private Long milhagem;
 	
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private LocalDateTime data;
 	
 	private double valor;

@@ -7,6 +7,7 @@ import java.util.Random;
 import org.springframework.stereotype.Service;
 
 import com.api.oficina.model.Cliente;
+import com.api.oficina.model.DetalheServico;
 import com.api.oficina.model.Oficina;
 import com.api.oficina.model.OrdemServico;
 import com.api.oficina.repository.ClienteRepository;
@@ -39,17 +40,36 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		
 		Optional<Oficina> oficina = this.oficinaRepository.findById(idOficina);
 		
-		ordemServico.setCliente(cliente.get());
-		ordemServico.setOficina(oficina.get());
-		
-		for(int i = 0; i<ordemServico.getDetalheServico().size(); i++) {
-			ordemServico.getDetalheServico().get(i).setOrdemServico(ordemServico);
+		if(cliente.isEmpty() || oficina.isEmpty()) {
+			throw new IllegalArgumentException();
+		}else {
+			
+			ordemServico.setInvoiceNumber(this.generateInvoiceNumber());
+			ordemServico.setCliente(cliente.get());
+			ordemServico.setOficina(oficina.get());
+			
+			for(int i = 0; i<ordemServico.getDetalheServico().size(); i++) {
+				ordemServico.getDetalheServico().get(i).setOrdemServico(ordemServico);
+				ordemServico.getDetalheServico().get(i).setData(ordemServico.getDataInicio());
+			}
+			
+			ordemServico.setValorTotal(this.calcularValorTotalServico(ordemServico));
 		}
 		
-		ordemServico.setInvoiceNumber(this.generateInvoiceNumber());
-		
 		this.ordemServicoRepository.save(ordemServico);
+		
 		return ordemServico;
+	}
+	
+	public double calcularValorTotalServico(OrdemServico ordemServico) {
+		
+		double valorTotal = 0;
+		
+		for(DetalheServico valorOS : ordemServico.getDetalheServico()) {
+			valorTotal = valorTotal + valorOS.getValor();
+		}
+		
+		return valorTotal;
 	}
 	
 	public Long generateInvoiceNumber() {
