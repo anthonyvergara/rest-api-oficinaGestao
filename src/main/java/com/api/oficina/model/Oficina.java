@@ -52,6 +52,12 @@ public class Oficina implements Serializable{
 	
 	@OneToMany(mappedBy = "oficina", cascade = CascadeType.ALL)
 	private Set<Cliente> cliente = new HashSet<Cliente>();
+<<<<<<< Updated upstream
+=======
+	
+	@OneToMany(mappedBy = "oficina")
+	private Set<OrdemServico> ordemServico = new HashSet<OrdemServico>();
+>>>>>>> Stashed changes
 
 	public Long getId() {
 		return Id;

@@ -39,6 +39,15 @@ public class Cliente extends Pessoa implements Serializable{
 	@OneToMany(mappedBy = "cliente")
 	private List<DocumentoImg> documentos = new ArrayList<>();
 	
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+	@OneToMany(mappedBy = "cliente")
+	private Set<OrdemServico> ordemServico = new HashSet<OrdemServico>();
+	
+>>>>>>> Stashed changes
 	public Long getId() {
 		return id;
 	}
