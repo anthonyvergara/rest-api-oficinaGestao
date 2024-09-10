@@ -26,8 +26,11 @@ import com.api.oficina.serviceImpl.DocumentoImgImpl;
 @RequestMapping(value = "/documento")
 public class DocumentoImgController {
 	
-	@Autowired
 	private DocumentoImgImpl documentoService;
+	
+	public DocumentoImgController(DocumentoImgImpl documentoService) {
+		this.documentoService = documentoService;
+	}
 	
 	@PostMapping(value = "/cliente/{idCliente}")
 	public ResponseEntity<List<String>> save(@RequestParam("file") List<MultipartFile> file, @PathVariable(value = "idCliente")Long id){
