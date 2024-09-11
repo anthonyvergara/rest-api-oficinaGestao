@@ -71,6 +71,9 @@ public class OrdemServico implements Serializable{
 	
 	@OneToOne(mappedBy = "ordemServico")
 	private StatusOrdemServico statusOrdemServico;
+	
+	@OneToMany(mappedBy = "ordemServico")
+	private List<Parcelamento> parcelamento = new ArrayList<Parcelamento>();
 
 	public Long getId() {
 		return id;

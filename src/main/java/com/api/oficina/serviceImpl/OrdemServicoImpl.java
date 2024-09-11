@@ -6,6 +6,7 @@ import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
+import com.api.oficina.model.CalculoInvoice;
 import com.api.oficina.model.Cliente;
 import com.api.oficina.model.DetalheServico;
 import com.api.oficina.model.Oficina;
@@ -53,23 +54,27 @@ public class OrdemServicoImpl implements OrdemServicoService{
 				ordemServico.getDetalheServico().get(i).setData(ordemServico.getDataInicio());
 			}
 			
-			ordemServico.setValorTotal(this.calcularValorTotalServico(ordemServico));
+			//CALCULAR VALOR TOTAL DOS SERVICOS
+			ordemServico.setValorTotal(CalculoInvoice.calcularServicos(ordemServico.getDetalheServico()));
+			
+			
+			if(ordemServico.getPagamento() != null) {
+				ordemServico.getPagamento().get(0).setDataPagamento(ordemServico.getDataInicio());
+				ordemServico.getPagamento().get(0).setOrdemServico(ordemServico);
+				
+				ordemServico.getStatusOrdemServico().setUltimoPagamento(ordemServico.getDataInicio());
+				//CALCULA O SALDO DEVEDOR
+				ordemServico.getStatusOrdemServico().setSaldoDevedor(CalculoInvoice.calcularSaldoDevedor(ordemServico));
+				
+				
+				ordemServico.getStatusOrdemServico().setProximoVencimento(ordemServico.getDataInicio().toLocalDate().plusDays(7));
+			}
+			
 		}
 		
 		this.ordemServicoRepository.save(ordemServico);
 		
 		return ordemServico;
-	}
-	
-	public double calcularValorTotalServico(OrdemServico ordemServico) {
-		
-		double valorTotal = 0;
-		
-		for(DetalheServico valorOS : ordemServico.getDetalheServico()) {
-			valorTotal = valorTotal + valorOS.getValor();
-		}
-		
-		return valorTotal;
 	}
 	
 	public Long generateInvoiceNumber() {

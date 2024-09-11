@@ -7,11 +7,13 @@ import java.util.Objects;
 
 import org.hibernate.annotations.ForeignKey;
 
+import com.api.oficina.modelEnum.StatusOS;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +28,8 @@ public class StatusOrdemServico implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	@Column
+	private Integer tipoStatus;
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime ultimoPagamento;
@@ -85,6 +89,16 @@ public class StatusOrdemServico implements Serializable{
 
 	public void setOrdemServico(OrdemServico ordemServico) {
 		this.ordemServico = ordemServico;
+	}
+	
+	public StatusOS getTipoStatus() {
+		return StatusOS.valueOf(tipoStatus);
+	}
+
+	public void setTipoStatus(Integer tipoStatus) {
+		if(tipoStatus != null) {
+			this.tipoStatus = tipoStatus;
+		}
 	}
 
 	@Override
