@@ -1,4 +1,4 @@
-package com.api.oficina.service;
+package com.api.oficina.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
