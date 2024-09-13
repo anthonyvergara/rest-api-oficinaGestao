@@ -20,28 +20,31 @@ public class DetalheServicoImpl implements DetalheServicoService{
 	
 	private final OrdemServicoRepository ordemServicoRepository;
 	
-	public DetalheServicoImpl(DetalheServicoRepository servicosRepository, OrdemServicoRepository ordemServicoRepository, OrdemServicoImpl ordemServicoImpl) {
+	private final CalculoServicos calculoServicos;
+	
+	public DetalheServicoImpl(DetalheServicoRepository servicosRepository, OrdemServicoRepository ordemServicoRepository, OrdemServicoImpl ordemServicoImpl,
+			CalculoServicos calculoServicos) {
 		this.servicoRepository = servicosRepository;
 		this.ordemServicoRepository = ordemServicoRepository;
 		this.ordemServicoImpl = ordemServicoImpl;
+		this.calculoServicos = calculoServicos;
 	}
-	
+
 	@Override
-	public List<DetalheServico> calcularServicos(Long ordemServicoID, List<DetalheServico> servicos) {
+	public List<DetalheServico> save(Long idOrdemServico, List<DetalheServico> servicos) {
 		
-		Optional<OrdemServico> ordemServico = this.ordemServicoRepository.findById(ordemServicoID);
-		
-		double valorTotal = ordemServico.get().getValorTotal();
-		
-		if(ordemServico.isPresent()) {
-			for(DetalheServico servico : servicos) {
-				valorTotal = valorTotal + servico.getValor();
-				servico.setOrdemServico(ordemServico.get());
-				this.servicoRepository.save(servico);
-			}
+		Optional<OrdemServico> ordemServico  = this.ordemServicoRepository.findById(idOrdemServico);
+		ordemServico.get().setDetalheServico(servicos);
+
+		for(DetalheServico d : servicos) {
+			d.setOrdemServico(ordemServico.get());
+			this.servicoRepository.save(d);
 		}
-		ordemServico.get().setValorTotal(valorTotal);
-		this.ordemServicoImpl.update(ordemServico.get());
+		
+		OrdemServico newOrdem = ordemServico.get();
+		newOrdem = this.calculoServicos.calcularServicos(ordemServico.get());
+		
+		this.ordemServicoImpl.update(newOrdem);
 		
 		return servicos;
 	}

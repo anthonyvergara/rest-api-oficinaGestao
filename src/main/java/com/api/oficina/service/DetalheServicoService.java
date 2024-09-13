@@ -7,7 +7,7 @@ import com.api.oficina.model.OrdemServico;
 
 public interface DetalheServicoService {
 
-	public List<DetalheServico>  calcularServicos(Long ordemServicoID, List<DetalheServico> servicos);
+	public List<DetalheServico> save(Long idOrdemServico, List<DetalheServico> servicos);
 	
 	
 	
