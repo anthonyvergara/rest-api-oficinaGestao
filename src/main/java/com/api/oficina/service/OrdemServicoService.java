@@ -8,5 +8,6 @@ public interface OrdemServicoService {
 	
 	public List<OrdemServico> listAll();
 	public OrdemServico save(OrdemServico ordemServico, Long idCliente, Long idOficina);
+	public OrdemServico update(OrdemServico ordemServico);
 	
 }

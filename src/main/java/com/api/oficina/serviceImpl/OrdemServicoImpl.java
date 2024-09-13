@@ -19,14 +19,17 @@ import com.api.oficina.service.OrdemServicoService;
 @Service
 public class OrdemServicoImpl implements OrdemServicoService{
 
-	private final OrdemServicoRepository ordemServicoRepository;
+	public final OrdemServicoRepository ordemServicoRepository;
 	private final ClienteRepository clienteRepository;
 	private final OficinaRepository oficinaRepository;
+	private final DetalheServicoImpl detalheServicoImpl;
 	
-	public OrdemServicoImpl(OrdemServicoRepository ordemServicoRepository, ClienteRepository clienteRepository, OficinaRepository oficinaRepository) {
+	public OrdemServicoImpl(OrdemServicoRepository ordemServicoRepository, ClienteRepository clienteRepository, OficinaRepository oficinaRepository,
+			DetalheServicoImpl detalheServicoImpl) {
 		this.ordemServicoRepository = ordemServicoRepository;
 		this.clienteRepository = clienteRepository;
 		this.oficinaRepository = oficinaRepository;
+		this.detalheServicoImpl = detalheServicoImpl;
 	}
 
 	@Override
@@ -41,39 +44,18 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		
 		Optional<Oficina> oficina = this.oficinaRepository.findById(idOficina);
 		
-		if(cliente.isEmpty() || oficina.isEmpty()) {
-			throw new IllegalArgumentException();
-		}else {
-			
-			ordemServico.setInvoiceNumber(this.generateInvoiceNumber());
-			ordemServico.setCliente(cliente.get());
-			ordemServico.setOficina(oficina.get());
-			
-			for(int i = 0; i<ordemServico.getDetalheServico().size(); i++) {
-				ordemServico.getDetalheServico().get(i).setOrdemServico(ordemServico);
-				ordemServico.getDetalheServico().get(i).setData(ordemServico.getDataInicio());
-			}
-			
-			//CALCULAR VALOR TOTAL DOS SERVICOS
-			ordemServico.setValorTotal(CalculoInvoice.calcularServicos(ordemServico.getDetalheServico()));
-			
-			
-			if(ordemServico.getPagamento() != null) {
-				ordemServico.getPagamento().get(0).setDataPagamento(ordemServico.getDataInicio());
-				ordemServico.getPagamento().get(0).setOrdemServico(ordemServico);
-				
-				ordemServico.getStatusOrdemServico().setUltimoPagamento(ordemServico.getDataInicio());
-				//CALCULA O SALDO DEVEDOR
-				ordemServico.getStatusOrdemServico().setSaldoDevedor(CalculoInvoice.calcularSaldoDevedor(ordemServico));
-				
-				
-				ordemServico.getStatusOrdemServico().setProximoVencimento(ordemServico.getDataInicio().toLocalDate().plusDays(7));
-			}
-			
-		}
+		ordemServico.setInvoiceNumber(this.generateInvoiceNumber());
+		ordemServico.setCliente(cliente.get());
+		ordemServico.setOficina(oficina.get());
 		
+		OrdemServico newOrdem = this.ordemServicoRepository.save(ordemServico);
+		this.detalheServicoImpl.calcularServicos(newOrdem.getId(), newOrdem.getDetalheServico());
+		return ordemServico;
+	}
+	
+	@Override
+	public OrdemServico update(OrdemServico ordemServico) {
 		this.ordemServicoRepository.save(ordemServico);
-		
 		return ordemServico;
 	}
 	
