@@ -1,4 +1,4 @@
-package com.api.oficina.serviceImpl;
+package com.api.oficina.component;
 
 import org.springframework.stereotype.Service;
 

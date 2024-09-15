@@ -21,6 +21,10 @@ import jakarta.persistence.ManyToOne;
 public class DetalheServico implements Serializable{
 
 	private static final long serialVersionUID = 1L;
+	
+	public DetalheServico() {
+		this.setData(data.now());
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
