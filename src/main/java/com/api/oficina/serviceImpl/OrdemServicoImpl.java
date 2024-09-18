@@ -1,9 +1,11 @@
 package com.api.oficina.serviceImpl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,11 @@ import com.api.oficina.model.Cliente;
 import com.api.oficina.model.DetalheServico;
 import com.api.oficina.model.Oficina;
 import com.api.oficina.model.OrdemServico;
+import com.api.oficina.model.Parcelamento;
+import com.api.oficina.model.StatusOrdemServico;
+import com.api.oficina.modelEnum.StatusOS;
+import com.api.oficina.modelEnum.StatusParcela;
+import com.api.oficina.modelEnum.TipoPagamento;
 import com.api.oficina.os.pagamento.CalculoParcelamentoSemJuros;
 import com.api.oficina.os.servico.CalculoServicoPadrao;
 import com.api.oficina.repository.ClienteRepository;
@@ -37,6 +44,9 @@ public class OrdemServicoImpl implements OrdemServicoService{
 	
 	private final Invoice INVOICE;
 	private final Parcelas PARCELAS;
+	
+	private double saldoDevedor;
+	private double valorEntrada = 0;
 	
 	public OrdemServicoImpl(OrdemServicoRepository ordemServicoRepository, ClienteRepository clienteRepository, OficinaRepository oficinaRepository,
 			Invoice invoice, Parcelas parcelas) {
@@ -77,30 +87,53 @@ public class OrdemServicoImpl implements OrdemServicoService{
 			
 			// BLOCO PAGAMENTO
 			
-			ordemServico.getPagamento().get(0).setOrdemServico(ordemServico);
+			if(ordemServico.getPagamento() != null) {
+				this.valorEntrada = ordemServico.getPagamento().get(0).getValorPago();
+				ordemServico.getPagamento().get(0).setOrdemServico(ordemServico);
+				ordemServico.getPagamento().get(0).setDataPagamento(ordemServico.getDataInicio());
+			}
 			
 			// BLOCO PARCELAS
 			
-		 	//Map<LocalDate,Double> listaParcelas = this.PARCELAS.calcularParcelas(ordemServico, new CalculoParcelamentoSemJuros(ordemServico.getQuantidadeParcelas()));
-			/*
-		 	Set<LocalDate> datas = listaParcelas.keySet();
-		 	Collection<Double> valoresParcelas = listaParcelas.values();
+			double somatorioParcelas;
+			
+			Map<LocalDate,Double> listaParcelas = this.PARCELAS.calcularParcelas(ordemServico, new CalculoParcelamentoSemJuros(ordemServico.getQuantidadeParcelas()));
+			
+			if(ordemServico.getQuantidadeParcelas() != 0) {
+			 	
+			 	ordemServico.setParcelamento(this.PARCELAS.listarParcelas(listaParcelas));
+			 	
+			 	
+			 	for(int i = 0; i<ordemServico.getQuantidadeParcelas(); i++) {
+			 		ordemServico.getParcelamento().get(i).setOrdemServico(ordemServico);
+			 	}
+			 	
+			 	somatorioParcelas = listaParcelas.values().stream().mapToDouble(value -> value.doubleValue()).sum();
+			}
+			
+			// BLOCO STATUS ORDEM SERVIÇO
+			StatusOrdemServico statusOS = new StatusOrdemServico();
+		 	ordemServico.setStatusOrdemServico(statusOS);
 		 	
-		 	ordemServico.getParcelamento().forEach(parcelamento->{
-		 		parcelamento.setOrdemServico(ordemServico);
-		 		
-		 		datas.forEach(dataVencimento ->{
-		 			parcelamento.setDataVencimento(dataVencimento);
-		 			
-		 			valoresParcelas.forEach(valor ->{
-		 				parcelamento.setValorParcela(valor);
-		 			});
-		 			
-		 		});
-		 	});
-
+		 	statusOS.setOrdemServico(ordemServico);
 		 	
-			this.ORDEM_SERVICO_REPOSITORY.save(ordemServico);*/
+		 	this.saldoDevedor = ordemServico.getValorTotal() - ordemServico.getPagamento().get(0).getValorPago();
+		 	statusOS.setSaldoDevedor(this.saldoDevedor);
+		 	
+		 	Optional<Double> proximaParcela = listaParcelas.values().stream().findFirst();
+		 	statusOS.setValorProximaParcela(proximaParcela.get());
+		 	
+		 	Optional<LocalDate> proximoVencimento = listaParcelas.keySet().stream().min(Comparator.comparing(value -> value));
+		 	statusOS.setProximoVencimento(proximoVencimento.get());
+		 	
+		 	StatusOS status = ordemServico.getTipoPagamento() == TipoPagamento.AVISTA ? StatusOS.PAGO : StatusOS.AGENDADO;
+		 	statusOS.setTipoStatus(status.code);
+			
+		 	
+		 	LocalDateTime dataUltimoPagamento = this.valorEntrada == 0 ? null : ordemServico.getDataInicio();
+		 	statusOS.setUltimoPagamento(dataUltimoPagamento);
+		 	
+			//this.ORDEM_SERVICO_REPOSITORY.save(ordemServico);
 		}
 		
 		return ordemServico;

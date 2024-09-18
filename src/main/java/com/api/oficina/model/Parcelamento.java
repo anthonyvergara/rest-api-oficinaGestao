@@ -36,6 +36,12 @@ public class Parcelamento implements Serializable{
 	@ForeignKey(name = "id_ordemServico")
 	@ManyToOne
 	private OrdemServico ordemServico;
+	
+	public Parcelamento(StatusParcela status, double valorParcela, LocalDate dataVencimento) {
+		this.statusParcela = status.code;
+		this.valorParcela = valorParcela;
+		this.dataVencimento = dataVencimento;
+	}
 
 	public Long getId() {
 		return id;
