@@ -72,7 +72,7 @@ public class OrdemServico implements Serializable{
 	@OneToOne(mappedBy = "ordemServico")
 	private StatusOrdemServico statusOrdemServico;
 	
-	@OneToMany(mappedBy = "ordemServico")
+	@OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL)
 	private List<Parcelamento> parcelamento = new ArrayList<Parcelamento>();
 
 	public Long getId() {
@@ -179,6 +179,14 @@ public class OrdemServico implements Serializable{
 
 	public void setPagamento(List<Pagamento> pagamento) {
 		this.pagamento = pagamento;
+	}
+	
+	public List<Parcelamento> getParcelamento() {
+		return parcelamento;
+	}
+
+	public void setParcelamento(List<Parcelamento> parcelamento) {
+		this.parcelamento = parcelamento;
 	}
 
 	@Override

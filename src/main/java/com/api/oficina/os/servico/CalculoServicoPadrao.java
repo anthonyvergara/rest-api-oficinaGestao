@@ -1,4 +1,4 @@
-package com.api.oficina.component;
+package com.api.oficina.os.servico;
 
 import java.util.List;
 

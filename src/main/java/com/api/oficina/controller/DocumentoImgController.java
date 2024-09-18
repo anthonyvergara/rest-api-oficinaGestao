@@ -48,7 +48,6 @@ public class DocumentoImgController {
 		byte[] file = this.documentoService.downloadFile();
 		
 		ByteArrayResource resource = new ByteArrayResource(file);
-		
 		String contentType = ".png";
 		
 		String fileName = "81b026b1-b5f6-430b-89cd-98a1a185c5c2";
