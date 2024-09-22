@@ -35,7 +35,7 @@ public class OrdemServicoController {
 	@PostMapping(value = "/cliente/{idCliente}/oficina/{idOficina}")
 	public ResponseEntity<OrdemServico> save(@RequestBody OrdemServico ordemServico, 
 											@PathVariable(value = "idCliente") Long idCliente,
-											@PathVariable(value = "idOficina") Long idOficina){
+											@PathVariable(value = "idOficina") Long idOficina) throws Exception{
 		
 		return new ResponseEntity<OrdemServico>(this.ordemServico.save(ordemServico, idCliente, idOficina),HttpStatus.OK);
 	}

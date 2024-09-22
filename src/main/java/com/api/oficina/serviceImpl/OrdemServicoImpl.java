@@ -35,12 +35,19 @@ import com.api.oficina.repository.OrdemServicoRepository;
 import com.api.oficina.service.CalculoServico;
 import com.api.oficina.service.OrdemServicoService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class OrdemServicoImpl implements OrdemServicoService{
 
 	public final OrdemServicoRepository ORDEM_SERVICO_REPOSITORY;
 	private final ClienteRepository CLIENTE_REPOSITORY;
 	private final OficinaRepository OFICINA_REPOSITORY;
+	
+	private final DetalheServicoImpl DETALHE_SERVICO_SERVICE;
+	private final PagamentoServiceImpl PAGAMENTO_SERVICE;
+	private final ParcelamentoServiceImpl PARCELAMENTO_SERVICE;
+	private final StatusOrdemServicoImpl STATUS_ORDEM_SERVICO;
 	
 	private final Invoice INVOICE;
 	private final Parcelas PARCELAS;
@@ -49,92 +56,52 @@ public class OrdemServicoImpl implements OrdemServicoService{
 	private double valorEntrada = 0;
 	
 	public OrdemServicoImpl(OrdemServicoRepository ordemServicoRepository, ClienteRepository clienteRepository, OficinaRepository oficinaRepository,
-			Invoice invoice, Parcelas parcelas) {
+			Invoice invoice, Parcelas parcelas, DetalheServicoImpl detalheServico, PagamentoServiceImpl pagamentoService,
+			ParcelamentoServiceImpl parcelamentoService, StatusOrdemServicoImpl statusOrdemServico) {
 		this.ORDEM_SERVICO_REPOSITORY = ordemServicoRepository;
 		this.CLIENTE_REPOSITORY = clienteRepository;
 		this.OFICINA_REPOSITORY = oficinaRepository;
 		this.INVOICE = invoice;
 		this.PARCELAS = parcelas;
+		this.DETALHE_SERVICO_SERVICE = detalheServico;
+		this.PAGAMENTO_SERVICE = pagamentoService;
+		this.PARCELAMENTO_SERVICE = parcelamentoService;
+		this.STATUS_ORDEM_SERVICO = statusOrdemServico;
 	}
 
 	@Override
 	public List<OrdemServico> listAll() {
 		return (List<OrdemServico>) this.ORDEM_SERVICO_REPOSITORY.findAll();
 	}
-
+	
+	@Transactional
 	@Override
-	public OrdemServico save(OrdemServico ordemServico, Long idCliente, Long idOficina) {
+	public OrdemServico save(OrdemServico ordemServico, Long idCliente, Long idOficina) throws Exception{
+		
 		Optional<Cliente> cliente = this.CLIENTE_REPOSITORY.findById(idCliente);
 		
 		Optional<Oficina> oficina = this.OFICINA_REPOSITORY.findById(idOficina);
 		
-		if(cliente.isEmpty() || oficina.isEmpty()) {
-			throw new RuntimeException();
-		}else {
-			
-			ordemServico.setCliente(cliente.get());
-			ordemServico.setOficina(oficina.get());
-			
-			ordemServico.setInvoiceNumber(this.generateInvoiceNumber());
-			
-			//BLOCO SERVICOS
-			for(int i = 0; i<ordemServico.getDetalheServico().size(); i++) {
-				ordemServico.getDetalheServico().get(i).setOrdemServico(ordemServico);
-			}
-			
-			//Retorna o VALOR TOTAL dos serviços realizados.
-			ordemServico.setValorTotal(this.INVOICE.calcularServico(ordemServico.getDetalheServico(), new CalculoServicoPadrao(ordemServico.getVat())));
-			
-			// BLOCO PAGAMENTO
-			
-			if(ordemServico.getPagamento() != null) {
-				this.valorEntrada = ordemServico.getPagamento().get(0).getValorPago();
-				ordemServico.getPagamento().get(0).setOrdemServico(ordemServico);
-				ordemServico.getPagamento().get(0).setDataPagamento(ordemServico.getDataInicio());
-			}
-			
-			// BLOCO PARCELAS
-			
-			double somatorioParcelas;
-			
-			Map<LocalDate,Double> listaParcelas = this.PARCELAS.calcularParcelas(ordemServico, new CalculoParcelamentoSemJuros(ordemServico.getQuantidadeParcelas()));
-			
-			if(ordemServico.getQuantidadeParcelas() != 0) {
-			 	
-			 	ordemServico.setParcelamento(this.PARCELAS.listarParcelas(listaParcelas));
-			 	
-			 	
-			 	for(int i = 0; i<ordemServico.getQuantidadeParcelas(); i++) {
-			 		ordemServico.getParcelamento().get(i).setOrdemServico(ordemServico);
-			 	}
-			 	
-			 	somatorioParcelas = listaParcelas.values().stream().mapToDouble(value -> value.doubleValue()).sum();
-			}
-			
-			// BLOCO STATUS ORDEM SERVIÇO
-			StatusOrdemServico statusOS = new StatusOrdemServico();
-		 	ordemServico.setStatusOrdemServico(statusOS);
-		 	
-		 	statusOS.setOrdemServico(ordemServico);
-		 	
-		 	this.saldoDevedor = ordemServico.getValorTotal() - ordemServico.getPagamento().get(0).getValorPago();
-		 	statusOS.setSaldoDevedor(this.saldoDevedor);
-		 	
-		 	Optional<Double> proximaParcela = listaParcelas.values().stream().findFirst();
-		 	statusOS.setValorProximaParcela(proximaParcela.get());
-		 	
-		 	Optional<LocalDate> proximoVencimento = listaParcelas.keySet().stream().min(Comparator.comparing(value -> value));
-		 	statusOS.setProximoVencimento(proximoVencimento.get());
-		 	
-		 	StatusOS status = ordemServico.getTipoPagamento() == TipoPagamento.AVISTA ? StatusOS.PAGO : StatusOS.AGENDADO;
-		 	statusOS.setTipoStatus(status.code);
-			
-		 	
-		 	LocalDateTime dataUltimoPagamento = this.valorEntrada == 0 ? null : ordemServico.getDataInicio();
-		 	statusOS.setUltimoPagamento(dataUltimoPagamento);
-		 	
-			//this.ORDEM_SERVICO_REPOSITORY.save(ordemServico);
+		StatusOrdemServico statusOS = new StatusOrdemServico();
+		statusOS.setOrdemServico(ordemServico);
+		ordemServico.setStatusOrdemServico(statusOS);
+		
+		ordemServico.setCliente(cliente.get());
+		ordemServico.setOficina(oficina.get());
+		
+		ordemServico.setInvoiceNumber(this.generateInvoiceNumber());
+		
+		ordemServico = this.ORDEM_SERVICO_REPOSITORY.save(ordemServico);
+		
+		this.DETALHE_SERVICO_SERVICE.save(ordemServico.getId(), ordemServico.getDetalheServico());
+		
+		this.PAGAMENTO_SERVICE.salvar(ordemServico.getPagamento(), ordemServico.getId());
+		
+		if(ordemServico.getQuantidadeParcelas() > 0) {
+			ordemServico.setParcelamento(this.PARCELAMENTO_SERVICE.save(ordemServico.getId(), ordemServico.getQuantidadeParcelas()));
 		}
+		
+		ordemServico.setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.save(ordemServico.getId()));
 		
 		return ordemServico;
 	}

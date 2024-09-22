@@ -37,6 +37,10 @@ public class Parcelamento implements Serializable{
 	@ManyToOne
 	private OrdemServico ordemServico;
 	
+	public Parcelamento() {
+		
+	}
+	
 	public Parcelamento(StatusParcela status, double valorParcela, LocalDate dataVencimento) {
 		this.statusParcela = status.code;
 		this.valorParcela = valorParcela;

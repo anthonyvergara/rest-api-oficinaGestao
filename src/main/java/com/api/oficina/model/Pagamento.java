@@ -19,7 +19,7 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Pagamento implements Serializable{
-
+	
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -36,6 +36,10 @@ public class Pagamento implements Serializable{
 	@ForeignKey(name = "id_ordemServico")
 	@ManyToOne
 	private OrdemServico ordemServico;
+	
+	public Pagamento() {
+		this.dataPagamento = LocalDateTime.now();
+	}
 
 	public Long getId() {
 		return id;

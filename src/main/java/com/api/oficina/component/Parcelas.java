@@ -36,6 +36,13 @@ public class Parcelas {
 		return parcelas;
 	}
 	
+	public List<Double> calcularParcela(OrdemServico ordemServico, CalculoParcelamento calculoParcelamento){
+		
+		List<Double> valorParcelas = calculoParcelamento.calcularParcelamento(ordemServico);
+		
+		return valorParcelas;
+	}
+	
 	public List<Parcelamento> listarParcelas(Map<LocalDate,Double> parcelasCalculadas){
 		
 		
@@ -54,20 +61,20 @@ public class Parcelas {
 		return this.listaParcelas;
 	}
 	
-	public List<LocalDate> calcularDatas (LocalDate dataParcela, TipoPagamento tipoPagamento, int quantidadeParcelas){
+	public List<LocalDate> calcularDatas (LocalDate dataPrimeiraParcela, TipoPagamento tipoPagamento, int quantidadeParcelas){
 		
 		List<LocalDate> datas = new ArrayList<LocalDate>();
 		
 		int valorSomaData = tipoPagamento == TipoPagamento.SEMANAL ? 7 : 30;
 		 
-		if(dataParcela == null) {
-			dataParcela = dataParcela.now().plusDays(valorSomaData);
+		if(dataPrimeiraParcela == null) {
+			dataPrimeiraParcela = dataPrimeiraParcela.now().plusDays(valorSomaData);
 		}else {
 			
 			for(int i = 0; i<quantidadeParcelas; i++) {
 				
-				dataParcela = dataParcela.getDayOfWeek() == DayOfWeek.SUNDAY ? dataParcela.plusDays(1) : dataParcela.plusDays(valorSomaData);
-				datas.add(dataParcela);
+				dataPrimeiraParcela = dataPrimeiraParcela.getDayOfWeek() == DayOfWeek.SUNDAY ? dataPrimeiraParcela.plusDays(1) : dataPrimeiraParcela.plusDays(valorSomaData);
+				datas.add(dataPrimeiraParcela);
 			}
 			
 		}

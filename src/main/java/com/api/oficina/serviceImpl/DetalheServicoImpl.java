@@ -35,16 +35,14 @@ public class DetalheServicoImpl implements DetalheServicoService{
 		
 		Optional<OrdemServico> ordemServico  = this.ORDEM_SERVICO_REPOSITORY.findById(idOrdemServico);
 		
-		double valorTotalAtual = ordemServico.get().getValorTotal();
-		double newValorTotal = valorTotalAtual + this.INVOICE.calcularServico(servicos, new CalculoServicoPadrao(ordemServico.get().getVat()));
+		double valorTotal = ordemServico.get().getValorTotal();
+		double valorTotalAtualizado = valorTotal +  this.INVOICE.calcularServico(servicos, new CalculoServicoPadrao(ordemServico.get().getVat()));
+		ordemServico.get().setValorTotal(valorTotalAtualizado);
 		
-		ordemServico.get().setValorTotal(newValorTotal);
-		
-		for(DetalheServico d : servicos) {
-			d.setOrdemServico(ordemServico.get());
-			this.DETALHE_SERVICO_REPOSITORY.save(d);
+		for(DetalheServico servico : servicos) {
+			servico.setOrdemServico(ordemServico.get());
+			this.DETALHE_SERVICO_REPOSITORY.save(servico);
 		}
-		
 		
 		return servicos;
 	}
