@@ -105,6 +105,8 @@ public class ClienteDTO implements Dto<ClienteDTO,Cliente>{
 	public LocalDate getDataNascimento() {
 		return dataNascimento;
 	}
+	
+	
 
 	public void setDataNascimento(LocalDate dataNascimento) {
 		this.dataNascimento = dataNascimento;

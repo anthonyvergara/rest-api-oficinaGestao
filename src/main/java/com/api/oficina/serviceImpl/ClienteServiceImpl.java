@@ -52,7 +52,7 @@ public class ClienteServiceImpl implements ClienteService{
 		}
 		
 		this.clienteRepository.save(cliente);
-		return (ClienteDTO) dto.convertToDto(findOficina);
+		return (ClienteDTO) dto.convertToDto(cliente);
 	}
 
 	@Override

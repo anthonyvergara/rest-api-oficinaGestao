@@ -39,7 +39,7 @@ public class ClienteController {
 		return new ResponseEntity<ClienteDTO>(this.clienteService.findById(id),HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "/oficina/{idOficina}")
+	@PostMapping(value = "/{idOficina}")
 	public ResponseEntity<ClienteDTO> save(@RequestBody Cliente cliente, @PathVariable(value = "idOficina") Long id){
 		return new ResponseEntity<ClienteDTO>(this.clienteService.save(cliente, id),HttpStatus.OK);
 	}
