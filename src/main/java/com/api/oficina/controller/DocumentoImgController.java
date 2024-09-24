@@ -23,7 +23,7 @@ import com.api.oficina.serviceImpl.DocumentoImgImpl;
 
 
 @RestController
-@RequestMapping(value = "/documento")
+@RequestMapping(value = "/oficina/documento")
 public class DocumentoImgController {
 	
 	private DocumentoImgImpl documentoService;

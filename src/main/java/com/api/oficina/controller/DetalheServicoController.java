@@ -14,7 +14,7 @@ import com.api.oficina.model.DetalheServico;
 import com.api.oficina.serviceImpl.DetalheServicoImpl;
 
 @RestController
-@RequestMapping(value = "/detalheservico")
+@RequestMapping(value = "/oficina/detalheservico")
 public class DetalheServicoController {
 
 	private final DetalheServicoImpl detalheServicoService;

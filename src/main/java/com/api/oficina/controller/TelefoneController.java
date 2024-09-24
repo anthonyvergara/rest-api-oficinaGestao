@@ -20,7 +20,7 @@ import com.api.oficina.repository.TelefoneRepository;
 import com.api.oficina.service.TelefoneService;
 
 @RestController
-@RequestMapping(value = "/telefone")
+@RequestMapping(value = "/oficina/pessoa/telefone")
 public class TelefoneController {
 	
 	@Autowired

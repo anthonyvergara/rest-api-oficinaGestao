@@ -21,7 +21,7 @@ import com.api.oficina.serviceImpl.DonoOficinaImpl;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/dono")
+@RequestMapping(value = "/oficina/dono")
 public class DonoOficinaController {
 	
 	private final DonoOficinaImpl donoOficinaService;

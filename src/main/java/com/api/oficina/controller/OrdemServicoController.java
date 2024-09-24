@@ -17,7 +17,7 @@ import com.api.oficina.model.OrdemServico;
 import com.api.oficina.serviceImpl.OrdemServicoImpl;
 
 @RestController
-@RequestMapping(value = "/ordemservico")
+@RequestMapping(value = "/oficina/ordemservico")
 @CrossOrigin(origins = "http://127.0.0.1:5500")
 public class OrdemServicoController {
 

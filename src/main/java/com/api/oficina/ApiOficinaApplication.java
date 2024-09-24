@@ -17,7 +17,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableTransactionManagement// Gerenciador de transações
 @EnableWebMvc // Ativa o projeto de MVC
 @RestController
-//////@EnableAutoConfiguration // Configura todo o projeto (manipulações de classes, dependencias...)
+//@EnableAutoConfiguration // Configura todo o projeto (manipulações de classes, dependencias...)
 public class ApiOficinaApplication {
 
 	public static void main(String[] args) {

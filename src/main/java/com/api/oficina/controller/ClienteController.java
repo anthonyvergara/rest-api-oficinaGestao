@@ -19,7 +19,7 @@ import com.api.oficina.model.Cliente;
 import com.api.oficina.service.ClienteService;
 
 @RestController
-@RequestMapping(value = "/cliente")
+@RequestMapping(value = "/oficina/cliente")
 public class ClienteController {
 	
 	private ClienteService clienteService;

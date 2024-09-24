@@ -11,7 +11,7 @@ public class OpenApiConfig {
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
                 .group("public")
-                .pathsToMatch("/oficina/**", "/cliente/**","/telefone/**","/documento/**","/dono/**","/endereco/**","/ordemServico/**")
+                .pathsToMatch("/oficina/**")
                 .packagesToScan("com.api.oficina.controller")
                 .build();
     }

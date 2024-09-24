@@ -50,19 +50,14 @@ public class OrdemServicoImpl implements OrdemServicoService{
 	private final StatusOrdemServicoImpl STATUS_ORDEM_SERVICO;
 	
 	private final Invoice INVOICE;
-	private final Parcelas PARCELAS;
-	
-	private double saldoDevedor;
-	private double valorEntrada = 0;
 	
 	public OrdemServicoImpl(OrdemServicoRepository ordemServicoRepository, ClienteRepository clienteRepository, OficinaRepository oficinaRepository,
-			Invoice invoice, Parcelas parcelas, DetalheServicoImpl detalheServico, PagamentoServiceImpl pagamentoService,
+			Invoice invoice, DetalheServicoImpl detalheServico, PagamentoServiceImpl pagamentoService,
 			ParcelamentoServiceImpl parcelamentoService, StatusOrdemServicoImpl statusOrdemServico) {
 		this.ORDEM_SERVICO_REPOSITORY = ordemServicoRepository;
 		this.CLIENTE_REPOSITORY = clienteRepository;
 		this.OFICINA_REPOSITORY = oficinaRepository;
 		this.INVOICE = invoice;
-		this.PARCELAS = parcelas;
 		this.DETALHE_SERVICO_SERVICE = detalheServico;
 		this.PAGAMENTO_SERVICE = pagamentoService;
 		this.PARCELAMENTO_SERVICE = parcelamentoService;

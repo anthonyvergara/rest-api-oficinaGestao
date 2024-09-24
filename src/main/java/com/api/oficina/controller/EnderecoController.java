@@ -18,7 +18,7 @@ import com.api.oficina.model.Endereco;
 import com.api.oficina.serviceImpl.EnderecoServiceImpl;
 
 @RestController
-@RequestMapping(value = "/endereco")
+@RequestMapping(value = "/oficina/pessoa/endereco")
 public class EnderecoController {
 	
 	@Autowired
