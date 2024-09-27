@@ -21,15 +21,15 @@ import com.api.oficina.serviceImpl.OrdemServicoImpl;
 @CrossOrigin(origins = "http://127.0.0.1:5500")
 public class OrdemServicoController {
 
-	private final OrdemServicoImpl ordemServico;
+	private final OrdemServicoImpl ORDEM_SERVICO;
 	
 	public OrdemServicoController(OrdemServicoImpl ordemServico) {
-		this.ordemServico = ordemServico;
+		this.ORDEM_SERVICO = ordemServico;
 	}
 	
 	@GetMapping
 	public ResponseEntity<List<OrdemServico>> listAll(){
-		return new ResponseEntity<List<OrdemServico>>(this.ordemServico.listAll(),HttpStatus.OK);
+		return new ResponseEntity<List<OrdemServico>>(this.ORDEM_SERVICO.listAll(),HttpStatus.OK);
 	}
 	
 	@PostMapping(value = "/cliente/{idCliente}/oficina/{idOficina}")
@@ -37,12 +37,18 @@ public class OrdemServicoController {
 											@PathVariable(value = "idCliente") Long idCliente,
 											@PathVariable(value = "idOficina") Long idOficina) throws Exception{
 		
-		return new ResponseEntity<OrdemServico>(this.ordemServico.save(ordemServico, idCliente, idOficina),HttpStatus.OK);
+		return new ResponseEntity<OrdemServico>(this.ORDEM_SERVICO.save(ordemServico, idCliente, idOficina),HttpStatus.OK);
 	}
 	
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<String> delete(@PathVariable(value = "id") Long id){
-		this.ordemServico.delete(id);
+		this.ORDEM_SERVICO.delete(id);
+		return ResponseEntity.ok().build();
+	}
+	
+	@DeleteMapping
+	public ResponseEntity<String> deleteAll(){
+		this.ORDEM_SERVICO.deleteAll();
 		return ResponseEntity.ok().build();
 	}
 	

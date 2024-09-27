@@ -30,7 +30,13 @@ public class PagamentoServiceImpl implements PagamentoService{
 		
 		Optional<OrdemServico> ordemServico = this.ORDEM_SERVICO_REPOSITORY.findById(idOrdemServico);
 		
-		ordemServico.get().getStatusOrdemServico().setUltimoPagamento(LocalDateTime.now());
+		double valorTotal = ordemServico.get().getValorTotal();
+		double valorPagamento = pagamentos.stream().mapToDouble(valor -> valor.getValorPago()).sum();
+		ordemServico.get().setValorTotal(valorTotal - valorPagamento);
+		
+		if(pagamentos.get(0).getValorPago() > 0) {
+			//ordemServico.get().getStatusOrdemServico().setUltimoPagamento(LocalDateTime.now());
+		}
 		
 		pagamentos.forEach(pagamento -> {
 			pagamento.setOrdemServico(ordemServico.get());

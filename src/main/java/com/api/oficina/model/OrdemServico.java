@@ -66,7 +66,7 @@ public class OrdemServico implements Serializable{
 	@OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL)
 	private List<DetalheServico> detalheServico = new ArrayList<DetalheServico>();
 	
-	@OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "ordemServico", cascade = CascadeType.ALL)
 	private List<Pagamento> pagamento = new ArrayList<Pagamento>();
 	
 	@OneToOne(mappedBy = "ordemServico", cascade = CascadeType.ALL)

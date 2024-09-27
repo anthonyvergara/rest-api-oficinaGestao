@@ -1,11 +1,13 @@
-package com.api.oficina.os.pagamento;
+package com.api.oficina.util.pagamento;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.api.oficina.model.OrdemServico;
 import com.api.oficina.model.Parcelamento;
 import com.api.oficina.service.CalculoParcelamento;
+import com.api.oficina.util.FormataNumero;
 
 public class CalculoParcelamentoSemJuros implements CalculoParcelamento{
 
@@ -27,6 +29,9 @@ public class CalculoParcelamentoSemJuros implements CalculoParcelamento{
 		
 		for(int i = 0; i< NUMERO_PARCELAS; i++) {
 			double valorParcela = (valorTotal - valoresPagos)/NUMERO_PARCELAS;
+			
+			valorParcela = Double.parseDouble(new FormataNumero().format(valorParcela));
+			
 			this.listaParcelas.add(valorParcela);
 		}
 		

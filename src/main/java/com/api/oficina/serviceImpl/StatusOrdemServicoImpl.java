@@ -27,48 +27,7 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 	
 	@Override
 	public StatusOrdemServico save(Long idOrdemServico) {
-		
-		Optional<OrdemServico> ordemServico = this.ORDEM_SERVICO_REPOSITORY.findById(idOrdemServico);
-		
-		StatusOrdemServico statusOS = ordemServico.get().getStatusOrdemServico();
-		
-		double valorTotal = ordemServico.get().getValorTotal();
-		double valoresPagos = ordemServico.get().getPagamento().stream()
-				.mapToDouble(valores -> valores.getValorPago())
-				.sum();
-		
-		double saldoDevedor = valorTotal - valoresPagos;
-		statusOS.setSaldoDevedor(saldoDevedor);
-		
-		StatusOS status = null;
-		
-		if(saldoDevedor == 0) {
-			status = StatusOS.PAGO;
-		}else if(saldoDevedor > 0 && statusOS.getProximoVencimento().isBefore(LocalDate.now())) {
-			status = StatusOS.ATRASADO;
-		}else {
-			status = StatusOS.AGENDADO;
-		}
-		
-		if(ordemServico.get().getQuantidadeParcelas() > 0) {
-			Long parcelaAtrasada = ordemServico.get().getParcelamento().stream()
-					.filter(parcelas -> parcelas.getStatusParcela() == StatusParcela.ATRASADO)
-					.count();
-			
-			Long parcelaPendente = ordemServico.get().getParcelamento().stream()
-					.filter(parcelas -> parcelas.getStatusParcela() == StatusParcela.PENDENTE)
-					.count();
-			
-			if(parcelaAtrasada > 0) {
-				status = StatusOS.ATRASADO;
-			}else if(parcelaAtrasada == 0 && parcelaPendente > 0) {
-				status = StatusOS.AGENDADO;
-			}
-		}
-		statusOS.setTipoStatus(status.getCode());
-		
-		
-		return statusOS;
+		return null;
 	}
 
 }

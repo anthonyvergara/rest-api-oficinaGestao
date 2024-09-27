@@ -1,39 +1,23 @@
 package com.api.oficina.serviceImpl;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.Period;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.api.oficina.component.Invoice;
-import com.api.oficina.component.Parcelas;
 import com.api.oficina.model.Cliente;
-import com.api.oficina.model.DetalheServico;
 import com.api.oficina.model.Oficina;
 import com.api.oficina.model.OrdemServico;
-import com.api.oficina.model.Parcelamento;
 import com.api.oficina.model.StatusOrdemServico;
-import com.api.oficina.modelEnum.StatusOS;
-import com.api.oficina.modelEnum.StatusParcela;
-import com.api.oficina.modelEnum.TipoPagamento;
-import com.api.oficina.os.pagamento.CalculoParcelamentoSemJuros;
-import com.api.oficina.os.servico.CalculoServicoPadrao;
 import com.api.oficina.repository.ClienteRepository;
 import com.api.oficina.repository.OficinaRepository;
 import com.api.oficina.repository.OrdemServicoRepository;
-import com.api.oficina.service.CalculoServico;
 import com.api.oficina.service.OrdemServicoService;
+import com.api.oficina.util.servico.CalculoServicoPadrao;
 
 import jakarta.transaction.Transactional;
 
@@ -46,21 +30,19 @@ public class OrdemServicoImpl implements OrdemServicoService{
 	
 	private final DetalheServicoImpl DETALHE_SERVICO_SERVICE;
 	private final PagamentoServiceImpl PAGAMENTO_SERVICE;
-	private final ParcelamentoServiceImpl PARCELAMENTO_SERVICE;
 	private final StatusOrdemServicoImpl STATUS_ORDEM_SERVICO;
 	
 	private final Invoice INVOICE;
 	
 	public OrdemServicoImpl(OrdemServicoRepository ordemServicoRepository, ClienteRepository clienteRepository, OficinaRepository oficinaRepository,
 			Invoice invoice, DetalheServicoImpl detalheServico, PagamentoServiceImpl pagamentoService,
-			ParcelamentoServiceImpl parcelamentoService, StatusOrdemServicoImpl statusOrdemServico) {
+			 StatusOrdemServicoImpl statusOrdemServico) {
 		this.ORDEM_SERVICO_REPOSITORY = ordemServicoRepository;
 		this.CLIENTE_REPOSITORY = clienteRepository;
 		this.OFICINA_REPOSITORY = oficinaRepository;
 		this.INVOICE = invoice;
 		this.DETALHE_SERVICO_SERVICE = detalheServico;
 		this.PAGAMENTO_SERVICE = pagamentoService;
-		this.PARCELAMENTO_SERVICE = parcelamentoService;
 		this.STATUS_ORDEM_SERVICO = statusOrdemServico;
 	}
 
@@ -77,9 +59,9 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		
 		Optional<Oficina> oficina = this.OFICINA_REPOSITORY.findById(idOficina);
 		
-		StatusOrdemServico statusOS = new StatusOrdemServico();
+		/*StatusOrdemServico statusOS = new StatusOrdemServico(); // verificar a necessidade
 		statusOS.setOrdemServico(ordemServico);
-		ordemServico.setStatusOrdemServico(statusOS);
+		ordemServico.setStatusOrdemServico(statusOS);*/
 		
 		ordemServico.setCliente(cliente.get());
 		ordemServico.setOficina(oficina.get());
@@ -90,13 +72,10 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		
 		this.DETALHE_SERVICO_SERVICE.save(ordemServico.getId(), ordemServico.getDetalheServico());
 		
-		this.PAGAMENTO_SERVICE.salvar(ordemServico.getPagamento(), ordemServico.getId());
+		if(! ordemServico.getPagamento().isEmpty())
+			this.PAGAMENTO_SERVICE.salvar(ordemServico.getPagamento(), ordemServico.getId());
 		
-		if(ordemServico.getQuantidadeParcelas() > 0) {
-			ordemServico.setParcelamento(this.PARCELAMENTO_SERVICE.save(ordemServico.getId(), ordemServico.getQuantidadeParcelas()));
-		}
-		
-		ordemServico.setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.save(ordemServico.getId()));
+		//ordemServico.setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.save(ordemServico.getId()));
 		
 		return ordemServico;
 	}
@@ -130,6 +109,10 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		if(periodo.getDays() > 1) { //SE CRIAÇAO DA ORDEM FOR MAIOR QUE 1 DIA - HAVERÁ IMPEDIMENTO DE DELETE
 			System.out.println("Ordem criada a "+periodo.getDays()+" dias.");
 		}
+	}
+	
+	public void deleteAll() {
+		this.ORDEM_SERVICO_REPOSITORY.deleteAll();
 	}
 	
 	public Long generateInvoiceNumber() {

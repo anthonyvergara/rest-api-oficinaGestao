@@ -20,45 +20,11 @@ import com.api.oficina.service.CalculoParcelamento;
 @Component
 public class Parcelas {
 	
-	private Map<LocalDate,Double> parcelas = new HashMap<LocalDate, Double>();
-	
-	private List<Parcelamento> listaParcelas = new ArrayList<Parcelamento>();
-	
-	public Map<LocalDate,Double> calcularParcelas(OrdemServico ordemServico, CalculoParcelamento calculoParcelamento){
-		
-		List<Double> valorParcelas = calculoParcelamento.calcularParcelamento(ordemServico);
-		List<LocalDate> datas = this.calcularDatas(LocalDate.now(), ordemServico.getTipoPagamento(), ordemServico.getQuantidadeParcelas());
-		
-		for(int i = 0; i<valorParcelas.size(); i++) {
-			parcelas.put(datas.get(i), valorParcelas.get(i));
-		}
-		
-		return parcelas;
-	}
-	
 	public List<Double> calcularParcela(OrdemServico ordemServico, CalculoParcelamento calculoParcelamento){
 		
 		List<Double> valorParcelas = calculoParcelamento.calcularParcelamento(ordemServico);
 		
 		return valorParcelas;
-	}
-	
-	public List<Parcelamento> listarParcelas(Map<LocalDate,Double> parcelasCalculadas){
-		
-		
-		List<Double> valorParcelas = parcelasCalculadas.values().stream()
-				.sorted()
-				.toList();
-		List<LocalDate> dataParcelas = parcelasCalculadas.keySet().stream()
-				.sorted()
-				.toList();
-	 	
-	 	for(int i = 0; i<parcelasCalculadas.size(); i++) {
-	 		Parcelamento parcelas = new Parcelamento(StatusParcela.PENDENTE, valorParcelas.get(i), dataParcelas.get(i));
-	 		this.listaParcelas.add(parcelas);
-	 	}
-		
-		return this.listaParcelas;
 	}
 	
 	public List<LocalDate> calcularDatas (LocalDate dataPrimeiraParcela, TipoPagamento tipoPagamento, int quantidadeParcelas){

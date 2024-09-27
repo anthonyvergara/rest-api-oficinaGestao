@@ -46,7 +46,7 @@ public class DetalheServico implements Serializable{
 	
 	@JsonIgnore
 	@ForeignKey(name = "id_ordemServico")
-	@ManyToOne(optional = false)
+	@ManyToOne
 	private OrdemServico ordemServico;
 
 	public Long getId() {

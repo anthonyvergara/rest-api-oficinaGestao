@@ -1,10 +1,12 @@
-package com.api.oficina.os.servico;
+package com.api.oficina.util.servico;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import com.api.oficina.model.DetalheServico;
 import com.api.oficina.model.OrdemServico;
 import com.api.oficina.service.CalculoServico;
+import com.api.oficina.util.FormataNumero;
 
 public class CalculoServicoPadrao implements CalculoServico{
 	
@@ -22,6 +24,8 @@ public class CalculoServicoPadrao implements CalculoServico{
 		.sum();
 		
 		valorTotal = ((valorTotal * vat)/100) + valorTotal;
+		
+		valorTotal = Double.parseDouble(new FormataNumero().format(valorTotal));
 		
 		return valorTotal;
 	}
