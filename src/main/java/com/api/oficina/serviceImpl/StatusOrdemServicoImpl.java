@@ -1,5 +1,6 @@
 package com.api.oficina.serviceImpl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.api.oficina.model.OrdemServico;
 import com.api.oficina.model.Pagamento;
+import com.api.oficina.model.Parcelamento;
 import com.api.oficina.model.StatusOrdemServico;
 import com.api.oficina.modelEnum.StatusOS;
 import com.api.oficina.modelEnum.StatusParcela;
@@ -16,6 +18,7 @@ import com.api.oficina.repository.OrdemServicoRepository;
 import com.api.oficina.repository.PagamentoRepository;
 import com.api.oficina.repository.StatusOrdemServicoRepository;
 import com.api.oficina.service.StatusOrdemServicoService;
+import com.fasterxml.jackson.annotation.JacksonInject.Value;
 
 @Service
 public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
@@ -52,6 +55,8 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 		
 		List<Pagamento> pagamentos = ordemServico.getPagamento() != null ? ordemServico.getPagamento() : null;
 		
+		int parcelaAtrasada = 0;
+		
 		if(!pagamentos.isEmpty()) {
 			Optional<LocalDateTime> ultimoPagamento = pagamentos.stream()
 					.map(Pagamento::getDataPagamento)
@@ -65,30 +70,42 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 		double valorTotal = ordemServico.getValorTotal();
 		double saldoDevedor = valorTotal - valoresPagos;
 		
-		int quantidadeParcelaAtrasada = 0;
-		
 		statusOS.setSaldoDevedor(saldoDevedor);
 		
 		if(! ordemServico.getParcelamento().isEmpty()) {
-			quantidadeParcelaAtrasada = (int) ordemServico.getParcelamento().stream()
-				.filter(parcela -> parcela.getStatusParcela() == StatusParcela.ATRASADO)
-				.count();
-		}
-		
-		if((valorTotal - valoresPagos) == 0) {
-			ordemServico.getStatusOrdemServico().setTipoStatus(StatusOS.PAGO.getCode());
-		}else if(quantidadeParcelaAtrasada > 0) {
-			ordemServico.getStatusOrdemServico().setTipoStatus(StatusOS.ATRASADO.getCode());
-		}else {
-			ordemServico.getStatusOrdemServico().setTipoStatus(StatusOS.AGENDADO.getCode());
+			StatusOS status = checarStatus(statusOS, ordemServico.getParcelamento());
+			statusOS.setTipoStatus(status.getCode());
 		}
 		
 		//statusOS.setTipoStatus(null);
 		//statusOS.setValorProximaParcela(0);
 		
-		return null;
+		this.STATUS_SERVICO_REPOSITORY.save(statusOS);
+		
+		return statusOS;
 	}
 	
-	
+	private StatusOS checarStatus(StatusOrdemServico statusOS, List<Parcelamento> parcelamento) {
+		StatusOS status = null;
+		
+		parcelamento = parcelamento.stream()
+				.filter(parcela -> parcela.getStatusParcela() != StatusParcela.PAGO)
+				.toList();
+		
+		int parcelasAtrasadas = 0;
+		parcelasAtrasadas = (int)parcelamento.stream()
+				.filter(parcela -> parcela.getDataVencimento().isBefore(LocalDate.now()))
+				.count();
+		
+		if(statusOS.getSaldoDevedor() == 0) {
+			status = StatusOS.PAGO;
+		}else if(parcelasAtrasadas > 0) {
+			status = StatusOS.ATRASADO;
+		}else {
+			status = StatusOS.AGENDADO;
+		}
+		
+		return status;
+	}
 	
 }

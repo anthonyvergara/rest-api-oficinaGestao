@@ -22,12 +22,15 @@ public class ParcelamentoServiceImpl implements ParcelamentoService{
 	
 	public final ParcelamentoRepository PARCELAMENTO_REPOSITORY;
 	private final OrdemServicoRepository ORDEM_SERVICO_REPOSITORY;
+	private final StatusOrdemServicoImpl STATUS_ORDEM_SERVICO;
 	private final Parcelas PARCELAS;
 
-	public ParcelamentoServiceImpl(ParcelamentoRepository parcelamentoRepository, OrdemServicoRepository ordemServicoRepository, Parcelas parcelas) {
+	public ParcelamentoServiceImpl(ParcelamentoRepository parcelamentoRepository, OrdemServicoRepository ordemServicoRepository, Parcelas parcelas, 
+			StatusOrdemServicoImpl statusOrdemServico) {
 		this.PARCELAMENTO_REPOSITORY = parcelamentoRepository;
 		this.ORDEM_SERVICO_REPOSITORY =  ordemServicoRepository;
 		this.PARCELAS = parcelas;
+		this.STATUS_ORDEM_SERVICO = statusOrdemServico;
 	}
 	
 	@Override
@@ -58,6 +61,7 @@ public class ParcelamentoServiceImpl implements ParcelamentoService{
 			}else {
 				listaParcelas = this.atualizarParcelamento(idOrdemServico, numeroParcelas);
 			}
+			
 		}else {
 			throw new IllegalArgumentException();
 		}
@@ -111,6 +115,9 @@ public class ParcelamentoServiceImpl implements ParcelamentoService{
 			this.PARCELAMENTO_REPOSITORY.save(parcela);
 			listaParcelas.add(parcela);
 		}
+		
+		this.STATUS_ORDEM_SERVICO.atualizarStatusOS(ordemServico.getStatusOrdemServico());
+		
 		return listaParcelas;
 	}
 }
