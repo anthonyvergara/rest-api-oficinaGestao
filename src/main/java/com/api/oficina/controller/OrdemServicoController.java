@@ -27,9 +27,13 @@ public class OrdemServicoController {
 		this.ORDEM_SERVICO = ordemServico;
 	}
 	
-	@GetMapping
+	@GetMapping("/")
 	public ResponseEntity<List<OrdemServico>> listAll(){
 		return new ResponseEntity<List<OrdemServico>>(this.ORDEM_SERVICO.listAll(),HttpStatus.OK);
+	}
+	@GetMapping("/{id}")
+	public ResponseEntity<OrdemServico> listAll(@PathVariable(value="id") Long id){
+		return new ResponseEntity<OrdemServico>(this.ORDEM_SERVICO.listById(id),HttpStatus.OK);
 	}
 	
 	@PostMapping(value = "/cliente/{idCliente}/oficina/{idOficina}")

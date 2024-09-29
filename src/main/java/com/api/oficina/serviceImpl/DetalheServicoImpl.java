@@ -26,16 +26,17 @@ public class DetalheServicoImpl implements DetalheServicoService{
 	private final Invoice INVOICE;
 	
 	private final OrdemServicoRepository ORDEM_SERVICO_REPOSITORY;
-	
+	private final StatusOrdemServicoImpl STATUS_ORDEM_SERVICO;
 	private final ParcelamentoServiceImpl PARCELAMENTO_SERVICE;
 	
 	
 	public DetalheServicoImpl(DetalheServicoRepository servicosRepository, OrdemServicoRepository ordemServicoRepository, Invoice invoice, 
-			ParcelamentoServiceImpl parcelamentoService) {
+			ParcelamentoServiceImpl parcelamentoService, StatusOrdemServicoImpl statusOrdemServico) {
 		this.DETALHE_SERVICO_REPOSITORY = servicosRepository;
 		this.ORDEM_SERVICO_REPOSITORY = ordemServicoRepository;
 		this.INVOICE = invoice;
 		this.PARCELAMENTO_SERVICE = parcelamentoService;
+		this.STATUS_ORDEM_SERVICO = statusOrdemServico;
 	}
 
 	@Override
@@ -55,7 +56,9 @@ public class DetalheServicoImpl implements DetalheServicoService{
 		
 		// PARCELAS
 		if (ordemServico.get().getQuantidadeParcelas() > 0){
-			this.PARCELAMENTO_SERVICE.save(ordemServico.get().getId(), 4);
+			this.PARCELAMENTO_SERVICE.criarParcelamento(ordemServico.get().getId(), ordemServico.get().getQuantidadeParcelas());
+		}else {
+			this.STATUS_ORDEM_SERVICO.atualizarStatusOS(ordemServico.get().getStatusOrdemServico());
 		}
 		
 		

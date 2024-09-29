@@ -1,13 +1,10 @@
 package com.api.oficina.serviceImpl;
 
-import java.io.PrintStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.api.oficina.component.Parcelas;
@@ -19,8 +16,6 @@ import com.api.oficina.repository.ParcelamentoRepository;
 import com.api.oficina.service.ParcelamentoService;
 import com.api.oficina.util.pagamento.CalculoParcelamentoSemJuros;
 
-import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 
 @Service
 public class ParcelamentoServiceImpl implements ParcelamentoService{
@@ -34,16 +29,30 @@ public class ParcelamentoServiceImpl implements ParcelamentoService{
 		this.ORDEM_SERVICO_REPOSITORY =  ordemServicoRepository;
 		this.PARCELAS = parcelas;
 	}
+	
+	@Override
+	public List<Parcelamento> listAll(){
+		return (List<Parcelamento>) this.PARCELAMENTO_REPOSITORY.findAll();
+	}
+	
+	@Override
+	public List<Parcelamento> findByIdOrdemServico(Long idOrdemServico) {
+		List<Parcelamento> listaParcelamento = this.PARCELAMENTO_REPOSITORY.listByIdOrdemServico(idOrdemServico);
+		
+		return listaParcelamento;
+	}
 
 	@Override
-	public List<Parcelamento> save(Long idOrdemServico, int numeroParcelas) {
+	public List<Parcelamento> criarParcelamento(Long idOrdemServico, int numeroParcelas) {
 		
 		Optional<OrdemServico> ordemServico = this.ORDEM_SERVICO_REPOSITORY.findById(idOrdemServico);
+		
 		List<Parcelamento> listaParcelas = new ArrayList<Parcelamento>();
 		
-		List<Parcelamento> parcelasExistentes = this.PARCELAMENTO_REPOSITORY.listByIdOrdemServico(idOrdemServico);
-		
 		if(! ordemServico.isEmpty()) {
+			List<Parcelamento> parcelasExistentes = this.PARCELAMENTO_REPOSITORY.listByIdOrdemServico(idOrdemServico);
+			
+			
 			if(parcelasExistentes.isEmpty()) {
 				listaParcelas = this.calcularParcelamento(ordemServico.get(), numeroParcelas);
 			}else {
@@ -53,32 +62,41 @@ public class ParcelamentoServiceImpl implements ParcelamentoService{
 			throw new IllegalArgumentException();
 		}
 		
-		
 		return listaParcelas;
 	}
 	
+	@Override
 	public List<Parcelamento> atualizarParcelamento(Long idOrdemServico, int quantidadeParcelas) {
 		
 		List<Parcelamento> parcelasExistentes = this.PARCELAMENTO_REPOSITORY.listByIdOrdemServico(idOrdemServico);
 		
-		OrdemServico ordemServico = parcelasExistentes.get(0).getOrdemServico();
-				
 		List<Parcelamento> novaListaParcelas = new ArrayList<Parcelamento>();
 		
-		int quantidadeParcelasPendentes = (int) parcelasExistentes.stream().filter(parcela -> parcela.getStatusParcela() != StatusParcela.PAGO).count();
-		
-		quantidadeParcelas =  quantidadeParcelas == 0 ? quantidadeParcelasPendentes : quantidadeParcelas;
-		
-		parcelasExistentes.stream()
-			.filter(parcela -> parcela.getStatusParcela() != StatusParcela.PAGO)
-			.forEach(this.PARCELAMENTO_REPOSITORY::delete);
-		
-		novaListaParcelas = calcularParcelamento(ordemServico, quantidadeParcelas);
+		if(! parcelasExistentes.isEmpty()) {
+			OrdemServico ordemServico = parcelasExistentes.get(0).getOrdemServico();
+			
+			int quantidadeParcelasPendentes = (int) parcelasExistentes.stream().filter(parcela -> parcela.getStatusParcela() != StatusParcela.PAGO).count();
+			
+			quantidadeParcelas =  quantidadeParcelas == 0 ? quantidadeParcelasPendentes : quantidadeParcelas;
+			
+			if (quantidadeParcelas == 0){
+				return null;
+			}
+			System.out.println("passou sem parcelas");
+			
+			parcelasExistentes.stream()
+				.filter(parcela -> parcela.getStatusParcela() != StatusParcela.PAGO)
+				.forEach(this.PARCELAMENTO_REPOSITORY::delete);
+			
+			novaListaParcelas = calcularParcelamento(ordemServico, quantidadeParcelas);
+		}else {
+			throw new IllegalArgumentException();
+		}
 		
 		return novaListaParcelas;
 	}
 	
-	public List<Parcelamento> calcularParcelamento(OrdemServico ordemServico, int numeroParcelas){
+	private List<Parcelamento> calcularParcelamento(OrdemServico ordemServico, int numeroParcelas){
 		List<Double> valorParcelas = this.PARCELAS.calcularParcela(ordemServico, new CalculoParcelamentoSemJuros(numeroParcelas));
 		List<LocalDate> datasParcelas = this.PARCELAS.calcularDatas(LocalDate.now(), ordemServico.getTipoPagamento(), numeroParcelas);
 		

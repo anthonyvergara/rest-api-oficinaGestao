@@ -31,12 +31,13 @@ public class OrdemServicoImpl implements OrdemServicoService{
 	private final DetalheServicoImpl DETALHE_SERVICO_SERVICE;
 	private final PagamentoServiceImpl PAGAMENTO_SERVICE;
 	private final StatusOrdemServicoImpl STATUS_ORDEM_SERVICO;
+	private final ParcelamentoServiceImpl PARCELAMENTO_SERVICE;
 	
 	private final Invoice INVOICE;
 	
 	public OrdemServicoImpl(OrdemServicoRepository ordemServicoRepository, ClienteRepository clienteRepository, OficinaRepository oficinaRepository,
 			Invoice invoice, DetalheServicoImpl detalheServico, PagamentoServiceImpl pagamentoService,
-			 StatusOrdemServicoImpl statusOrdemServico) {
+			 StatusOrdemServicoImpl statusOrdemServico, ParcelamentoServiceImpl parcelamentoService) {
 		this.ORDEM_SERVICO_REPOSITORY = ordemServicoRepository;
 		this.CLIENTE_REPOSITORY = clienteRepository;
 		this.OFICINA_REPOSITORY = oficinaRepository;
@@ -44,11 +45,17 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		this.DETALHE_SERVICO_SERVICE = detalheServico;
 		this.PAGAMENTO_SERVICE = pagamentoService;
 		this.STATUS_ORDEM_SERVICO = statusOrdemServico;
+		this.PARCELAMENTO_SERVICE = parcelamentoService;
 	}
 
 	@Override
 	public List<OrdemServico> listAll() {
 		return (List<OrdemServico>) this.ORDEM_SERVICO_REPOSITORY.findAll();
+	}
+	
+	public OrdemServico listById(Long id) {
+		Optional<OrdemServico> findById = this.ORDEM_SERVICO_REPOSITORY.findById(id);
+		return findById.get();
 	}
 	
 	@Transactional
@@ -70,12 +77,17 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		
 		ordemServico = this.ORDEM_SERVICO_REPOSITORY.save(ordemServico);
 		
+		ordemServico.setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.criarStatusOS(ordemServico.getId()));
+		
+		
 		this.DETALHE_SERVICO_SERVICE.save(ordemServico.getId(), ordemServico.getDetalheServico());
 		
 		if(! ordemServico.getPagamento().isEmpty())
-			this.PAGAMENTO_SERVICE.salvar(ordemServico.getPagamento(), ordemServico.getId());
+			ordemServico.setPagamento(this.PAGAMENTO_SERVICE.salvar(ordemServico.getPagamento(), ordemServico.getId()));
 		
 		//ordemServico.setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.save(ordemServico.getId()));
+		
+		ordemServico.setParcelamento(this.PARCELAMENTO_SERVICE.findByIdOrdemServico(ordemServico.getId()));
 		
 		return ordemServico;
 	}

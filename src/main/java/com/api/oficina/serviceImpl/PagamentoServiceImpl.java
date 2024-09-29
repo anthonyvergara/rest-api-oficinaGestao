@@ -19,10 +19,13 @@ public class PagamentoServiceImpl implements PagamentoService{
 	
 	private final PagamentoRepository PAGAMENTO_REPOSITORY;
 	private final OrdemServicoRepository ORDEM_SERVICO_REPOSITORY;
+	private final StatusOrdemServicoImpl STATUS_ORDEM_SERVICO;
 	
-	public PagamentoServiceImpl(OrdemServicoRepository ordemServicoRepository, PagamentoRepository pagamentoRepository) {
+	public PagamentoServiceImpl(OrdemServicoRepository ordemServicoRepository, PagamentoRepository pagamentoRepository,
+			StatusOrdemServicoImpl statusOrdemServico) {
 		this.PAGAMENTO_REPOSITORY = pagamentoRepository;
 		this.ORDEM_SERVICO_REPOSITORY = ordemServicoRepository;
+		this.STATUS_ORDEM_SERVICO = statusOrdemServico;
 	}
 
 	@Override
@@ -30,18 +33,13 @@ public class PagamentoServiceImpl implements PagamentoService{
 		
 		Optional<OrdemServico> ordemServico = this.ORDEM_SERVICO_REPOSITORY.findById(idOrdemServico);
 		
-		double valorTotal = ordemServico.get().getValorTotal();
-		double valorPagamento = pagamentos.stream().mapToDouble(valor -> valor.getValorPago()).sum();
-		ordemServico.get().setValorTotal(valorTotal - valorPagamento);
-		
-		if(pagamentos.get(0).getValorPago() > 0) {
-			//ordemServico.get().getStatusOrdemServico().setUltimoPagamento(LocalDateTime.now());
-		}
-		
 		pagamentos.forEach(pagamento -> {
+			pagamento.setDataPagamento(LocalDateTime.now());
 			pagamento.setOrdemServico(ordemServico.get());
 			this.PAGAMENTO_REPOSITORY.save(pagamento);
 		});
+		
+		this.STATUS_ORDEM_SERVICO.atualizarStatusOS(ordemServico.get().getStatusOrdemServico());
 		
 		return pagamentos;
 	}
