@@ -12,8 +12,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Setter @Getter
 public class DonoOficina extends Pessoa implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -31,39 +34,6 @@ public class DonoOficina extends Pessoa implements Serializable{
 	@JsonIgnore
 	@ManyToMany(mappedBy = "donoOficina")
 	private List<Oficina> oficina;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
-	}
-
-	public String getSenha() {
-		return senha;
-	}
-
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
-	
-	public List<Oficina> getOficina() {
-		return oficina;
-	}
-
-	public void setOficina(List<Oficina> oficina) {
-		this.oficina = oficina;
-	}
-
 	
 	@Override
 	public int hashCode() {

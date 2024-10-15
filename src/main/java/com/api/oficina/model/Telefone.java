@@ -14,8 +14,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Setter @Getter @EqualsAndHashCode
 public class Telefone implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -44,15 +48,6 @@ public class Telefone implements Serializable{
 	@ManyToOne(optional = false)
 	private Pessoa pessoa;
 	
-
-	public Long getId_telefone() {
-		return id_telefone;
-	}
-
-	public void setId_telefone(Long id_telefone) {
-		this.id_telefone = id_telefone;
-	}
-
 	public TipoTelefone getTipo() {
 		return TipoTelefone.valueOf(tipo);
 	}
@@ -62,56 +57,5 @@ public class Telefone implements Serializable{
 			this.tipo = tipo.getCode();
 		}
 	}
-
-	public String getCountry() {
-		return country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
-	}
-
-	public int getDdd() {
-		return ddd;
-	}
-
-	public void setDdd(int ddd) {
-		this.ddd = ddd;
-	}
-
-	public Long getNumero() {
-		return numero;
-	}
-
-	public void setNumero(Long numero) {
-		this.numero = numero;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id_telefone);
-	}
-
-	public Pessoa getPessoa() {
-		return pessoa;
-	}
-
-	public void setPessoa(Pessoa pessoa) {
-		this.pessoa = pessoa;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Telefone other = (Telefone) obj;
-		return Objects.equals(id_telefone, other.id_telefone);
-	}
-	
-	
 	
 }

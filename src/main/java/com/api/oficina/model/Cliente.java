@@ -2,7 +2,6 @@ package com.api.oficina.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -18,8 +17,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Setter @Getter
 public class Cliente extends Pessoa implements Serializable, Comparable<Cliente>{
 
 	private static final long serialVersionUID = 1L;
@@ -45,62 +47,6 @@ public class Cliente extends Pessoa implements Serializable, Comparable<Cliente>
 	@OneToMany(mappedBy = "cliente")
 	private Set<OrdemServico> ordemServico = new HashSet<OrdemServico>();
 	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getNumeroDrive() {
-		return numeroDrive;
-	}
-
-	public void setNumeroDrive(Long numeroDrive) {
-		this.numeroDrive = numeroDrive;
-	}
-
-	public Long getNumeroPassaporte() {
-		return numeroPassaporte;
-	}
-
-	public void setNumeroPassaporte(Long numeroPassaporte) {
-		this.numeroPassaporte = numeroPassaporte;
-	}
-
-	public Long getNumeroRg() {
-		return numeroRg;
-	}
-
-	public void setNumeroRg(Long numeroRg) {
-		this.numeroRg = numeroRg;
-	}
-	
-	public Oficina getOficina() {
-		return oficina;
-	}
-
-	public void setOficina(Oficina oficina) {
-		this.oficina = oficina;
-	}
-	
-	public List<DocumentoImg> getDocumentos() {
-		return documentos;
-	}
-
-	public void setDocumentos(List<DocumentoImg> documentos) {
-		this.documentos = documentos;
-	}
-	
-	public Set<OrdemServico> getOrdemServico() {
-		return ordemServico;
-	}
-
-	public void setOrdemServico(Set<OrdemServico> ordemServico) {
-		this.ordemServico = ordemServico;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;

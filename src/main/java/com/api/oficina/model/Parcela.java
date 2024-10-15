@@ -15,8 +15,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Setter @Getter @EqualsAndHashCode
 public class Parcela implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -54,48 +58,4 @@ public class Parcela implements Serializable{
 			this.statusParcela = statusParcela.getCode();
 		}
 	}
-
-	public double getValorParcela() {
-		return valorParcela;
-	}
-
-	public void setValorParcela(double valorParcela) {
-		this.valorParcela = valorParcela;
-	}
-
-	public LocalDate getDataVencimento() {
-		return dataVencimento;
-	}
-
-	public void setDataVencimento(LocalDate dataVencimento) {
-		this.dataVencimento = dataVencimento;
-	}
-
-	public OrdemServico getOrdemServico() {
-		return ordemServico;
-	}
-
-	public void setOrdemServico(OrdemServico ordemServico) {
-		this.ordemServico = ordemServico;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Parcela other = (Parcela) obj;
-		return Objects.equals(id, other.id);
-	}
-	
-	
-	
 }

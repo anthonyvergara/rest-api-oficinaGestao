@@ -27,7 +27,7 @@ public class OrdemServicoController {
 		this.ORDEM_SERVICO = ordemServico;
 	}
 	
-	@GetMapping("/")
+	@GetMapping("")
 	public ResponseEntity<List<OrdemServico>> listAll(){
 		return new ResponseEntity<List<OrdemServico>>(this.ORDEM_SERVICO.listAll(),HttpStatus.OK);
 	}

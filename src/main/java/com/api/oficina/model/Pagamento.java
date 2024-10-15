@@ -16,8 +16,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Setter @Getter @EqualsAndHashCode
 public class Pagamento implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -40,55 +44,4 @@ public class Pagamento implements Serializable{
 	public Pagamento() {
 		this.dataPagamento = LocalDateTime.now();
 	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public double getValorPago() {
-		return valorPago;
-	}
-
-	public void setValorPago(double valorPago) {
-		this.valorPago = valorPago;
-	}
-
-	public LocalDateTime getDataPagamento() {
-		return dataPagamento;
-	}
-
-	public void setDataPagamento(LocalDateTime dataPagamento) {
-		this.dataPagamento = dataPagamento;
-	}
-	
-	public OrdemServico getOrdemServico() {
-		return ordemServico;
-	}
-
-	public void setOrdemServico(OrdemServico ordemServico) {
-		this.ordemServico = ordemServico;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Pagamento other = (Pagamento) obj;
-		return Objects.equals(id, other.id);
-	}
-	
-	
 }

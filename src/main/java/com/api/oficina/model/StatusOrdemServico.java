@@ -19,8 +19,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Setter @Getter @EqualsAndHashCode
 public class StatusOrdemServico implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -43,54 +47,6 @@ public class StatusOrdemServico implements Serializable{
 	@OneToOne
 	private OrdemServico ordemServico;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public LocalDateTime getUltimoPagamento() {
-		return ultimoPagamento;
-	}
-
-	public void setUltimoPagamento(LocalDateTime ultimoPagamento) {
-		this.ultimoPagamento = ultimoPagamento;
-	}
-
-	public LocalDate getProximoVencimento() {
-		return proximoVencimento;
-	}
-
-	public void setProximoVencimento(LocalDate proximoVencimento) {
-		this.proximoVencimento = proximoVencimento;
-	}
-
-	public double getSaldoDevedor() {
-		return saldoDevedor;
-	}
-
-	public void setSaldoDevedor(double saldoDevedor) {
-		this.saldoDevedor = saldoDevedor;
-	}
-
-	public double getValorProximaParcela() {
-		return valorProximaParcela;
-	}
-
-	public void setValorProximaParcela(double valorProximaParcela) {
-		this.valorProximaParcela = valorProximaParcela;
-	}
-
-	public OrdemServico getOrdemServico() {
-		return ordemServico;
-	}
-
-	public void setOrdemServico(OrdemServico ordemServico) {
-		this.ordemServico = ordemServico;
-	}
-	
 	public StatusOS getTipoStatus() {
 		return StatusOS.valueOf(tipoStatus);
 	}
@@ -100,22 +56,4 @@ public class StatusOrdemServico implements Serializable{
 			this.tipoStatus = tipoStatus;
 		}
 	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		StatusOrdemServico other = (StatusOrdemServico) obj;
-		return Objects.equals(id, other.id);
-	}
-	
 }
