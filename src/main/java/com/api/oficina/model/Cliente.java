@@ -2,6 +2,7 @@ package com.api.oficina.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -19,7 +20,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
-public class Cliente extends Pessoa implements Serializable{
+public class Cliente extends Pessoa implements Serializable, Comparable<Cliente>{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -119,7 +120,11 @@ public class Cliente extends Pessoa implements Serializable{
 		Cliente other = (Cliente) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
+
+	@Override
+	public int compareTo(Cliente o) {
+		
+		return this.getNome().compareTo(o.getNome());
+	}
 
 }

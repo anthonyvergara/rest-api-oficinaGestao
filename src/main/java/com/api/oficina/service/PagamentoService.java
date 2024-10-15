@@ -6,6 +6,6 @@ import com.api.oficina.model.Pagamento;
 
 public interface PagamentoService {
 	
-	public List<Pagamento> salvar(List<Pagamento> pagamentos, Long idOrdemServico);
+	public List<Pagamento> save(Long idOrdemServico, List<Pagamento> pagamentos);
 
 }

@@ -32,7 +32,8 @@ public class DonoOficinaDTO implements Dto<DonoOficinaDTO,DonoOficina>{
 		List<DonoOficinaDTO> listDTO = new ArrayList<DonoOficinaDTO>();
 		
 		dono.forEach(value ->{
-			listDTO.add(this.convertToDto(value));
+			DonoOficinaDTO donoDTO = new DonoOficinaDTO();
+			listDTO.add(donoDTO.convertToDto(value));
 		});
 		return listDTO;
 	}

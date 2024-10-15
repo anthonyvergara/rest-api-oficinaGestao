@@ -7,16 +7,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.api.oficina.model.Parcelamento;
-import com.api.oficina.serviceImpl.ParcelamentoServiceImpl;
+import com.api.oficina.model.Parcela;
+import com.api.oficina.serviceImpl.ParcelaServiceImpl;
 
 @RestController
 @RequestMapping(value = "/oficina/parcelamento")
-public class ParcelamentoController {
+public class ParcelaController {
 	
-	private final ParcelamentoServiceImpl  PARCELAMENTO_SERVICE;
+	private final ParcelaServiceImpl  PARCELAMENTO_SERVICE;
 	
-	public ParcelamentoController(ParcelamentoServiceImpl parcelamentoServiceImpl) {
+	public ParcelaController(ParcelaServiceImpl parcelamentoServiceImpl) {
 		this.PARCELAMENTO_SERVICE = parcelamentoServiceImpl;
 	}
 	

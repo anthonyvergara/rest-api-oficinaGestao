@@ -10,9 +10,12 @@ import org.springframework.stereotype.Service;
 
 import com.api.oficina.component.Invoice;
 import com.api.oficina.model.Cliente;
+import com.api.oficina.model.DetalheServico;
 import com.api.oficina.model.Oficina;
 import com.api.oficina.model.OrdemServico;
+import com.api.oficina.model.Pagamento;
 import com.api.oficina.model.StatusOrdemServico;
+import com.api.oficina.modelEnum.StatusOS;
 import com.api.oficina.repository.ClienteRepository;
 import com.api.oficina.repository.OficinaRepository;
 import com.api.oficina.repository.OrdemServicoRepository;
@@ -31,13 +34,13 @@ public class OrdemServicoImpl implements OrdemServicoService{
 	private final DetalheServicoImpl DETALHE_SERVICO_SERVICE;
 	private final PagamentoServiceImpl PAGAMENTO_SERVICE;
 	private final StatusOrdemServicoImpl STATUS_ORDEM_SERVICO;
-	private final ParcelamentoServiceImpl PARCELAMENTO_SERVICE;
+	private final ParcelaServiceImpl PARCELA_SERVICE;
 	
 	private final Invoice INVOICE;
 	
 	public OrdemServicoImpl(OrdemServicoRepository ordemServicoRepository, ClienteRepository clienteRepository, OficinaRepository oficinaRepository,
 			Invoice invoice, DetalheServicoImpl detalheServico, PagamentoServiceImpl pagamentoService,
-			 StatusOrdemServicoImpl statusOrdemServico, ParcelamentoServiceImpl parcelamentoService) {
+			 StatusOrdemServicoImpl statusOrdemServico, ParcelaServiceImpl parcelaService) {
 		this.ORDEM_SERVICO_REPOSITORY = ordemServicoRepository;
 		this.CLIENTE_REPOSITORY = clienteRepository;
 		this.OFICINA_REPOSITORY = oficinaRepository;
@@ -45,7 +48,7 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		this.DETALHE_SERVICO_SERVICE = detalheServico;
 		this.PAGAMENTO_SERVICE = pagamentoService;
 		this.STATUS_ORDEM_SERVICO = statusOrdemServico;
-		this.PARCELAMENTO_SERVICE = parcelamentoService;
+		this.PARCELA_SERVICE = parcelaService;
 	}
 
 	@Override
@@ -59,37 +62,39 @@ public class OrdemServicoImpl implements OrdemServicoService{
 	}
 	
 	@Transactional
-	@Override
-	public OrdemServico save(OrdemServico ordemServico, Long idCliente, Long idOficina) throws Exception{
+	public OrdemServico save(OrdemServico ordemServico, Long idCliente, Long idOficina) {
 		
-		Optional<Cliente> cliente = this.CLIENTE_REPOSITORY.findById(idCliente);
+		Optional<Cliente> cliente = Optional.of(this.CLIENTE_REPOSITORY.findById(idCliente)
+				.orElseThrow(() -> new IllegalArgumentException("Cliente não existe!")));
 		
-		Optional<Oficina> oficina = this.OFICINA_REPOSITORY.findById(idOficina);
-		
-		/*StatusOrdemServico statusOS = new StatusOrdemServico(); // verificar a necessidade
-		statusOS.setOrdemServico(ordemServico);
-		ordemServico.setStatusOrdemServico(statusOS);*/
+		Optional<Oficina> oficina = Optional.of(this.OFICINA_REPOSITORY.findById(idOficina)
+				.orElseThrow(() -> new IllegalArgumentException("Oficina não existe!")));
 		
 		ordemServico.setCliente(cliente.get());
 		ordemServico.setOficina(oficina.get());
-		
 		ordemServico.setInvoiceNumber(this.generateInvoiceNumber());
 		
 		ordemServico = this.ORDEM_SERVICO_REPOSITORY.save(ordemServico);
 		
-		ordemServico.setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.criarStatusOS(ordemServico.getId()));
+		ordemServico.setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.save(ordemServico.getId()));
 		
 		
-		this.DETALHE_SERVICO_SERVICE.save(ordemServico.getId(), ordemServico.getDetalheServico());
-		
-		if(! ordemServico.getPagamento().isEmpty())
-			ordemServico.setPagamento(this.PAGAMENTO_SERVICE.salvar(ordemServico.getPagamento(), ordemServico.getId()));
-		
-		//ordemServico.setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.save(ordemServico.getId()));
-		
-		ordemServico.setParcelamento(this.PARCELAMENTO_SERVICE.findByIdOrdemServico(ordemServico.getId()));
+		ordemServico.setDetalheServico(this.DETALHE_SERVICO_SERVICE.save(ordemServico.getId(), ordemServico.getDetalheServico()));
+		ordemServico.setPagamento(this.PAGAMENTO_SERVICE.save(ordemServico.getId(), ordemServico.getPagamento()));
+		ordemServico.setParcela(this.PARCELA_SERVICE.save(ordemServico.getId(), ordemServico.getQuantidadeParcelas()));
 		
 		return ordemServico;
+	}
+	
+	private void verificarParcelamento(OrdemServico ordemServico) {
+		
+		if(! ordemServico.getParcela().isEmpty() && ordemServico.getStatusOrdemServico().getTipoStatus() != StatusOS.PAGO) {
+			this.PARCELA_SERVICE.update(ordemServico.getId(), 0);
+		}
+		else if(ordemServico.getParcela().isEmpty() && ordemServico.getQuantidadeParcelas() > 0) {
+			this.PARCELA_SERVICE.save(ordemServico.getId(), ordemServico.getQuantidadeParcelas());
+		}
+		
 	}
 	
 	@Override
@@ -127,7 +132,7 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		this.ORDEM_SERVICO_REPOSITORY.deleteAll();
 	}
 	
-	public Long generateInvoiceNumber() {
+	private Long generateInvoiceNumber() {
 		Random invoice = new Random();
 		
 		String invoiceNumber = "";

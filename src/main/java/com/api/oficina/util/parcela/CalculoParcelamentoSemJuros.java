@@ -1,11 +1,11 @@
-package com.api.oficina.util.pagamento;
+package com.api.oficina.util.parcela;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.api.oficina.model.OrdemServico;
-import com.api.oficina.model.Parcelamento;
+import com.api.oficina.model.Parcela;
 import com.api.oficina.service.CalculoParcelamento;
 import com.api.oficina.util.FormataNumero;
 

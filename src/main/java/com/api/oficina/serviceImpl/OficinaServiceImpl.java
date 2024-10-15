@@ -35,7 +35,8 @@ public class OficinaServiceImpl implements OficinaService{
 	@Override
 	public OficinaDTO save(Oficina oficina, Long idDonoOficina) {
 		
-		Optional<DonoOficina> dono = this.oficinaRepository.findDonoOficinaById(idDonoOficina);
+		Optional<DonoOficina> dono = Optional.of(this.oficinaRepository.findDonoOficinaById(idDonoOficina)
+				.orElseThrow(()-> new IllegalArgumentException("Oficina não existe!")));
 		
 		if(dono.isEmpty() || oficina.getNomeOficina().isBlank()) {
 			throw new RuntimeException();

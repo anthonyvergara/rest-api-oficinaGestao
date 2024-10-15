@@ -27,19 +27,17 @@ public class PagamentoServiceImpl implements PagamentoService{
 		this.ORDEM_SERVICO_REPOSITORY = ordemServicoRepository;
 		this.STATUS_ORDEM_SERVICO = statusOrdemServico;
 	}
-
+	
 	@Override
-	public List<Pagamento> salvar(List<Pagamento> pagamentos, Long idOrdemServico) {
-		
-		Optional<OrdemServico> ordemServico = this.ORDEM_SERVICO_REPOSITORY.findById(idOrdemServico);
+	public List<Pagamento> save(Long idOrdemServico, List<Pagamento> pagamentos) {
+		Optional<OrdemServico> ordemServico = Optional.of(this.ORDEM_SERVICO_REPOSITORY.findById(idOrdemServico)
+				.orElseThrow(()-> new IllegalArgumentException("OrdemServico não existe!")));
 		
 		pagamentos.forEach(pagamento -> {
 			pagamento.setDataPagamento(LocalDateTime.now());
 			pagamento.setOrdemServico(ordemServico.get());
 			this.PAGAMENTO_REPOSITORY.save(pagamento);
 		});
-		
-		this.STATUS_ORDEM_SERVICO.atualizarStatusOS(ordemServico.get().getStatusOrdemServico());
 		
 		return pagamentos;
 	}

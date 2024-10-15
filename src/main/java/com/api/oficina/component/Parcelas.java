@@ -12,7 +12,7 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 import com.api.oficina.model.OrdemServico;
-import com.api.oficina.model.Parcelamento;
+import com.api.oficina.model.Parcela;
 import com.api.oficina.modelEnum.StatusParcela;
 import com.api.oficina.modelEnum.TipoPagamento;
 import com.api.oficina.service.CalculoParcelamento;

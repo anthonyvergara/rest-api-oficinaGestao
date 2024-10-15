@@ -17,7 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Parcelamento implements Serializable{
+public class Parcela implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -92,7 +92,7 @@ public class Parcelamento implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Parcelamento other = (Parcelamento) obj;
+		Parcela other = (Parcela) obj;
 		return Objects.equals(id, other.id);
 	}
 	

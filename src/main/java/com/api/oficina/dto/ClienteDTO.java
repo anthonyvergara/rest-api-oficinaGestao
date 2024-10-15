@@ -2,6 +2,7 @@ package com.api.oficina.dto;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -22,24 +23,20 @@ public class ClienteDTO implements Dto<ClienteDTO,Cliente>{
 	private Long numeroDrive;
 	private Long numeroPassaporte;
 	private Long numeroRg;
-	private Oficina oficina;
-	
-	private String nomeOficina;
 	
 	@Override
 	public ClienteDTO convertToDto(Cliente cliente) {
-		
-		BeanUtils.copyProperties(cliente, this);
+		BeanUtils.copyProperties(cliente, this, "id");
 		
 		return this;
 	}
 	
 	@Override
 	public List<ClienteDTO> listToDto(List<Cliente> cliente) {
-		List<ClienteDTO> lista = new ArrayList<ClienteDTO>();
-		
-		for(Cliente c : cliente) {
-			lista.add(this.convertToDto(c));
+		List<ClienteDTO> lista = new ArrayList<>();
+		for(int i = 0; i<cliente.size(); i++) {
+			ClienteDTO clienteDTO = new ClienteDTO();
+			lista.add(clienteDTO.convertToDto(cliente.get(i)));
 		}
 		
 		return lista;
@@ -91,15 +88,6 @@ public class ClienteDTO implements Dto<ClienteDTO,Cliente>{
 
 	public void setNumeroRg(Long numeroRg) {
 		this.numeroRg = numeroRg;
-	}
-
-	public String getNomeOficina() {
-		return nomeOficina;
-	}
-
-	public void setOficina(Oficina oficina) {
-		
-		this.nomeOficina = oficina.getNomeOficina();
 	}
 
 	public LocalDate getDataNascimento() {

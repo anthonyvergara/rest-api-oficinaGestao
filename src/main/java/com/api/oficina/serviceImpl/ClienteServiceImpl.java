@@ -1,5 +1,6 @@
 package com.api.oficina.serviceImpl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,14 +30,15 @@ public class ClienteServiceImpl implements ClienteService{
 	@Override
 	public List<ClienteDTO> listAll() {
 		List<Cliente> cliente = (List<Cliente>) this.clienteRepository.findAll();
-		
+		Collections.sort(cliente);
 		return dto.listToDto(cliente);
 	}
 
 	@Override
 	public ClienteDTO save(Cliente cliente, Long idOficina) {
 		
-		Optional<Oficina> findOficina = this.oficinaRepository.findById(idOficina);
+		Optional<Oficina> findOficina = Optional.of(this.oficinaRepository.findById(idOficina)
+				.orElseThrow(()-> new IllegalArgumentException("Oficina não existe!")));
 		
 		if(findOficina.isEmpty()) {
 			throw new RuntimeException();
