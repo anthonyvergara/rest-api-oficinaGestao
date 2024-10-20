@@ -23,32 +23,35 @@ import com.api.oficina.service.TelefoneService;
 @RequestMapping(value = "/oficina/pessoa/telefone")
 public class TelefoneController {
 	
-	@Autowired
-	private TelefoneService telefoneService;
+	private final TelefoneService TELEFONE_SERVICE;
+	
+	public TelefoneController(TelefoneService telefoneService) {
+		this.TELEFONE_SERVICE = telefoneService;
+	}
 	
 	@GetMapping(value = "")
 	public ResponseEntity<List<Telefone>> listAll(){
-		return new ResponseEntity<List<Telefone>>(this.telefoneService.listAll(),HttpStatus.OK);
+		return new ResponseEntity<List<Telefone>>(this.TELEFONE_SERVICE.listAll(),HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "{idPessoa}")
 	public ResponseEntity<List<Telefone>> listById(@PathVariable(value = "idPessoa") Long idPessoa){
-		return new ResponseEntity<List<Telefone>>(this.telefoneService.listById(idPessoa),HttpStatus.OK);
+		return new ResponseEntity<List<Telefone>>(this.TELEFONE_SERVICE.listById(idPessoa),HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/pessoa/{idPessoa}")
 	public ResponseEntity<Telefone> save(@RequestBody Telefone Telefone, @PathVariable(value = "idPessoa") Long idPessoa){
-		return new ResponseEntity<Telefone>(this.telefoneService.save(Telefone, idPessoa), HttpStatus.OK);
+		return new ResponseEntity<Telefone>(this.TELEFONE_SERVICE.save(Telefone, idPessoa), HttpStatus.OK);
 	}
 	
 	@PutMapping(value = "")
 	public ResponseEntity<Telefone> update(@RequestBody Telefone telefone){
-		return new ResponseEntity<Telefone>(this.telefoneService.update(telefone),HttpStatus.OK);
+		return new ResponseEntity<Telefone>(this.TELEFONE_SERVICE.update(telefone),HttpStatus.OK);
 	}
 	
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<String> delete(@PathVariable(value = "id") Long id){
-		this.telefoneService.deleteById(id);
+		this.TELEFONE_SERVICE.deleteById(id);
 		return ResponseEntity.ok().build();
 	}
 	

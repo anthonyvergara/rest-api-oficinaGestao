@@ -23,13 +23,11 @@ public class ParcelaServiceImpl implements ParcelaService{
 	public final ParcelaRepository PARCELAMENTO_REPOSITORY;
 	private final OrdemServicoRepository ORDEM_SERVICO_REPOSITORY;
 	private final StatusOrdemServicoImpl STATUS_ORDEM_SERVICO;
-	private final Parcelas PARCELAS;
 
-	public ParcelaServiceImpl(ParcelaRepository parcelamentoRepository, OrdemServicoRepository ordemServicoRepository, Parcelas parcelas, 
+	public ParcelaServiceImpl(ParcelaRepository parcelamentoRepository, OrdemServicoRepository ordemServicoRepository,
 			StatusOrdemServicoImpl statusOrdemServico) {
 		this.PARCELAMENTO_REPOSITORY = parcelamentoRepository;
 		this.ORDEM_SERVICO_REPOSITORY =  ordemServicoRepository;
-		this.PARCELAS = parcelas;
 		this.STATUS_ORDEM_SERVICO = statusOrdemServico;
 	}
 	
@@ -87,8 +85,8 @@ public class ParcelaServiceImpl implements ParcelaService{
 	}
 	
 	private List<Parcela> gerarParcelamento(OrdemServico ordemServico, int numeroParcelas){
-		List<Double> valorParcelas = this.PARCELAS.calcularParcela(ordemServico, new CalculoParcelamentoSemJuros(numeroParcelas));
-		List<LocalDate> datasParcelas = this.PARCELAS.calcularDatas(LocalDate.now(), ordemServico.getTipoPagamento(), numeroParcelas);
+		List<Double> valorParcelas = Parcelas.calcularParcela(ordemServico, new CalculoParcelamentoSemJuros(numeroParcelas));
+		List<LocalDate> datasParcelas = Parcelas.calcularDatas(LocalDate.now(), ordemServico.getTipoPagamento(), numeroParcelas);
 		
 		List<Parcela> listaParcelas = new ArrayList<Parcela>();
 		

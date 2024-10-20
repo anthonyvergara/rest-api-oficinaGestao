@@ -16,13 +16,16 @@ import com.api.oficina.service.OficinaEnderecoService;
 @Service
 public class OficinaEnderecoImpl implements OficinaEnderecoService{
 	
-	@Autowired
-	private OficinaEnderecoRepo enderecoRepository;
+	private OficinaEnderecoRepo ENDERECO_REPOSITORY;
+	
+	public OficinaEnderecoImpl(OficinaEnderecoRepo enderecoRepository) {
+		this.ENDERECO_REPOSITORY = enderecoRepository;
+	}
 
 	@Override
 	public OficinaEndereco getInfoEndereco(Long id) {
 		Collection<OficinaEndereco> end = new HashSet<>();
-		this.enderecoRepository.findAll().forEach(value -> end.add(value));
+		this.ENDERECO_REPOSITORY.findAll().forEach(value -> end.add(value));
 		
 		for(OficinaEndereco e : end) {
 			if(e.getOficina().getId().longValue() == id) {
@@ -34,36 +37,36 @@ public class OficinaEnderecoImpl implements OficinaEnderecoService{
 
 	@Override
 	public OficinaEndereco save(OficinaEndereco endereco, Long idOficina) {
-		Optional<Oficina> findOficina = this.enderecoRepository.findOficina(idOficina);
+		Optional<Oficina> findOficina = this.ENDERECO_REPOSITORY.findOficina(idOficina);
 		
 		if(findOficina.isEmpty()) {
 			throw new RuntimeException();
 		}else {
 			endereco.setOficina(findOficina.get());
-			return this.enderecoRepository.save(endereco);
+			return this.ENDERECO_REPOSITORY.save(endereco);
 		}
 	}
 
 	@Override
 	public void deleteById(Long id) {
-		Optional<OficinaEndereco> findEndereco = this.enderecoRepository.findById(id);
+		Optional<OficinaEndereco> findEndereco = this.ENDERECO_REPOSITORY.findById(id);
 		if(findEndereco.isEmpty()) {
 			throw new RuntimeException();
 		}else {
-			this.enderecoRepository.deleteById(id);
+			this.ENDERECO_REPOSITORY.deleteById(id);
 		}
 		
 	}
 
 	@Override
 	public List<OficinaEndereco> listAll() {
-		List<OficinaEndereco> lista = (List<OficinaEndereco>) this.enderecoRepository.findAll();
+		List<OficinaEndereco> lista = (List<OficinaEndereco>) this.ENDERECO_REPOSITORY.findAll();
 		return lista;
 	}
 
 	@Override
 	public OficinaEndereco update(OficinaEndereco endereco) {
-		return this.enderecoRepository.save(endereco);
+		return this.ENDERECO_REPOSITORY.save(endereco);
 	}
 
 }

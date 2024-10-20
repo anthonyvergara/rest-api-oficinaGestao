@@ -17,25 +17,25 @@ import com.api.oficina.service.OficinaService;
 @Service
 public class OficinaServiceImpl implements OficinaService{
 	
-	private final OficinaRepository oficinaRepository;
-	private final Dto dto;
+	private final OficinaRepository OFICINA_REPOSITORY;
+	private final Dto DTO;
 	
 	public OficinaServiceImpl(OficinaRepository oficinaRepository, OficinaDTO oficinaDTO) {
-		this.oficinaRepository = oficinaRepository;
-		this.dto = oficinaDTO;
+		this.OFICINA_REPOSITORY = oficinaRepository;
+		this.DTO = oficinaDTO;
 	}
 
 	@Override
 	public List<OficinaDTO> listAll() {
-		List<Oficina> lista = (List<Oficina>) this.oficinaRepository.findAll();
+		List<Oficina> lista = (List<Oficina>) this.OFICINA_REPOSITORY.findAll();
 		
-		return this.dto.listToDto(lista);
+		return this.DTO.listToDto(lista);
 	}
 
 	@Override
 	public OficinaDTO save(Oficina oficina, Long idDonoOficina) {
 		
-		Optional<DonoOficina> dono = Optional.of(this.oficinaRepository.findDonoOficinaById(idDonoOficina)
+		Optional<DonoOficina> dono = Optional.of(this.OFICINA_REPOSITORY.findDonoOficinaById(idDonoOficina)
 				.orElseThrow(()-> new IllegalArgumentException("Oficina não existe!")));
 		
 		if(dono.isEmpty() || oficina.getNomeOficina().isBlank()) {
@@ -44,9 +44,9 @@ public class OficinaServiceImpl implements OficinaService{
 			List<DonoOficina> listaDono = new ArrayList<DonoOficina>();
 			listaDono.add(dono.get());
 			oficina.setDonoOficina(listaDono);
-			this.oficinaRepository.save(oficina);
+			this.OFICINA_REPOSITORY.save(oficina);
 			
-			return (OficinaDTO)this.dto.convertToDto(oficina);
+			return (OficinaDTO)this.DTO.convertToDto(oficina);
 		}
 	}
 
@@ -56,15 +56,15 @@ public class OficinaServiceImpl implements OficinaService{
 		if(oficina.getNomeOficina().isBlank()) {
 			throw new RuntimeException();
 		}else {
-			this.oficinaRepository.save(oficina);
-			return (OficinaDTO)this.dto.convertToDto(oficina);
+			this.OFICINA_REPOSITORY.save(oficina);
+			return (OficinaDTO)this.DTO.convertToDto(oficina);
 		}
 	}
 
 	@Override
 	public void deleteDonoFromOficina(Long idOficina, Long idDono) {
-		Optional<Oficina> oficina = this.oficinaRepository.findById(idOficina);
-		Optional<DonoOficina> dono = this.oficinaRepository.findDonoOficinaById(idDono);
+		Optional<Oficina> oficina = this.OFICINA_REPOSITORY.findById(idOficina);
+		Optional<DonoOficina> dono = this.OFICINA_REPOSITORY.findDonoOficinaById(idDono);
 		
 		if(oficina.isEmpty() || dono.isEmpty()) {
 			throw new RuntimeException();
@@ -74,7 +74,7 @@ public class OficinaServiceImpl implements OficinaService{
 					oficina.get().getDonoOficina().remove(d);
 				}
 			}
-			this.oficinaRepository.save(oficina.get());
+			this.OFICINA_REPOSITORY.save(oficina.get());
 		}
 		
 	}

@@ -15,20 +15,20 @@ import com.api.oficina.service.DonoOficinaService;
 @Service
 public class DonoOficinaImpl implements DonoOficinaService{
 
-	private final DonoOficinaRepository donoOficina;
-	private final Dto dto;
+	private final DonoOficinaRepository DONO_OFICINA;
+	private final Dto DTO;
 	
 	public DonoOficinaImpl(DonoOficinaRepository donoOficina, DonoOficinaDTO donoOficinaDTO) {
-		this.donoOficina = donoOficina;
-		this.dto = donoOficinaDTO;
+		this.DONO_OFICINA = donoOficina;
+		this.DTO = donoOficinaDTO;
 	}
 	
 	@Override
 	public List<DonoOficinaDTO> listAll() {
 		
-		List<DonoOficina> listDTO = (List<DonoOficina>) this.donoOficina.findAll();
+		List<DonoOficina> listDTO = (List<DonoOficina>) this.DONO_OFICINA.findAll();
 		
-		return this.dto.listToDto(listDTO);
+		return this.DTO.listToDto(listDTO);
 	}
 
 	@Override
@@ -40,9 +40,9 @@ public class DonoOficinaImpl implements DonoOficinaService{
 		for(int i = 0; i < dono.getEndereco().size(); i++){
 			dono.getEndereco().get(i).setPessoa(dono);
 		}
-		donoOficina.save(dono);
+		DONO_OFICINA.save(dono);
 		
-		return (DonoOficinaDTO) this.dto.convertToDto(dono);
+		return (DonoOficinaDTO) this.DTO.convertToDto(dono);
 	}
 
 	@Override
@@ -54,18 +54,18 @@ public class DonoOficinaImpl implements DonoOficinaService{
 			dono.getEndereco().get(i).setPessoa(dono);
 		}
 		
-		this.donoOficina.save(dono);
-		return (DonoOficinaDTO) this.dto.convertToDto(dono);
+		this.DONO_OFICINA.save(dono);
+		return (DonoOficinaDTO) this.DTO.convertToDto(dono);
 	}
 
 	@Override
 	public void deleteById(Long id) {
 		
-		Optional<DonoOficina> dono = this.donoOficina.findById(id);
+		Optional<DonoOficina> dono = this.DONO_OFICINA.findById(id);
 		if(dono.isEmpty()) {
 			throw new RuntimeException();
 		}else {
-			this.donoOficina.deleteById(id);
+			this.DONO_OFICINA.deleteById(id);
 		}
 		
 	}

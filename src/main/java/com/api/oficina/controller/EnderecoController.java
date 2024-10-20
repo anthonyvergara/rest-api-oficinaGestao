@@ -21,37 +21,40 @@ import com.api.oficina.serviceImpl.EnderecoServiceImpl;
 @RequestMapping(value = "/oficina/pessoa/endereco")
 public class EnderecoController {
 	
-	@Autowired
-	private EnderecoServiceImpl enderecoService;
+	private final EnderecoServiceImpl ENDERECO_SERVICE;
+	
+	public EnderecoController(EnderecoServiceImpl enderecoService) {
+		this.ENDERECO_SERVICE = enderecoService;
+	}
 	
 	@GetMapping(value = "")
 	public ResponseEntity<List<Endereco>> listAll(){
 		
-		return new ResponseEntity<List<Endereco>>(enderecoService.listAll(), HttpStatus.OK);
+		return new ResponseEntity<List<Endereco>>(ENDERECO_SERVICE.listAll(), HttpStatus.OK);
 		
 	}
 	
 	@GetMapping(value = "/{idPessoa}")
 	public ResponseEntity<List<Endereco>> listById(@PathVariable (value = "idPessoa") Long id){
 		
-		return new ResponseEntity<List<Endereco>>(enderecoService.listById(id), HttpStatus.OK);
+		return new ResponseEntity<List<Endereco>>(ENDERECO_SERVICE.listById(id), HttpStatus.OK);
 	}
 	
 	@PostMapping(value = "/pessoa/{idPessoa}")
 	public ResponseEntity<Endereco> addEndereco(@RequestBody Endereco endereco, @PathVariable(value = "idPessoa") Long id){
 
-		return new ResponseEntity<Endereco>(this.enderecoService.save(endereco, id),HttpStatus.OK);
+		return new ResponseEntity<Endereco>(this.ENDERECO_SERVICE.save(endereco, id),HttpStatus.OK);
 	}
 	
 	@PutMapping(value = "")
 	public ResponseEntity<Endereco> update(@RequestBody Endereco endereco){
 		
-		return new ResponseEntity<Endereco>(this.enderecoService.update(endereco),HttpStatus.OK);
+		return new ResponseEntity<Endereco>(this.ENDERECO_SERVICE.update(endereco),HttpStatus.OK);
 	}
 	
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<String> delete(@PathVariable(value = "id") Long id){
-		enderecoService.deleteById(id);
+		ENDERECO_SERVICE.deleteById(id);
 		return ResponseEntity.ok().build();
 	}
 }

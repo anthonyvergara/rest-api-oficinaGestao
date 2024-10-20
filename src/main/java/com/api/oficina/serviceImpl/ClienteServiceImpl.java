@@ -17,27 +17,27 @@ import com.api.oficina.service.ClienteService;
 @Service
 public class ClienteServiceImpl implements ClienteService{
 	
-	private final OficinaRepository oficinaRepository;
-	private final ClienteRepository clienteRepository;
-	private final Dto dto;
+	private final OficinaRepository OFICINA_REPOSITORY;
+	private final ClienteRepository CLIENTE_REPOSITORY;
+	private final Dto DTO;
 	
 	public ClienteServiceImpl(OficinaRepository oficina, ClienteRepository clienteRepository, ClienteDTO clienteDTO) {
-		this.oficinaRepository = oficina;
-		this.clienteRepository = clienteRepository;
-		this.dto = clienteDTO;
+		this.OFICINA_REPOSITORY = oficina;
+		this.CLIENTE_REPOSITORY = clienteRepository;
+		this.DTO = clienteDTO;
 	}
 	
 	@Override
 	public List<ClienteDTO> listAll() {
-		List<Cliente> cliente = (List<Cliente>) this.clienteRepository.findAll();
+		List<Cliente> cliente = (List<Cliente>) this.CLIENTE_REPOSITORY.findAll();
 		Collections.sort(cliente);
-		return dto.listToDto(cliente);
+		return DTO.listToDto(cliente);
 	}
 
 	@Override
 	public ClienteDTO save(Cliente cliente, Long idOficina) {
 		
-		Optional<Oficina> findOficina = Optional.of(this.oficinaRepository.findById(idOficina)
+		Optional<Oficina> findOficina = Optional.of(this.OFICINA_REPOSITORY.findById(idOficina)
 				.orElseThrow(()-> new IllegalArgumentException("Oficina não existe!")));
 		
 		if(findOficina.isEmpty()) {
@@ -53,18 +53,18 @@ public class ClienteServiceImpl implements ClienteService{
 			}
 		}
 		
-		this.clienteRepository.save(cliente);
-		return (ClienteDTO) dto.convertToDto(cliente);
+		this.CLIENTE_REPOSITORY.save(cliente);
+		return (ClienteDTO) DTO.convertToDto(cliente);
 	}
 
 	@Override
 	public ClienteDTO findById(Long id) {
 		
-		Optional<Cliente> find = this.clienteRepository.findById(id);
+		Optional<Cliente> find = this.CLIENTE_REPOSITORY.findById(id);
 		if(find.isEmpty()) {
 			throw new RuntimeException();
 		}else {
-			return (ClienteDTO) dto.convertToDto(find.get());
+			return (ClienteDTO) DTO.convertToDto(find.get());
 		}
 		
 	}
@@ -78,19 +78,19 @@ public class ClienteServiceImpl implements ClienteService{
 		for(int i = 0; i<cliente.getEndereco().size(); i++) {
 			cliente.getEndereco().get(i).setPessoa(cliente);
 		}
-		this.clienteRepository.save(cliente);
+		this.CLIENTE_REPOSITORY.save(cliente);
 		
-		return (ClienteDTO) dto.convertToDto(cliente);
+		return (ClienteDTO) DTO.convertToDto(cliente);
 	}
 
 	@Override
 	public void deleteById(Long id) {
 		
-		Optional<Cliente> findCliente = this.clienteRepository.findById(id);
+		Optional<Cliente> findCliente = this.CLIENTE_REPOSITORY.findById(id);
 		if(findCliente.isEmpty()) {
 			throw new RuntimeException();
 		}else {
-			this.clienteRepository.deleteById(id);
+			this.CLIENTE_REPOSITORY.deleteById(id);
 		}
 		
 	}

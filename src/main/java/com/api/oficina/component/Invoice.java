@@ -7,10 +7,9 @@ import org.springframework.stereotype.Component;
 import com.api.oficina.model.DetalheServico;
 import com.api.oficina.service.CalculoServico;
 
-@Component
 public class Invoice {
 	
-	public double calcularServico(List<DetalheServico> detalheServico, CalculoServico calculoServico) {
+	public static double calcularServico(List<DetalheServico> detalheServico, CalculoServico calculoServico) {
 		
 		double valorTotal = calculoServico.calcular(detalheServico);
 		

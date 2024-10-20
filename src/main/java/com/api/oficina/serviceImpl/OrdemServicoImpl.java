@@ -36,15 +36,13 @@ public class OrdemServicoImpl implements OrdemServicoService{
 	private final StatusOrdemServicoImpl STATUS_ORDEM_SERVICO;
 	private final ParcelaServiceImpl PARCELA_SERVICE;
 	
-	private final Invoice INVOICE;
 	
 	public OrdemServicoImpl(OrdemServicoRepository ordemServicoRepository, ClienteRepository clienteRepository, OficinaRepository oficinaRepository,
-			Invoice invoice, DetalheServicoImpl detalheServico, PagamentoServiceImpl pagamentoService,
+			 DetalheServicoImpl detalheServico, PagamentoServiceImpl pagamentoService,
 			 StatusOrdemServicoImpl statusOrdemServico, ParcelaServiceImpl parcelaService) {
 		this.ORDEM_SERVICO_REPOSITORY = ordemServicoRepository;
 		this.CLIENTE_REPOSITORY = clienteRepository;
 		this.OFICINA_REPOSITORY = oficinaRepository;
-		this.INVOICE = invoice;
 		this.DETALHE_SERVICO_SERVICE = detalheServico;
 		this.PAGAMENTO_SERVICE = pagamentoService;
 		this.STATUS_ORDEM_SERVICO = statusOrdemServico;
@@ -105,7 +103,7 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		}
 		
 		double valorTotal = ordemServico.getValorTotal();
-		valorTotal = valorTotal + this.INVOICE.calcularServico(ordemServico.getDetalheServico(), new CalculoServicoPadrao(ordemServico.getVat()));
+		valorTotal = valorTotal + Invoice.calcularServico(ordemServico.getDetalheServico(), new CalculoServicoPadrao(ordemServico.getVat()));
 		ordemServico.setValorTotal(valorTotal);
 		
 		this.ORDEM_SERVICO_REPOSITORY.save(ordemServico);

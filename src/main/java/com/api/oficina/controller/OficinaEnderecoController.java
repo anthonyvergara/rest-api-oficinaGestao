@@ -20,28 +20,31 @@ import com.api.oficina.serviceImpl.OficinaEnderecoImpl;
 @RequestMapping(value = "/oficina/endereco")
 public class OficinaEnderecoController {
 	
-	@Autowired
-	private OficinaEnderecoImpl oficinaEndereco;
+	private final OficinaEnderecoImpl OFICINA_ENDERECO_SERVICE;
+	
+	public OficinaEnderecoController(OficinaEnderecoImpl oficinaEndereco) {
+		this.OFICINA_ENDERECO_SERVICE = oficinaEndereco;
+	}
 	
 	@GetMapping
 	public ResponseEntity<List<OficinaEndereco>> listAll(){
-		return new ResponseEntity<List<OficinaEndereco>>(this.oficinaEndereco.listAll(), HttpStatus.OK);
+		return new ResponseEntity<List<OficinaEndereco>>(this.OFICINA_ENDERECO_SERVICE.listAll(), HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/{idOficina}")
 	public ResponseEntity<OficinaEndereco> findById(@PathVariable(value = "idOficina") Long id){
-		return new ResponseEntity<OficinaEndereco>(this.oficinaEndereco.getInfoEndereco(id),HttpStatus.OK);
+		return new ResponseEntity<OficinaEndereco>(this.OFICINA_ENDERECO_SERVICE.getInfoEndereco(id),HttpStatus.OK);
 	}
 	
 	@PutMapping(value = "")
 	public ResponseEntity<OficinaEndereco> update(@RequestBody OficinaEndereco endereco){
-		return new ResponseEntity<OficinaEndereco>(this.oficinaEndereco.update(endereco), HttpStatus.OK);
+		return new ResponseEntity<OficinaEndereco>(this.OFICINA_ENDERECO_SERVICE.update(endereco), HttpStatus.OK);
 	}
 	
 	@PostMapping(value = "/{idOficina}")
 	public ResponseEntity<OficinaEndereco> save(@RequestBody OficinaEndereco endereco,
 												@PathVariable(value = "idOficina") Long id ){
-		return new ResponseEntity<OficinaEndereco>(this.oficinaEndereco.save(endereco, id), HttpStatus.OK);
+		return new ResponseEntity<OficinaEndereco>(this.OFICINA_ENDERECO_SERVICE.save(endereco, id), HttpStatus.OK);
 	}
 
 }

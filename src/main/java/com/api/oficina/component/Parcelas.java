@@ -16,17 +16,16 @@ import com.api.oficina.model.Parcela;
 import com.api.oficina.modelEnum.TipoPagamento;
 import com.api.oficina.service.CalculoParcelamento;
 
-@Component
 public class Parcelas {
 	
-	public List<Double> calcularParcela(OrdemServico ordemServico, CalculoParcelamento calculoParcelamento){
+	public static List<Double> calcularParcela(OrdemServico ordemServico, CalculoParcelamento calculoParcelamento){
 		
 		List<Double> valorParcelas = calculoParcelamento.calcularParcelamento(ordemServico);
 		
 		return valorParcelas;
 	}
 	
-	public List<LocalDate> calcularDatas (LocalDate dataPrimeiraParcela, TipoPagamento tipoPagamento, int quantidadeParcelas){
+	public static List<LocalDate> calcularDatas (LocalDate dataPrimeiraParcela, TipoPagamento tipoPagamento, int quantidadeParcelas){
 		
 		List<LocalDate> datas = new ArrayList<LocalDate>();
 		

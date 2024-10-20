@@ -14,18 +14,21 @@ import com.api.oficina.service.TelefoneService;
 @Service
 public class TelefoneServiceImpl implements TelefoneService {
 	
-	@Autowired
-	private TelefoneRepository telefoneRepository;
+	private TelefoneRepository TELEFONE_REPOSITORY;
+	
+	public TelefoneServiceImpl(TelefoneRepository telefoneRepository) {
+		this.TELEFONE_REPOSITORY = telefoneRepository;
+	}
 
 	@Override
 	public List<Telefone> listAll() {
-		List<Telefone>lista = (List<Telefone>) this.telefoneRepository.findAll();
+		List<Telefone>lista = (List<Telefone>) this.TELEFONE_REPOSITORY.findAll();
 		return lista;
 	}
 
 	@Override
 	public List<Telefone> listById(Long id) {
-		List<Telefone>lista = this.telefoneRepository.listById(id);
+		List<Telefone>lista = this.TELEFONE_REPOSITORY.listById(id);
 		if(lista.isEmpty()) {
 			throw new RuntimeException();
 		}else {
@@ -35,33 +38,33 @@ public class TelefoneServiceImpl implements TelefoneService {
 
 	@Override
 	public Telefone save(Telefone telefone, Long idPessoa) {
-		Pessoa pessoa = this.telefoneRepository.findPessoaId(idPessoa);
+		Pessoa pessoa = this.TELEFONE_REPOSITORY.findPessoaId(idPessoa);
 		if(pessoa == null) {
 			throw new RuntimeException();
 		}else {
 			telefone.setPessoa(pessoa);
-			return this.telefoneRepository.save(telefone);
+			return this.TELEFONE_REPOSITORY.save(telefone);
 		}
 	}
 
 	@Override
 	public Telefone update(Telefone telefone) {
-		Optional<Telefone> tel = this.telefoneRepository.findById(telefone.getId_telefone());
+		Optional<Telefone> tel = this.TELEFONE_REPOSITORY.findById(telefone.getId_telefone());
 		if(tel.isEmpty()) {
 			throw new RuntimeException();
 		}else {
 			telefone.setPessoa(tel.get().getPessoa());
-			return this.telefoneRepository.save(telefone);
+			return this.TELEFONE_REPOSITORY.save(telefone);
 		}
 	}
 
 	@Override
 	public void deleteById(Long id) {
-		Optional<Telefone>findId = this.telefoneRepository.findById(id);
+		Optional<Telefone>findId = this.TELEFONE_REPOSITORY.findById(id);
 		if(findId.isEmpty()) {
 			throw new RuntimeException();
 		}else {
-			this.telefoneRepository.deleteById(id);
+			this.TELEFONE_REPOSITORY.deleteById(id);
 		}
 
 	}

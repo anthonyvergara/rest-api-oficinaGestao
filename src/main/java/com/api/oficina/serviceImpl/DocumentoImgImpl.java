@@ -34,17 +34,17 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 @Service
 public class DocumentoImgImpl implements DocumentoImgService{
 
-	private final S3Client s3Client;
-	private final ClienteRepository clienteRepository;
-	private final DocumentoImgRepository documentoRepository;
+	private final S3Client S3_CLIENT;
+	private final ClienteRepository CLIENTE_REPOSITORY;
+	private final DocumentoImgRepository DOCUMENTO_REPOSITORY;
 	
 	@Value("${aws.s3.bucket.name}")
 	private String bucketName;
     
     public DocumentoImgImpl(S3Client s3Client, ClienteRepository clienteRepository, DocumentoImgRepository documentoRepository) {
-    	this.s3Client = s3Client;
-    	this.clienteRepository = clienteRepository;
-    	this.documentoRepository = documentoRepository;
+    	this.S3_CLIENT = s3Client;
+    	this.CLIENTE_REPOSITORY = clienteRepository;
+    	this.DOCUMENTO_REPOSITORY = documentoRepository;
     }
 	
 	@Override
@@ -55,7 +55,7 @@ public class DocumentoImgImpl implements DocumentoImgService{
 				.bucket(bucketName)
 				.build();
 		
-		ListObjectsResponse res = s3Client.listObjects(objects);
+		ListObjectsResponse res = S3_CLIENT.listObjects(objects);
 		List<S3Object> listObjects = res.contents();
 		
 		for(S3Object docs : listObjects) {
@@ -70,7 +70,7 @@ public class DocumentoImgImpl implements DocumentoImgService{
 	@Override
 	public List<String> save(List<MultipartFile> file, Long id) {
 		
-		Optional<Cliente> cliente = this.clienteRepository.findById(id);
+		Optional<Cliente> cliente = this.CLIENTE_REPOSITORY.findById(id);
 		
 		List<String> keys = new ArrayList();
 		
@@ -82,7 +82,7 @@ public class DocumentoImgImpl implements DocumentoImgService{
 					DocumentoImg doc = new DocumentoImg();
 					doc.setKey(fileUrlKey);
 					doc.setCliente(cliente.get());
-					this.documentoRepository.save(doc);
+					this.DOCUMENTO_REPOSITORY.save(doc);
 					System.out.println("save: "+fileUrlKey);
                     return fileUrlKey;
 				});
@@ -105,7 +105,7 @@ public class DocumentoImgImpl implements DocumentoImgService{
 		String contentType = file.getContentType();
 		
 		try (InputStream fileInput = file.getInputStream()){
-			s3Client.putObject(PutObjectRequest.builder()
+			S3_CLIENT.putObject(PutObjectRequest.builder()
 					.bucket(bucketName)
 					.key(key)
 					.contentType("contentType")
@@ -124,7 +124,7 @@ public class DocumentoImgImpl implements DocumentoImgService{
 		String key = "81b026b1-b5f6-430b-89cd-98a1a185c5c2";
 		GetObjectRequest s3 = GetObjectRequest.builder().bucket(bucketName).key(key).build();
 		
-		ResponseBytes<GetObjectResponse> objectResponse = s3Client.getObjectAsBytes(s3);	
+		ResponseBytes<GetObjectResponse> objectResponse = S3_CLIENT.getObjectAsBytes(s3);	
 		
 		return objectResponse.asByteArray();
 	}

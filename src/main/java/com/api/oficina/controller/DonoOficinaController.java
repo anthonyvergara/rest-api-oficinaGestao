@@ -24,33 +24,33 @@ import jakarta.validation.Valid;
 @RequestMapping(value = "/oficina/dono")
 public class DonoOficinaController {
 	
-	private final DonoOficinaImpl donoOficinaService;
+	private final DonoOficinaImpl DONO_OFICINA_SERVICE;
 	
 	public DonoOficinaController(DonoOficinaImpl donoOficinaService) {
-		this.donoOficinaService = donoOficinaService;
+		this.DONO_OFICINA_SERVICE = donoOficinaService;
 	}
 
 	
 	@GetMapping(value = "", produces = "application/json")
 	public ResponseEntity<List<DonoOficinaDTO>> listAll(){
-		return new ResponseEntity<>(this.donoOficinaService.listAll(), HttpStatus.OK);
+		return new ResponseEntity<>(this.DONO_OFICINA_SERVICE.listAll(), HttpStatus.OK);
 	}
 	
 	@PutMapping(value = "")
 	public ResponseEntity<DonoOficinaDTO> updateDados(@RequestBody @Valid DonoOficina dono){
 		
-		return ResponseEntity.ok().body(donoOficinaService.updateDados(dono));
+		return ResponseEntity.ok().body(DONO_OFICINA_SERVICE.updateDados(dono));
 	}
 	
 	@PostMapping(value = "")
 	public ResponseEntity<DonoOficinaDTO> saveDados(@RequestBody @Valid DonoOficina dono){
 		
-		return ResponseEntity.ok().body(donoOficinaService.save(dono));
+		return ResponseEntity.ok().body(DONO_OFICINA_SERVICE.save(dono));
 	}
 	
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<String> delete(@PathVariable("id") Long id){
-		this.donoOficinaService.deleteById(id);
+		this.DONO_OFICINA_SERVICE.deleteById(id);
 		return ResponseEntity.ok().build();
 	}
 
