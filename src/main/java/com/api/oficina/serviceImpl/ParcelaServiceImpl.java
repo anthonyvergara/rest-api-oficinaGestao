@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.api.oficina.component.Parcelas;
 import com.api.oficina.model.OrdemServico;
 import com.api.oficina.model.Parcela;
-import com.api.oficina.modelEnum.StatusParcela;
+import com.api.oficina.modelEnum.Status;
 import com.api.oficina.repository.OrdemServicoRepository;
 import com.api.oficina.repository.ParcelaRepository;
 import com.api.oficina.service.ParcelaService;
@@ -73,12 +73,12 @@ public class ParcelaServiceImpl implements ParcelaService{
 		
 		OrdemServico ordemServico = parcelasExistentes.get().get(0).getOrdemServico();
 		
-		int quantidadeParcelasPendentes = (int) parcelasExistentes.get().stream().filter(parcela -> parcela.getStatusParcela() != StatusParcela.PAGO).count();
+		int quantidadeParcelasPendentes = (int) parcelasExistentes.get().stream().filter(parcela -> parcela.getStatusParcela() != Status.PAGO).count();
 		
 		quantidadeParcelas =  quantidadeParcelas == 0 ? quantidadeParcelasPendentes : quantidadeParcelas;
 		
 		parcelasExistentes.get().stream()
-			.filter(parcela -> parcela.getStatusParcela() != StatusParcela.PAGO)
+			.filter(parcela -> parcela.getStatusParcela() != Status.PAGO)
 			.forEach(this.PARCELAMENTO_REPOSITORY::delete);
 		
 		novaListaParcelas = gerarParcelamento(ordemServico, quantidadeParcelas);
@@ -96,7 +96,7 @@ public class ParcelaServiceImpl implements ParcelaService{
 			Parcela parcela = new Parcela();
 			parcela.setDataVencimento(datasParcelas.get(i));
 			parcela.setValorParcela(valorParcelas.get(i));
-			parcela.setStatusParcela(StatusParcela.PENDENTE);
+			parcela.setStatusParcela(Status.AGENDADO);
 			parcela.setOrdemServico(ordemServico);
 			this.PARCELAMENTO_REPOSITORY.save(parcela);
 			listaParcelas.add(parcela);

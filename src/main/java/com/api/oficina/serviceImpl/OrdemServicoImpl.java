@@ -15,7 +15,7 @@ import com.api.oficina.model.Oficina;
 import com.api.oficina.model.OrdemServico;
 import com.api.oficina.model.Pagamento;
 import com.api.oficina.model.StatusOrdemServico;
-import com.api.oficina.modelEnum.StatusOS;
+import com.api.oficina.modelEnum.Status;
 import com.api.oficina.repository.ClienteRepository;
 import com.api.oficina.repository.OficinaRepository;
 import com.api.oficina.repository.OrdemServicoRepository;
@@ -88,7 +88,7 @@ public class OrdemServicoImpl implements OrdemServicoService{
 	
 	private void verificarParcelamento(OrdemServico ordemServico) {
 		
-		if(! ordemServico.getParcela().isEmpty() && ordemServico.getStatusOrdemServico().getTipoStatus() != StatusOS.PAGO) {
+		if(! ordemServico.getParcela().isEmpty() && ordemServico.getStatusOrdemServico().getTipoStatus() != Status.PAGO) {
 			this.PARCELA_SERVICE.update(ordemServico.getId(), 0);
 		}
 		else if(ordemServico.getParcela().isEmpty() && ordemServico.getQuantidadeParcelas() > 0) {

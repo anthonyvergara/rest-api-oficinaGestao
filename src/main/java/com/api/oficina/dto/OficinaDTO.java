@@ -8,9 +8,13 @@ import org.springframework.stereotype.Component;
 
 import com.api.oficina.model.Oficina;
 
-@Component
+import lombok.Getter;
+import lombok.Setter;
+
+@Component @Setter @Getter
 public class OficinaDTO implements Dto<OficinaDTO, Oficina>{
 	
+	private Long id;
 	private String nomeOficina;
 	private Long companyNumber;
 	private Long vatNumber;
@@ -30,30 +34,6 @@ public class OficinaDTO implements Dto<OficinaDTO, Oficina>{
 			lista.add(this.convertToDto(value));
 		});
 		return lista;
-	}
-	
-	public String getNomeOficina() {
-		return nomeOficina;
-	}
-
-	public void setNomeOficina(String nomeOficina) {
-		this.nomeOficina = nomeOficina;
-	}
-
-	public Long getCompanyNumber() {
-		return companyNumber;
-	}
-
-	public void setCompanyNumber(Long companyNumber) {
-		this.companyNumber = companyNumber;
-	}
-
-	public Long getVatNumber() {
-		return vatNumber;
-	}
-
-	public void setVatNumber(Long vatNumber) {
-		this.vatNumber = vatNumber;
 	}
 	
 }

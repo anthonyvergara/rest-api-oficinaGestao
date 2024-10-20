@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import org.hibernate.annotations.ForeignKey;
 
-import com.api.oficina.modelEnum.StatusParcela;
+import com.api.oficina.modelEnum.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -49,11 +49,11 @@ public class Parcela implements Serializable{
 		this.id = id;
 	}
 
-	public StatusParcela getStatusParcela() {
-		return StatusParcela.valueOf(this.statusParcela);
+	public Status getStatusParcela() {
+		return Status.valueOf(this.statusParcela);
 	}
 
-	public void setStatusParcela(StatusParcela statusParcela) {
+	public void setStatusParcela(Status statusParcela) {
 		if(statusParcela != null) {
 			this.statusParcela = statusParcela.getCode();
 		}

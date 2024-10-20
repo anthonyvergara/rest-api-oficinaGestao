@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.api.oficina.component.Invoice;
 import com.api.oficina.model.DetalheServico;
 import com.api.oficina.model.OrdemServico;
-import com.api.oficina.modelEnum.StatusOS;
+import com.api.oficina.modelEnum.Status;
 import com.api.oficina.repository.DetalheServicoRepository;
 import com.api.oficina.repository.OrdemServicoRepository;
 import com.api.oficina.service.DetalheServicoService;
@@ -59,7 +59,7 @@ public class DetalheServicoImpl implements DetalheServicoService{
 	
 	private void verificarParcelamento(OrdemServico ordemServico) {
 		
-		if(! ordemServico.getParcela().isEmpty() && ordemServico.getStatusOrdemServico().getTipoStatus() != StatusOS.PAGO) {
+		if(! ordemServico.getParcela().isEmpty() && ordemServico.getStatusOrdemServico().getTipoStatus() != Status.PAGO) {
 			this.PARCELAMENTO_SERVICE.update(ordemServico.getId(), 0);
 		}else {
 			this.STATUS_ORDEM_SERVICO.atualizarStatus(ordemServico, ordemServico.getStatusOrdemServico());

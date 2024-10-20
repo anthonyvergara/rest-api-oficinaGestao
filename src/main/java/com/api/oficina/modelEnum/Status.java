@@ -1,28 +1,30 @@
 package com.api.oficina.modelEnum;
 
-public enum StatusParcela {
+public enum Status {
 	
-	PAGO(1),
-	PENDENTE(2),
-	ATRASADO(3);
+	ATRASADO(1),
+	PAGO(2),
+	AGENDADO(3);
 	
 	public int code;
 	
-	private StatusParcela(int code) {
+	private Status(int code) {
 		this.code = code;
 	}
-	
+
 	public int getCode() {
-		return this.code;
+		return code;
 	}
 	
-	public static StatusParcela valueOf(int code) {
-		for(StatusParcela value : StatusParcela.values()) {
+	
+	public static Status valueOf(int code) {
+		for(Status value : values()) {
 			if(value.getCode() == code) {
 				return value;
 			}
 		}
 		throw new IllegalArgumentException("Illegal code");
 	}
+	
 
 }

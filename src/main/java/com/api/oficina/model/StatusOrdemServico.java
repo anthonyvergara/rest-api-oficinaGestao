@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import org.hibernate.annotations.ForeignKey;
 
-import com.api.oficina.modelEnum.StatusOS;
+import com.api.oficina.modelEnum.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -47,8 +47,8 @@ public class StatusOrdemServico implements Serializable{
 	@OneToOne
 	private OrdemServico ordemServico;
 
-	public StatusOS getTipoStatus() {
-		return StatusOS.valueOf(tipoStatus);
+	public Status getTipoStatus() {
+		return Status.valueOf(tipoStatus);
 	}
 
 	public void setTipoStatus(Integer tipoStatus) {

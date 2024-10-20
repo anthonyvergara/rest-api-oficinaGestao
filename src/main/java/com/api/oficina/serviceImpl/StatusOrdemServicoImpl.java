@@ -12,8 +12,7 @@ import com.api.oficina.model.OrdemServico;
 import com.api.oficina.model.Pagamento;
 import com.api.oficina.model.Parcela;
 import com.api.oficina.model.StatusOrdemServico;
-import com.api.oficina.modelEnum.StatusOS;
-import com.api.oficina.modelEnum.StatusParcela;
+import com.api.oficina.modelEnum.Status;
 import com.api.oficina.repository.OrdemServicoRepository;
 import com.api.oficina.repository.PagamentoRepository;
 import com.api.oficina.repository.StatusOrdemServicoRepository;
@@ -52,14 +51,14 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 		// VERIFICA SE EXISTE PARCELAMENTOS PARA ATUALIZAR O STATUS
 		if(! ordemServico.getParcela().isEmpty())	{
 			Optional<LocalDate> proximoVencimento = ordemServico.getParcela().stream()
-					.filter(parcela -> parcela.getStatusParcela() != StatusParcela.PAGO)
+					.filter(parcela -> parcela.getStatusParcela() != Status.PAGO)
 					.map(Parcela::getDataVencimento)
 					.min(Comparator.naturalOrder());
 			
 			statusOS.setProximoVencimento(proximoVencimento.get());
 			
 			Optional<Double> valorProximaParcela = ordemServico.getParcela().stream()
-					.filter(parcela -> parcela.getStatusParcela() != StatusParcela.PAGO)
+					.filter(parcela -> parcela.getStatusParcela() != Status.PAGO)
 					.map(Parcela::getValorParcela)
 					.min(Comparator.naturalOrder());
 			
@@ -67,7 +66,7 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 			
 			
 			parcelaAtrasada = ordemServico.getParcela().stream()
-			.anyMatch(parcela -> parcela.getStatusParcela() == StatusParcela.ATRASADO);
+			.anyMatch(parcela -> parcela.getStatusParcela() == Status.ATRASADO);
 		}
 		
 		double valorTotalOrdemServico = ordemServico.getValorTotal();
@@ -89,7 +88,7 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 		
 		// VERIFICA CONDIÇOES PARA DEFINITIR O TIPO DE STATUS
 		
-		StatusOS status = saldoDevedor == 0 ? StatusOS.PAGO : parcelaAtrasada == true? StatusOS.ATRASADO : StatusOS.AGENDADO;
+		Status status = saldoDevedor == 0 ? Status.PAGO : parcelaAtrasada == true? Status.ATRASADO : Status.AGENDADO;
 		
 		statusOS.setSaldoDevedor(saldoDevedor);
 		statusOS.setTipoStatus(status.getCode());
@@ -125,7 +124,7 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 		statusOS.setSaldoDevedor(saldoDevedor);
 		
 		if(! ordemServico.getParcela().isEmpty()) {
-			StatusOS status = checarStatus(statusOS, ordemServico.getParcela());
+			Status status = checarStatus(statusOS, ordemServico.getParcela());
 			statusOS.setTipoStatus(status.getCode());
 		}
 		
@@ -137,11 +136,11 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 		return statusOS;
 	}
 	
-	private StatusOS checarStatus(StatusOrdemServico statusOS, List<Parcela> parcelamento) {
-		StatusOS status = null;
+	private Status checarStatus(StatusOrdemServico statusOS, List<Parcela> parcelamento) {
+		Status status = null;
 		
 		parcelamento = parcelamento.stream()
-				.filter(parcela -> parcela.getStatusParcela() != StatusParcela.PAGO)
+				.filter(parcela -> parcela.getStatusParcela() != Status.PAGO)
 				.toList();
 		
 		int parcelasAtrasadas = 0;
@@ -150,11 +149,11 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 				.count();
 		
 		if(statusOS.getSaldoDevedor() == 0) {
-			status = StatusOS.PAGO;
+			status = Status.PAGO;
 		}else if(parcelasAtrasadas > 0) {
-			status = StatusOS.ATRASADO;
+			status = Status.ATRASADO;
 		}else {
-			status = StatusOS.AGENDADO;
+			status = Status.AGENDADO;
 		}
 		
 		return status;
