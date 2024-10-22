@@ -2,20 +2,20 @@ package com.api.oficina.dto;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import com.api.oficina.model.Cliente;
-import com.api.oficina.model.Oficina;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Component @Setter @Getter
+@Component @Setter @Getter @NoArgsConstructor @AllArgsConstructor
 public class ClienteDTO implements Dto<ClienteDTO,Cliente>{
 	
 	private Long id;
