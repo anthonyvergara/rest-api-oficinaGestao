@@ -7,31 +7,31 @@ Este é um projeto pessoal que visa desenvolver um sistema de gestão para ofici
 Atualmente, estou focado em aprimorar minhas habilidades e conceitos em desenvolvimento de software e tecnologias associadas. O sistema está em constante aperfeiçoamento e sujeito a mudanças à medida que novas funcionalidades são adicionadas e melhorias são implementadas.
 <br>
 
-## FUNCIONALIDADES PRINCIPAIS
+## 🖥️ FUNCIONALIDADES PRINCIPAIS
 * Gerenciamento de clientes e veículos
 * Agendamento de serviços
 * Controle de histórico de atendimentos
 * Geração de relatórios e análises
 <br>
 
-## Futuro do Projeto
+## 🔮 Futuro do Projeto
 No futuro, pretendo desenvolver o front-end da aplicação, proporcionando uma interface intuitiva e amigável para os usuários. Estou animado para continuar expandindo as funcionalidades e melhorando a experiência geral.
-<br>
+
 
 |TECNOLOGIAS ATUAIS|          ☕️         |            ☕️         |              ☕️            |
 |:-----------------|:-------------------:|:---------------------:|:---------------------------:|
-|Linguagem: ||<code>JAVA</code>          |                        |                            |
-|Frameworks||<code>SPRING BOOT</code>    |<code>Hibernate</code>  |                            |
-|Banco de dados||<code>POSTGRESql</code> |<code>SQL</code>        |                            |
-|APIs||<code>AWS CLOUD</code>            |<code>JPA</code>        |<code>STREAM</code>         |
-|Ferramentas||<code>MAVE</code>          |<code>MAVEN</code>      |<code>GIT</code>            |
-|Arquitetura||<code>SWAGGER</code>       |<code>REST</code>       |<code>microsservicos</code> |
-|Metodologias||<code>JUNIT</code>        |<code>POO</code>        |<code>CLEAN CODE</code>     |
-|Testes Unitários||<code>MOCKITO</code>  |<code>JUNIT</code>      |<code>MOCKITO</code>        |
-|Documentação||<code></code>             |<code>JAVADOC</code>    |<code>SWAGGER</code>        |
+|Linguagem: | <code>JAVA</code>          |                        |                            |
+|Frameworks| <code>SPRING BOOT</code>    |<code>Hibernate</code>  |                            |
+|Banco de dados| <code>POSTGRESql</code> |<code>SQL</code>        |                            |
+|APIs| <code>AWS CLOUD</code>            |<code>JPA</code>        |<code>STREAM</code>         |
+|Ferramentas| <code>MAVEN</code>         |<code>GIT</code>        |<code>POSTMAN</code>        |
+|Arquitetura|<code>microsservicos</code> |<code>REST</code>       |                            |
+|Metodologias| <code>CLEAN CODE</code>   |<code>POO</code>        |                            |
+|Testes Unitários| <code>MOCKITO</code>  |<code>JUNIT</code>      |                            |
+|Documentação| <code>JAVADOC</code>      |<code>SWAGGER</code>    |                            |
 <br>
 
-### DIAGRAMA UML
+### 📈 DIAGRAMA UML
 Caso queira ver o Diagrama UML [clique aqui](https://whimsical.com/oficina-Hxn7YQc8Y8spF1ngAmHphM). (Desatualizado, estou providenciando um novo.)
 <br>
 
