@@ -82,7 +82,7 @@ public class ClienteServiceImpl implements ClienteService{
 		
 		return (ClienteDTO) DTO.convertToDto(cliente);
 	}
-
+	
 	@Override
 	public void deleteById(Long id) {
 		
