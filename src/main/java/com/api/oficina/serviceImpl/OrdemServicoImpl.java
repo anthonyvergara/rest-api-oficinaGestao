@@ -40,6 +40,7 @@ public class OrdemServicoImpl implements OrdemServicoService{
 	public OrdemServicoImpl(OrdemServicoRepository ordemServicoRepository, ClienteRepository clienteRepository, OficinaRepository oficinaRepository,
 			 DetalheServicoImpl detalheServico, PagamentoServiceImpl pagamentoService,
 			 StatusOrdemServicoImpl statusOrdemServico, ParcelaServiceImpl parcelaService) {
+		
 		this.ORDEM_SERVICO_REPOSITORY = ordemServicoRepository;
 		this.CLIENTE_REPOSITORY = clienteRepository;
 		this.OFICINA_REPOSITORY = oficinaRepository;

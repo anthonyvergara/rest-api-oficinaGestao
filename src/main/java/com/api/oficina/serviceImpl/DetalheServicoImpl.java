@@ -59,7 +59,7 @@ public class DetalheServicoImpl implements DetalheServicoService{
 		if(! ordemServico.getParcela().isEmpty() && ordemServico.getStatusOrdemServico().getTipoStatus() != Status.PAGO) {
 			this.PARCELAMENTO_SERVICE.update(ordemServico.getId(), 0);
 		}else {
-			this.STATUS_ORDEM_SERVICO.atualizarStatus(ordemServico, ordemServico.getStatusOrdemServico());
+			this.STATUS_ORDEM_SERVICO.update(ordemServico.getStatusOrdemServico());
 		}
 		/*else if(ordemServico.getParcelamento().isEmpty() && ordemServico.getQuantidadeParcelas() > 0) {
 			this.PARCELAMENTO_SERVICE.criarParcela(ordemServico.getId(), ordemServico.getQuantidadeParcelas());

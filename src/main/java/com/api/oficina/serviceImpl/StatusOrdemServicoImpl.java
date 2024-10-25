@@ -34,18 +34,25 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 		this.PAGAMENTO_REPOSITORY = pagamentoRepository;
 	}
 	
+	@Override
 	public StatusOrdemServico save(Long idOrdemServico) {
 		
-		Optional<OrdemServico> ordemServico = this.ORDEM_SERVICO_REPOSITORY.findById(idOrdemServico);
+		Optional<OrdemServico> ordemServico = Optional.of(this.ORDEM_SERVICO_REPOSITORY.findById(idOrdemServico)
+				.orElseThrow(()-> new IllegalArgumentException("Ordem Servico não existe!")));
 		
 		StatusOrdemServico statusOS = new StatusOrdemServico();
 		
-		statusOS = this.atualizarStatus(ordemServico.get(), statusOS);
+		statusOS.setOrdemServico(ordemServico.get());
 		
-		 return statusOS;
+		statusOS = this.update(statusOS);
+		
+		return statusOS;
 	}
 	
-	public StatusOrdemServico atualizarStatus(OrdemServico ordemServico, StatusOrdemServico statusOS) {
+	@Override
+	public StatusOrdemServico update(StatusOrdemServico statusOS) {
+		OrdemServico ordemServico = statusOS.getOrdemServico();
+		
 		boolean parcelaAtrasada = false;
 		
 		// VERIFICA SE EXISTE PARCELAMENTOS PARA ATUALIZAR O STATUS
@@ -97,66 +104,6 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 		this.STATUS_SERVICO_REPOSITORY.save(statusOS);
 				
 		return statusOS;
-	}
-
-	@Override
-	public StatusOrdemServico atualizarStatusOS(StatusOrdemServico statusOS) {
-		
-		OrdemServico ordemServico = statusOS.getOrdemServico();
-		
-		List<Pagamento> pagamentos = ordemServico.getPagamento() != null ? ordemServico.getPagamento() : null;
-		
-		int parcelaAtrasada = 0;
-		
-		if(!pagamentos.isEmpty()) {
-			Optional<LocalDateTime> ultimoPagamento = pagamentos.stream()
-					.map(Pagamento::getDataPagamento)
-					.min(Comparator.naturalOrder());
-			
-			statusOS.setUltimoPagamento(ultimoPagamento.get());
-		}
-		//statusOS.setProximoVencimento(null);
-		
-		double valoresPagos = ordemServico.getPagamento().stream().mapToDouble(valor -> valor.getValorPago()).sum();
-		double valorTotal = ordemServico.getValorTotal();
-		double saldoDevedor = valorTotal - valoresPagos;
-		
-		statusOS.setSaldoDevedor(saldoDevedor);
-		
-		if(! ordemServico.getParcela().isEmpty()) {
-			Status status = checarStatus(statusOS, ordemServico.getParcela());
-			statusOS.setTipoStatus(status.getCode());
-		}
-		
-		//statusOS.setTipoStatus(null);
-		//statusOS.setValorProximaParcela(0);
-		
-		this.STATUS_SERVICO_REPOSITORY.save(statusOS);
-		
-		return statusOS;
-	}
-	
-	private Status checarStatus(StatusOrdemServico statusOS, List<Parcela> parcelamento) {
-		Status status = null;
-		
-		parcelamento = parcelamento.stream()
-				.filter(parcela -> parcela.getStatusParcela() != Status.PAGO)
-				.toList();
-		
-		int parcelasAtrasadas = 0;
-		parcelasAtrasadas = (int)parcelamento.stream()
-				.filter(parcela -> parcela.getDataVencimento().isBefore(LocalDate.now()))
-				.count();
-		
-		if(statusOS.getSaldoDevedor() == 0) {
-			status = Status.PAGO;
-		}else if(parcelasAtrasadas > 0) {
-			status = Status.ATRASADO;
-		}else {
-			status = Status.AGENDADO;
-		}
-		
-		return status;
 	}
 	
 }

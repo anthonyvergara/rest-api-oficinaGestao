@@ -100,7 +100,7 @@ public class ParcelaServiceImpl implements ParcelaService{
 			listaParcelas.add(parcela);
 		}
 		// before it was atualizarStatusOS
-		this.STATUS_ORDEM_SERVICO.atualizarStatus(ordemServico, ordemServico.getStatusOrdemServico());
+		this.STATUS_ORDEM_SERVICO.update(ordemServico.getStatusOrdemServico());
 		
 		return listaParcelas;
 	}

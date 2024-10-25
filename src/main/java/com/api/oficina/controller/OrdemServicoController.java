@@ -50,10 +50,10 @@ public class OrdemServicoController {
 		return ResponseEntity.ok().build();
 	}
 	
-	@DeleteMapping
-	public ResponseEntity<String> deleteAll(){
-		this.ORDEM_SERVICO.deleteAll();
-		return ResponseEntity.ok().build();
-	}
+//	@DeleteMapping
+//	public ResponseEntity<String> deleteAll(){
+//		this.ORDEM_SERVICO.deleteAll();
+//		return ResponseEntity.ok().build();
+//	}
 	
 }
