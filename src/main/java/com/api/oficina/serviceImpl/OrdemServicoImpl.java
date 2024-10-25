@@ -55,7 +55,9 @@ public class OrdemServicoImpl implements OrdemServicoService{
 	}
 	
 	public OrdemServico listById(Long id) {
-		Optional<OrdemServico> findById = this.ORDEM_SERVICO_REPOSITORY.findById(id);
+		Optional<OrdemServico> findById = Optional.of(this.ORDEM_SERVICO_REPOSITORY.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("Ordem Servico não existe!")));
+		
 		return findById.get();
 	}
 	
@@ -113,20 +115,22 @@ public class OrdemServicoImpl implements OrdemServicoService{
 
 	@Override
 	public void delete(Long id) {
-		Optional<OrdemServico> ordemServico = this.ORDEM_SERVICO_REPOSITORY.findById(id);
+		OrdemServico ordemServico = this.listById(id);
 		
-		LocalDate dataOrdem = ordemServico.get().getDataInicio().toLocalDate();
+		LocalDate dataDeCriacaoDaOrdemServico = ordemServico.getDataInicio().toLocalDate();
 		
-		LocalDate dateNow = LocalDate.now();
+		LocalDate dataDeSolicitacaoDeRemocao = LocalDate.now();
 		
-		Period periodo = Period.between(dataOrdem, dateNow);
+		Period periodoEntreDatas = Period.between(dataDeCriacaoDaOrdemServico, dataDeSolicitacaoDeRemocao);
 		
-		if(periodo.getDays() > 1) { //SE CRIAÇAO DA ORDEM FOR MAIOR QUE 1 DIA - HAVERÁ IMPEDIMENTO DE DELETE
-			System.out.println("Ordem criada a "+periodo.getDays()+" dias.");
+		if(periodoEntreDatas.getDays() > 1) { //SE CRIAÇAO DA ORDEM FOR MAIOR QUE 1 DIA - HAVERÁ IMPEDIMENTO DE DELETE
+			throw new RuntimeException("[ALERTA] Não foi possivel remover a Ordem de Servico. Por favor, entre em contato com um Administrador!");
+		}else {
+			this.ORDEM_SERVICO_REPOSITORY.deleteById(id);
 		}
 	}
 	
-	public void deleteAll() {
+	private void deleteAll() {
 		this.ORDEM_SERVICO_REPOSITORY.deleteAll();
 	}
 	
