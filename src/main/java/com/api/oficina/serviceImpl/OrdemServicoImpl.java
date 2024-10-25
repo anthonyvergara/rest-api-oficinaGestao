@@ -71,6 +71,10 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		Optional<Oficina> oficina = Optional.of(this.OFICINA_REPOSITORY.findById(idOficina)
 				.orElseThrow(() -> new IllegalArgumentException("Oficina não existe!")));
 		
+		if(ordemServico.getQuantidadeParcelas() == 0 && ordemServico.getPagamento().isEmpty()) {
+			ordemServico.setQuantidadeParcelas(1);
+		}
+		
 		ordemServico.setCliente(cliente.get());
 		ordemServico.setOficina(oficina.get());
 		ordemServico.setInvoiceNumber(this.generateInvoiceNumber());
@@ -82,8 +86,12 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		
 		ordemServico.setDetalheServico(this.DETALHE_SERVICO_SERVICE.save(ordemServico.getId(), ordemServico.getDetalheServico()));
 		ordemServico.setPagamento(this.PAGAMENTO_SERVICE.save(ordemServico.getId(), ordemServico.getPagamento()));
-		ordemServico.setParcela(this.PARCELA_SERVICE.save(ordemServico.getId(), ordemServico.getQuantidadeParcelas()));
 		
+		if(ordemServico.getStatusOrdemServico().getTipoStatus() == Status.AGENDADO) {
+			ordemServico.setParcela(this.PARCELA_SERVICE.save(ordemServico.getId(), ordemServico.getQuantidadeParcelas()));
+		}else {
+			ordemServico.setQuantidadeParcelas(0);
+		}
 		return ordemServico;
 	}
 	
