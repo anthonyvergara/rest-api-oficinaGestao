@@ -99,7 +99,8 @@ public class ParcelaServiceImpl implements ParcelaService{
 			this.PARCELAMENTO_REPOSITORY.save(parcela);
 			listaParcelas.add(parcela);
 		}
-		// before it was atualizarStatusOS
+		ordemServico.setParcela(listaParcelas);
+		
 		this.STATUS_ORDEM_SERVICO.update(ordemServico.getStatusOrdemServico());
 		
 		return listaParcelas;

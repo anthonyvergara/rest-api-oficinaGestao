@@ -2,6 +2,7 @@ package com.api.oficina.serviceImpl;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -71,10 +72,6 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		Optional<Oficina> oficina = Optional.of(this.OFICINA_REPOSITORY.findById(idOficina)
 				.orElseThrow(() -> new IllegalArgumentException("Oficina não existe!")));
 		
-		if(ordemServico.getQuantidadeParcelas() == 0 && ordemServico.getPagamento().isEmpty()) {
-			ordemServico.setQuantidadeParcelas(1);
-		}
-		
 		ordemServico.setCliente(cliente.get());
 		ordemServico.setOficina(oficina.get());
 		ordemServico.setInvoiceNumber(this.generateInvoiceNumber());
@@ -85,25 +82,59 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		
 		
 		ordemServico.setDetalheServico(this.DETALHE_SERVICO_SERVICE.save(ordemServico.getId(), ordemServico.getDetalheServico()));
-		ordemServico.setPagamento(this.PAGAMENTO_SERVICE.save(ordemServico.getId(), ordemServico.getPagamento()));
 		
-		if(ordemServico.getStatusOrdemServico().getTipoStatus() == Status.AGENDADO) {
-			ordemServico.setParcela(this.PARCELA_SERVICE.save(ordemServico.getId(), ordemServico.getQuantidadeParcelas()));
-		}else {
-			ordemServico.setQuantidadeParcelas(0);
+		if(!ordemServico.getPagamento().isEmpty()) {
+			boolean valorPagoIgualAZero = false;
+			List<Pagamento> pagamentosComValorZero = new ArrayList<Pagamento>();
+			for(Pagamento pagamento : ordemServico.getPagamento()) {
+				if(pagamento.getValorPago() == 0) {
+					valorPagoIgualAZero = true;
+					pagamentosComValorZero.add(pagamento);
+				}
+			}
+			if(valorPagoIgualAZero == false) {
+				ordemServico.setPagamento(this.PAGAMENTO_SERVICE.save(ordemServico.getId(), ordemServico.getPagamento()));
+			}else {
+				ordemServico.getPagamento().removeAll(pagamentosComValorZero);
+			}
 		}
+		
+		validarVerificacaoCondicional(ordemServico);
+		
+		// CASO O STATUS DA ORDEM_SERVICO SEJA AGENDADO, ENTENDE-SE QUE VALOR_PAGO É 0 -- OU -- VALOR_PAGO É MENOR QUE VALOR_TOTAL_ORDEMSERVICO
+		// DEVE OCORRER O PARCELAMENTO.
+		if(ordemServico.getStatusOrdemServico().getTipoStatus() == Status.AGENDADO)
+			ordemServico.setParcela(this.PARCELA_SERVICE.save(ordemServico.getId(), ordemServico.getQuantidadeParcelas()));
+			
 		return ordemServico;
 	}
 	
-	private void verificarParcelamento(OrdemServico ordemServico) {
-		
-		if(! ordemServico.getParcela().isEmpty() && ordemServico.getStatusOrdemServico().getTipoStatus() != Status.PAGO) {
-			this.PARCELA_SERVICE.update(ordemServico.getId(), 0);
-		}
-		else if(ordemServico.getParcela().isEmpty() && ordemServico.getQuantidadeParcelas() > 0) {
-			this.PARCELA_SERVICE.save(ordemServico.getId(), ordemServico.getQuantidadeParcelas());
+	private void validarVerificacaoCondicional(OrdemServico ordemServico) {
+		// CASO QUANTIDADE DE PARCELA == 0 E VALOR_PAGAMENTO NAO EXISTA
+		// DEVE DEVE PARCELAR O VALOR NO MINIMO 1 VEZ
+		if(ordemServico.getQuantidadeParcelas() == 0 && ordemServico.getPagamento().isEmpty()) {
+			ordemServico.setQuantidadeParcelas(1);
 		}
 		
+		if(!ordemServico.getPagamento().isEmpty()) {
+			
+			// CASO O VALOR_PAGO SEJA MAIOR QUE O VALOR_TOTAL_ORDEMSERVICO
+			if(ordemServico.getPagamento().get(0).getValorPago() > ordemServico.getValorTotal()) {
+				throw new IllegalArgumentException("O valor pago não pode ser maior que o valor total");
+			}
+			
+			// CASO O PAGAMENTO SEJA MENOR QUE O VALOR_TOTAL_ORDEMSERVICO
+			// DEVE PARCELAR O RESTANTE NO MINIMO 1 VEZ
+			if(ordemServico.getPagamento().get(0).getValorPago() < ordemServico.getValorTotal() && ordemServico.getQuantidadeParcelas() == 0) {
+				ordemServico.setQuantidadeParcelas(1);
+			}
+		}
+		
+		// CASO FOI PASSADO ALGUMA QUANTIDADE DE PARCELAS, POREM O VALOR_PAGAMENTO SEJA IGUAL AO VALOR_TOTAL_ORDEMSERVICO
+		// DEVE ZERAR A QUANTIDADE DE PARCELAS.
+		if(ordemServico.getStatusOrdemServico().getTipoStatus() == Status.PAGO) {
+			ordemServico.setQuantidadeParcelas(0);
+		}
 	}
 	
 	@Override

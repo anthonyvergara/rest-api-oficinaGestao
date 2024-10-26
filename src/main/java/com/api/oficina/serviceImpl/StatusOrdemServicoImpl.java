@@ -82,10 +82,13 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 		// VERIFICA SE EXISTE PAGAMENTOS PARA ATUALIZAR O ULTIMO PAGAMENTO E SALDO DEVEDOR
 		if(! ordemServico.getPagamento().isEmpty()) {
 			Optional<LocalDateTime> ultimoPagamento = ordemServico.getPagamento().stream()
+					.filter(valores -> valores.getValorPago() > 0)
 					.map(Pagamento::getDataPagamento)
 					.min(Comparator.naturalOrder());
 			
-			statusOS.setUltimoPagamento(ultimoPagamento.get());
+			if(ultimoPagamento.isPresent()) {
+				statusOS.setUltimoPagamento(ultimoPagamento.get());
+			}
 			
 			valorTotalPagamento = ordemServico.getPagamento().stream()
 					.mapToDouble(valor -> valor.getValorPago())

@@ -34,9 +34,11 @@ public class PagamentoServiceImpl implements PagamentoService{
 				.orElseThrow(()-> new IllegalArgumentException("OrdemServico não existe!")));
 		
 		pagamentos.forEach(pagamento -> {
-			pagamento.setDataPagamento(LocalDateTime.now());
-			pagamento.setOrdemServico(ordemServico.get());
-			this.PAGAMENTO_REPOSITORY.save(pagamento);
+			if(pagamento.getValorPago() > 0) {
+				pagamento.setDataPagamento(LocalDateTime.now());
+				pagamento.setOrdemServico(ordemServico.get());
+				this.PAGAMENTO_REPOSITORY.save(pagamento);
+			}
 		});
 		
 		return pagamentos;
