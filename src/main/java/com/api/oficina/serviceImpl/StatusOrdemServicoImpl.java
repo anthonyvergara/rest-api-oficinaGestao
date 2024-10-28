@@ -84,7 +84,7 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 			Optional<LocalDateTime> ultimoPagamento = ordemServico.getPagamento().stream()
 					.filter(valores -> valores.getValorPago() > 0)
 					.map(Pagamento::getDataPagamento)
-					.min(Comparator.naturalOrder());
+					.max(Comparator.naturalOrder());
 			
 			if(ultimoPagamento.isPresent()) {
 				statusOS.setUltimoPagamento(ultimoPagamento.get());

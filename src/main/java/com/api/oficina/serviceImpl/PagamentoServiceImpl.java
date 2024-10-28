@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.api.oficina.model.OrdemServico;
 import com.api.oficina.model.Pagamento;
+import com.api.oficina.model.Parcela;
 import com.api.oficina.model.StatusOrdemServico;
 import com.api.oficina.repository.OrdemServicoRepository;
 import com.api.oficina.repository.PagamentoRepository;
@@ -40,6 +41,8 @@ public class PagamentoServiceImpl implements PagamentoService{
 			pagamento.setOrdemServico(ordemServico.get());
 			this.PAGAMENTO_REPOSITORY.save(pagamento);
 		});
+		
+		this.STATUS_ORDEM_SERVICO.update(ordemServico.get().getStatusOrdemServico());
 		
 		return pagamentos;
 	}
