@@ -32,7 +32,7 @@ public class OrdemServicoController {
 		return new ResponseEntity<List<OrdemServico>>(this.ORDEM_SERVICO.listAll(),HttpStatus.OK);
 	}
 	@GetMapping("/{id}")
-	public ResponseEntity<OrdemServico> listAll(@PathVariable(value="id") Long id){
+	public ResponseEntity<OrdemServico> listById(@PathVariable(value="id") Long id){
 		return new ResponseEntity<OrdemServico>(this.ORDEM_SERVICO.listById(id),HttpStatus.OK);
 	}
 	

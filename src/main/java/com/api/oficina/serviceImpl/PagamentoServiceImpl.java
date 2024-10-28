@@ -33,12 +33,12 @@ public class PagamentoServiceImpl implements PagamentoService{
 		Optional<OrdemServico> ordemServico = Optional.of(this.ORDEM_SERVICO_REPOSITORY.findById(idOrdemServico)
 				.orElseThrow(()-> new IllegalArgumentException("OrdemServico não existe!")));
 		
+		pagamentos.removeIf(valor -> valor.getValorPago() == 0);
+		
 		pagamentos.forEach(pagamento -> {
-			if(pagamento.getValorPago() > 0) {
-				pagamento.setDataPagamento(LocalDateTime.now());
-				pagamento.setOrdemServico(ordemServico.get());
-				this.PAGAMENTO_REPOSITORY.save(pagamento);
-			}
+			pagamento.setDataPagamento(LocalDateTime.now());
+			pagamento.setOrdemServico(ordemServico.get());
+			this.PAGAMENTO_REPOSITORY.save(pagamento);
 		});
 		
 		return pagamentos;

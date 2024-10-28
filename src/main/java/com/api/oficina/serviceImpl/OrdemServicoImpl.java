@@ -83,21 +83,7 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		
 		ordemServico.setDetalheServico(this.DETALHE_SERVICO_SERVICE.save(ordemServico.getId(), ordemServico.getDetalheServico()));
 		
-		if(!ordemServico.getPagamento().isEmpty()) {
-			boolean valorPagoIgualAZero = false;
-			List<Pagamento> pagamentosComValorZero = new ArrayList<Pagamento>();
-			for(Pagamento pagamento : ordemServico.getPagamento()) {
-				if(pagamento.getValorPago() == 0) {
-					valorPagoIgualAZero = true;
-					pagamentosComValorZero.add(pagamento);
-				}
-			}
-			if(valorPagoIgualAZero == false) {
-				ordemServico.setPagamento(this.PAGAMENTO_SERVICE.save(ordemServico.getId(), ordemServico.getPagamento()));
-			}else {
-				ordemServico.getPagamento().removeAll(pagamentosComValorZero);
-			}
-		}
+		ordemServico.setPagamento(this.PAGAMENTO_SERVICE.save(ordemServico.getId(), ordemServico.getPagamento()));
 		
 		validarVerificacaoCondicional(ordemServico);
 		
