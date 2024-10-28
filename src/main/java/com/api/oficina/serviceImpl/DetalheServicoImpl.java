@@ -67,4 +67,16 @@ public class DetalheServicoImpl implements DetalheServicoService{
 		
 	}
 
+	@Override
+	public List<DetalheServico> listByPlaca(String placa, Long idOrdemServico) {
+		List<DetalheServico> listaServicos = this.DETALHE_SERVICO_REPOSITORY.listByPlaca(placa,idOrdemServico);
+		return listaServicos;
+	}
+
+	@Override
+	public List<DetalheServico> listByIdOrdemServico(Long idOrdemServico) {
+		List<DetalheServico> listaServicos = this.DETALHE_SERVICO_REPOSITORY.listByIdOrdemServico(idOrdemServico);
+		return listaServicos;
+	}
+
 }
