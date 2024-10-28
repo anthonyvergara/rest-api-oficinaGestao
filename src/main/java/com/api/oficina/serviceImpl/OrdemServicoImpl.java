@@ -56,6 +56,7 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		return (List<OrdemServico>) this.ORDEM_SERVICO_REPOSITORY.findAll();
 	}
 	
+	@Override
 	public OrdemServico listById(Long id) {
 		Optional<OrdemServico> findById = Optional.of(this.ORDEM_SERVICO_REPOSITORY.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Ordem Servico não existe!")));
