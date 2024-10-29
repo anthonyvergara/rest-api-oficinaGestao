@@ -41,6 +41,13 @@ public class PagamentoServiceImpl implements PagamentoService{
 		
 		pagamentos.removeIf(valor -> valor.getValorPago() == 0);
 		
+		double saldoDevedor = ordemServico.get().getStatusOrdemServico().getSaldoDevedor();
+		double valorTotalPagamentos = pagamentos.stream().mapToDouble(Pagamento::getValorPago).sum();
+		
+		if(valorTotalPagamentos > saldoDevedor) {
+			throw new IllegalArgumentException("O valor total pago não pode ser maior que o saldo devedor!");
+		}
+		
 		pagamentos.forEach(pagamento -> {
 			pagamento.setDataPagamento(LocalDateTime.now());
 			pagamento.setOrdemServico(ordemServico.get());
