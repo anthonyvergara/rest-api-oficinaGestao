@@ -62,14 +62,22 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 					.map(Parcela::getDataVencimento)
 					.min(Comparator.naturalOrder());
 			
-			statusOS.setProximoVencimento(proximoVencimento.get());
+			if(proximoVencimento.isPresent()) {
+				statusOS.setProximoVencimento(proximoVencimento.get());
+			}else {
+				statusOS.setProximoVencimento(null);
+			}
 			
 			Optional<Double> valorProximaParcela = ordemServico.getParcela().stream()
 					.filter(parcela -> parcela.getStatusParcela() != Status.PAGO)
 					.map(Parcela::getValorParcela)
 					.min(Comparator.naturalOrder());
 			
-			statusOS.setValorProximaParcela(valorProximaParcela.get());
+			if(valorProximaParcela.isPresent()) {
+				statusOS.setValorProximaParcela(valorProximaParcela.get());
+			}else {
+				statusOS.setValorProximaParcela(0.0);
+			}
 			
 			
 			parcelaAtrasada = ordemServico.getParcela().stream()

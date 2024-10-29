@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.api.oficina.component.Parcelas;
 import com.api.oficina.model.OrdemServico;
 import com.api.oficina.model.Pagamento;
 import com.api.oficina.model.Parcela;
@@ -13,6 +14,9 @@ import com.api.oficina.model.StatusOrdemServico;
 import com.api.oficina.repository.OrdemServicoRepository;
 import com.api.oficina.repository.PagamentoRepository;
 import com.api.oficina.service.PagamentoService;
+import com.api.oficina.util.parcela.CalculoParcelamentoSemJuros;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class PagamentoServiceImpl implements PagamentoService{
@@ -29,6 +33,7 @@ public class PagamentoServiceImpl implements PagamentoService{
 		this.STATUS_ORDEM_SERVICO = statusOrdemServico;
 	}
 	
+	@Transactional
 	@Override
 	public List<Pagamento> save(Long idOrdemServico, List<Pagamento> pagamentos) {
 		Optional<OrdemServico> ordemServico = Optional.of(this.ORDEM_SERVICO_REPOSITORY.findById(idOrdemServico)
@@ -40,8 +45,12 @@ public class PagamentoServiceImpl implements PagamentoService{
 			pagamento.setDataPagamento(LocalDateTime.now());
 			pagamento.setOrdemServico(ordemServico.get());
 			this.PAGAMENTO_REPOSITORY.save(pagamento);
+			ordemServico.get().getPagamento().add(pagamento);
 		});
 		
+		if(!ordemServico.get().getParcela().isEmpty()) {
+			ordemServico.get().setParcela(Parcelas.debitarValorDaParcela(ordemServico.get(), pagamentos, new CalculoParcelamentoSemJuros(0)));
+		}
 		this.STATUS_ORDEM_SERVICO.update(ordemServico.get().getStatusOrdemServico());
 		
 		return pagamentos;

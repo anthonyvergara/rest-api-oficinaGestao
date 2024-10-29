@@ -12,7 +12,9 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 import com.api.oficina.model.OrdemServico;
+import com.api.oficina.model.Pagamento;
 import com.api.oficina.model.Parcela;
+import com.api.oficina.modelEnum.Status;
 import com.api.oficina.modelEnum.TipoPagamento;
 import com.api.oficina.service.CalculoParcelamento;
 
@@ -43,6 +45,28 @@ public class Parcelas {
 			
 		}
 		return datas;
+	}
+	
+	public static List<Parcela> debitarValorDaParcela(OrdemServico ordemServico, List<Pagamento> pagamento ,CalculoParcelamento calculoParcelamento){
+		List<Double> valorNovasParcelas = calculoParcelamento.debitarValorDaParcela(ordemServico, pagamento);
+		
+		List<Parcela>parcelasAtuais = ordemServico.getParcela();
+		
+		List<Parcela>novasParcelas = ordemServico.getParcela();
+		
+		for(int i = 0; i<valorNovasParcelas.size(); i++) {
+			if(parcelasAtuais.get(i).getStatusParcela() != Status.PAGO) {
+				if(valorNovasParcelas.get(i) == 0) {
+					novasParcelas.get(i).setStatusParcela(Status.PAGO);
+					continue;
+				}
+				if(valorNovasParcelas.get(i) < parcelasAtuais.get(i).getValorParcela()) {
+					novasParcelas.get(i).setValorParcela(valorNovasParcelas.get(i));
+				}
+			}
+		}
+		
+		return novasParcelas;
 	}
 
 }
