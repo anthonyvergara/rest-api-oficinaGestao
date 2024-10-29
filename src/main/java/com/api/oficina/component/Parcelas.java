@@ -3,13 +3,15 @@ package com.api.oficina.component;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collection;import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.comparator.Comparators;
 
 import com.api.oficina.model.OrdemServico;
 import com.api.oficina.model.Pagamento;
@@ -48,25 +50,30 @@ public class Parcelas {
 	}
 	
 	public static List<Parcela> debitarValorDaParcela(OrdemServico ordemServico, List<Pagamento> pagamento ,CalculoParcelamento calculoParcelamento){
-		List<Double> valorNovasParcelas = calculoParcelamento.debitarValorDaParcela(ordemServico, pagamento);
 		
-		List<Parcela>parcelasAtuais = ordemServico.getParcela();
+		List<Double> valorParcelaAtualizado = calculoParcelamento.debitarValorDaParcela(ordemServico, pagamento);
 		
-		List<Parcela>novasParcelas = ordemServico.getParcela();
+		List<Parcela> parcelasPagas = ordemServico.getParcela().stream()
+				.filter(parcela -> parcela.getStatusParcela() == Status.PAGO)
+				.collect(Collectors.toCollection(ArrayList::new));
 		
-		for(int i = 0; i<valorNovasParcelas.size(); i++) {
-			if(parcelasAtuais.get(i).getStatusParcela() != Status.PAGO) {
-				if(valorNovasParcelas.get(i) == 0) {
-					novasParcelas.get(i).setStatusParcela(Status.PAGO);
-					continue;
-				}
-				if(valorNovasParcelas.get(i) < parcelasAtuais.get(i).getValorParcela()) {
-					novasParcelas.get(i).setValorParcela(valorNovasParcelas.get(i));
-				}
+		List<Parcela> parcelasNaoPagas = ordemServico.getParcela().stream()
+				.filter(parcela -> parcela.getStatusParcela() != Status.PAGO)
+				.collect(Collectors.toCollection(ArrayList::new));
+		
+		List<Parcela> parcelasAtualizadas = parcelasPagas;
+		
+		for(int i = 0; i<valorParcelaAtualizado.size(); i++) {
+			
+			if(valorParcelaAtualizado.get(i) != 0.0) {
+				parcelasNaoPagas.get(i).setValorParcela(valorParcelaAtualizado.get(i));
+			}else {
+				parcelasNaoPagas.get(i).setStatusParcela(Status.PAGO);
 			}
+			parcelasAtualizadas.add(parcelasNaoPagas.get(i));
 		}
 		
-		return novasParcelas;
+		return parcelasAtualizadas;
 	}
 
 }

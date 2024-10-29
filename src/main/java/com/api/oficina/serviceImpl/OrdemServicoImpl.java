@@ -60,7 +60,7 @@ public class OrdemServicoImpl implements OrdemServicoService{
 	public OrdemServico listById(Long id) {
 		Optional<OrdemServico> findById = Optional.of(this.ORDEM_SERVICO_REPOSITORY.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Ordem Servico não existe!")));
-		
+		findById.get().getParcela().sort(null);
 		return findById.get();
 	}
 	

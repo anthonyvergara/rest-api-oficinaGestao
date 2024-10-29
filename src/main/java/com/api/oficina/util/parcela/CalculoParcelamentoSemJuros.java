@@ -43,22 +43,41 @@ public class CalculoParcelamentoSemJuros implements CalculoParcelamento{
 	}
 	
 	public List<Double> debitarValorDaParcela(OrdemServico ordemServico, List<Pagamento> pagamento){
+		ordemServico.getParcela().sort(null);
 		
-		 List<Double> parcelas = ordemServico.getParcela().stream()
+		 List<Double> parcelasNaoPagas = ordemServico.getParcela().stream()
 				.filter(parcela -> parcela.getStatusParcela() != Status.PAGO)
 				.map(Parcela::getValorParcela)
 				.collect(Collectors.toCollection(ArrayList::new));
 		 
-		 for(int i = 0; i<pagamento.size(); i++) {
-			 if(parcelas.get(i) < pagamento.get(i).getValorPago()) {
-				 parcelas.set(i, 0.0);
-			 }else {
-				 double novoValor = parcelas.get(i) - pagamento.get(i).getValorPago();
-				 parcelas.set(i, novoValor);
+		 double restoPagamento = pagamento.stream().mapToDouble(Pagamento::getValorPago).sum();
+		 int i = 0;
+		 
+		 while(restoPagamento > 0) {
+			 //Verifica se valor da parcela é menor que o valor pago.
+			 if(parcelasNaoPagas.get(i) < restoPagamento) {
+				 restoPagamento = restoPagamento - parcelasNaoPagas.get(i);
+				 parcelasNaoPagas.set(i, 0.0);
+				 i++;
+				 continue;
 			 }
+			 //Verifica se o valor da parcela é igual ao valor pago.
+			 if(parcelasNaoPagas.get(i) == restoPagamento) {
+				 restoPagamento = restoPagamento - parcelasNaoPagas.get(i);
+				 parcelasNaoPagas.set(i, 0.0);
+				 i++;
+				 continue;
+			 }
+			 //Verifica se o valor da parcela é maior que o valor pago.
+			 if(parcelasNaoPagas.get(i) > restoPagamento) {
+				 parcelasNaoPagas.set(i, parcelasNaoPagas.get(i) - restoPagamento);
+				 restoPagamento = 0;
+				 break;
+			 }
+			 i++;
 		 }
 		 
-		 return parcelas;
+		 return parcelasNaoPagas;
 	}
 	
 }
