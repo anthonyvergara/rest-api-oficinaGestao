@@ -17,8 +17,8 @@ import com.api.oficina.model.OrdemServico;
 import com.api.oficina.serviceImpl.OrdemServicoImpl;
 
 @RestController
-@RequestMapping(value = "/oficina/ordemservico")
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+@RequestMapping(value = "/oficina/ordemServico")
+//@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class OrdemServicoController {
 
 	private final OrdemServicoImpl ORDEM_SERVICO;
@@ -32,7 +32,7 @@ public class OrdemServicoController {
 		return new ResponseEntity<List<OrdemServico>>(this.ORDEM_SERVICO.listAll(),HttpStatus.OK);
 	}
 	@GetMapping("/{id}")
-	public ResponseEntity<OrdemServico> listAll(@PathVariable(value="id") Long id){
+	public ResponseEntity<OrdemServico> listById(@PathVariable(value="id") Long id){
 		return new ResponseEntity<OrdemServico>(this.ORDEM_SERVICO.listById(id),HttpStatus.OK);
 	}
 	

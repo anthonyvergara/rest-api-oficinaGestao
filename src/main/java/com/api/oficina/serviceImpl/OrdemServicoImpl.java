@@ -2,6 +2,7 @@ package com.api.oficina.serviceImpl;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -55,15 +56,16 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		return (List<OrdemServico>) this.ORDEM_SERVICO_REPOSITORY.findAll();
 	}
 	
+	@Override
 	public OrdemServico listById(Long id) {
 		Optional<OrdemServico> findById = Optional.of(this.ORDEM_SERVICO_REPOSITORY.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Ordem Servico não existe!")));
-		
+		findById.get().getParcela().sort(null);
 		return findById.get();
 	}
 	
 	@Transactional
-	public OrdemServico save(OrdemServico ordemServico, Long idCliente, Long idOficina) {
+	public OrdemServico save(OrdemServico ordemServico, Long idCliente, Long idOficina){
 		
 		Optional<Cliente> cliente = Optional.of(this.CLIENTE_REPOSITORY.findById(idCliente)
 				.orElseThrow(() -> new IllegalArgumentException("Cliente não existe!")));
@@ -75,27 +77,54 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		ordemServico.setOficina(oficina.get());
 		ordemServico.setInvoiceNumber(this.generateInvoiceNumber());
 		
+		List<Pagamento> pagamentosNoAtoDaCriacaoDaOrdem = new ArrayList<>(ordemServico.getPagamento());
+		ordemServico.getPagamento().clear(); // Remove temporariamente os valores para não fazer parte da atualização em detalheServico
+		
 		ordemServico = this.ORDEM_SERVICO_REPOSITORY.save(ordemServico);
 		
 		ordemServico.setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.save(ordemServico.getId()));
 		
 		
 		ordemServico.setDetalheServico(this.DETALHE_SERVICO_SERVICE.save(ordemServico.getId(), ordemServico.getDetalheServico()));
-		ordemServico.setPagamento(this.PAGAMENTO_SERVICE.save(ordemServico.getId(), ordemServico.getPagamento()));
-		ordemServico.setParcela(this.PARCELA_SERVICE.save(ordemServico.getId(), ordemServico.getQuantidadeParcelas()));
 		
+		ordemServico.setPagamento(this.PAGAMENTO_SERVICE.save(ordemServico.getId(), pagamentosNoAtoDaCriacaoDaOrdem));
+		
+		validarVerificacaoCondicional(ordemServico);
+		
+		// CASO O STATUS DA ORDEM_SERVICO SEJA AGENDADO, ENTENDE-SE QUE VALOR_PAGO É 0 -- OU -- VALOR_PAGO É MENOR QUE VALOR_TOTAL_ORDEMSERVICO
+		// DEVE OCORRER O PARCELAMENTO.
+		if(ordemServico.getStatusOrdemServico().getTipoStatus() == Status.AGENDADO && ordemServico.getStatusOrdemServico().getSaldoDevedor() > 0)
+			ordemServico.setParcela(this.PARCELA_SERVICE.save(ordemServico.getId(), ordemServico.getQuantidadeParcelas()));
+			
 		return ordemServico;
 	}
 	
-	private void verificarParcelamento(OrdemServico ordemServico) {
-		
-		if(! ordemServico.getParcela().isEmpty() && ordemServico.getStatusOrdemServico().getTipoStatus() != Status.PAGO) {
-			this.PARCELA_SERVICE.update(ordemServico.getId(), 0);
-		}
-		else if(ordemServico.getParcela().isEmpty() && ordemServico.getQuantidadeParcelas() > 0) {
-			this.PARCELA_SERVICE.save(ordemServico.getId(), ordemServico.getQuantidadeParcelas());
+	private void validarVerificacaoCondicional(OrdemServico ordemServico) {
+		// CASO QUANTIDADE DE PARCELA == 0 E VALOR_PAGAMENTO NAO EXISTA
+		// DEVE DEVE PARCELAR O VALOR NO MINIMO 1 VEZ
+		if(ordemServico.getQuantidadeParcelas() == 0 && ordemServico.getPagamento().isEmpty()) {
+			ordemServico.setQuantidadeParcelas(1);
 		}
 		
+		if(!ordemServico.getPagamento().isEmpty()) {
+			
+			// CASO O VALOR_PAGO SEJA MAIOR QUE O VALOR_TOTAL_ORDEMSERVICO
+			if(ordemServico.getPagamento().get(0).getValorPago() > ordemServico.getValorTotal()) {
+				throw new IllegalArgumentException("O valor pago não pode ser maior que o valor total");
+			}
+			
+			// CASO O PAGAMENTO SEJA MENOR QUE O VALOR_TOTAL_ORDEMSERVICO
+			// DEVE PARCELAR O RESTANTE NO MINIMO 1 VEZ
+			if(ordemServico.getPagamento().get(0).getValorPago() < ordemServico.getValorTotal() && ordemServico.getQuantidadeParcelas() == 0) {
+				ordemServico.setQuantidadeParcelas(1);
+			}
+		}
+		
+		// CASO FOI PASSADO ALGUMA QUANTIDADE DE PARCELAS, POREM O VALOR_PAGAMENTO SEJA IGUAL AO VALOR_TOTAL_ORDEMSERVICO
+		// DEVE ZERAR A QUANTIDADE DE PARCELAS.
+		if(ordemServico.getStatusOrdemServico().getTipoStatus() == Status.PAGO) {
+			ordemServico.setQuantidadeParcelas(0);
+		}
 	}
 	
 	@Override

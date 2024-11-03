@@ -62,14 +62,22 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 					.map(Parcela::getDataVencimento)
 					.min(Comparator.naturalOrder());
 			
-			statusOS.setProximoVencimento(proximoVencimento.get());
+			if(proximoVencimento.isPresent()) {
+				statusOS.setProximoVencimento(proximoVencimento.get());
+			}else {
+				statusOS.setProximoVencimento(null);
+			}
 			
 			Optional<Double> valorProximaParcela = ordemServico.getParcela().stream()
 					.filter(parcela -> parcela.getStatusParcela() != Status.PAGO)
 					.map(Parcela::getValorParcela)
 					.min(Comparator.naturalOrder());
 			
-			statusOS.setValorProximaParcela(valorProximaParcela.get());
+			if(valorProximaParcela.isPresent()) {
+				statusOS.setValorProximaParcela(valorProximaParcela.get());
+			}else {
+				statusOS.setValorProximaParcela(0.0);
+			}
 			
 			
 			parcelaAtrasada = ordemServico.getParcela().stream()
@@ -82,10 +90,13 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 		// VERIFICA SE EXISTE PAGAMENTOS PARA ATUALIZAR O ULTIMO PAGAMENTO E SALDO DEVEDOR
 		if(! ordemServico.getPagamento().isEmpty()) {
 			Optional<LocalDateTime> ultimoPagamento = ordemServico.getPagamento().stream()
+					.filter(valores -> valores.getValorPago() > 0)
 					.map(Pagamento::getDataPagamento)
-					.min(Comparator.naturalOrder());
+					.max(Comparator.naturalOrder());
 			
-			statusOS.setUltimoPagamento(ultimoPagamento.get());
+			if(ultimoPagamento.isPresent()) {
+				statusOS.setUltimoPagamento(ultimoPagamento.get());
+			}
 			
 			valorTotalPagamento = ordemServico.getPagamento().stream()
 					.mapToDouble(valor -> valor.getValorPago())

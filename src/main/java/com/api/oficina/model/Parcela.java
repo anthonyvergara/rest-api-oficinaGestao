@@ -2,6 +2,7 @@ package com.api.oficina.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.Objects;
 
 import org.hibernate.annotations.ForeignKey;
@@ -21,7 +22,7 @@ import lombok.Setter;
 
 @Entity
 @Setter @Getter @EqualsAndHashCode
-public class Parcela implements Serializable{
+public class Parcela implements Serializable, Comparable<Parcela>{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -57,5 +58,27 @@ public class Parcela implements Serializable{
 		if(statusParcela != null) {
 			this.statusParcela = statusParcela.getCode();
 		}
+	}
+	
+	@Override
+	public int compareTo(Parcela o) {
+		return this.getDataVencimento().compareTo(o.getDataVencimento());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Parcela other = (Parcela) obj;
+		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
 	}
 }
