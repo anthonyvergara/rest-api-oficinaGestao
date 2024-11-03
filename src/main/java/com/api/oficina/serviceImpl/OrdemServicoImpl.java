@@ -77,6 +77,9 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		ordemServico.setOficina(oficina.get());
 		ordemServico.setInvoiceNumber(this.generateInvoiceNumber());
 		
+		List<Pagamento> pagamentosNoAtoDaCriacaoDaOrdem = new ArrayList<>(ordemServico.getPagamento());
+		ordemServico.getPagamento().clear(); // Remove temporariamente os valores para não fazer parte da atualização em detalheServico
+		
 		ordemServico = this.ORDEM_SERVICO_REPOSITORY.save(ordemServico);
 		
 		ordemServico.setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.save(ordemServico.getId()));
@@ -84,13 +87,13 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		
 		ordemServico.setDetalheServico(this.DETALHE_SERVICO_SERVICE.save(ordemServico.getId(), ordemServico.getDetalheServico()));
 		
-		ordemServico.setPagamento(this.PAGAMENTO_SERVICE.save(ordemServico.getId(), ordemServico.getPagamento()));
+		ordemServico.setPagamento(this.PAGAMENTO_SERVICE.save(ordemServico.getId(), pagamentosNoAtoDaCriacaoDaOrdem));
 		
 		validarVerificacaoCondicional(ordemServico);
 		
 		// CASO O STATUS DA ORDEM_SERVICO SEJA AGENDADO, ENTENDE-SE QUE VALOR_PAGO É 0 -- OU -- VALOR_PAGO É MENOR QUE VALOR_TOTAL_ORDEMSERVICO
 		// DEVE OCORRER O PARCELAMENTO.
-		if(ordemServico.getStatusOrdemServico().getTipoStatus() == Status.AGENDADO)
+		if(ordemServico.getStatusOrdemServico().getTipoStatus() == Status.AGENDADO && ordemServico.getStatusOrdemServico().getSaldoDevedor() > 0)
 			ordemServico.setParcela(this.PARCELA_SERVICE.save(ordemServico.getId(), ordemServico.getQuantidadeParcelas()));
 			
 		return ordemServico;

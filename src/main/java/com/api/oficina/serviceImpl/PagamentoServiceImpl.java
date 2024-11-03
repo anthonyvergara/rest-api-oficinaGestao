@@ -1,6 +1,7 @@
 package com.api.oficina.serviceImpl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,21 +45,22 @@ public class PagamentoServiceImpl implements PagamentoService{
 		double saldoDevedor = ordemServico.get().getStatusOrdemServico().getSaldoDevedor();
 		double valorTotalPagamentos = pagamentos.stream().mapToDouble(Pagamento::getValorPago).sum();
 		
-		if(valorTotalPagamentos > saldoDevedor) {
+		if(saldoDevedor > 0 && valorTotalPagamentos > saldoDevedor) {
 			throw new IllegalArgumentException("O valor total pago não pode ser maior que o saldo devedor!");
 		}
 		
 		pagamentos.forEach(pagamento -> {
 			pagamento.setDataPagamento(LocalDateTime.now());
 			pagamento.setOrdemServico(ordemServico.get());
-			this.PAGAMENTO_REPOSITORY.save(pagamento);
-			ordemServico.get().getPagamento().add(pagamento);
 		});
+		ordemServico.get().setPagamento(pagamentos);
+		
+		this.PAGAMENTO_REPOSITORY.saveAll(pagamentos);
 		
 		if(!ordemServico.get().getParcela().isEmpty()) {
 			ordemServico.get().setParcela(Parcelas.debitarValorDaParcela(ordemServico.get(), pagamentos, new CalculoParcelamentoSemJuros(0)));
 		}
-		this.STATUS_ORDEM_SERVICO.update(ordemServico.get().getStatusOrdemServico());
+		ordemServico.get().setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.update(ordemServico.get().getStatusOrdemServico()));
 		
 		return pagamentos;
 	}
