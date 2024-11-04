@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.api.oficina.model.OrdemServico;
 import com.api.oficina.serviceImpl.OrdemServicoImpl;
 
+import jakarta.validation.Valid;
+
 @RestController
+@Validated
 @RequestMapping(value = "/oficina/ordemServico")
 //@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class OrdemServicoController {
@@ -37,7 +40,7 @@ public class OrdemServicoController {
 	}
 	
 	@PostMapping(value = "/cliente/{idCliente}/oficina/{idOficina}")
-	public ResponseEntity<OrdemServico> save(@RequestBody OrdemServico ordemServico, 
+	public ResponseEntity<OrdemServico> save(@RequestBody @Valid OrdemServico ordemServico, 
 											@PathVariable(value = "idCliente") Long idCliente,
 											@PathVariable(value = "idOficina") Long idOficina) throws Exception{
 		
