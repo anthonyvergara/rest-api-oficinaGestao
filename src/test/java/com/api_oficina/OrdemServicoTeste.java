@@ -4,11 +4,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
@@ -69,97 +71,75 @@ public class OrdemServicoTeste {
 	private static StatusOrdemServico status;
 	private static Parcela parcela1, parcela2;
 	
-	private List<DetalheServico> detalhesDosServicos;
-	private List<Parcela> listaDeParcelas;
-	private List<Pagamento> listaPagamento;
-	
 	@BeforeEach
 	void setUp() {
 		cliente = new Cliente();
-		cliente.setId(30L);
-		cliente.setNome("Anthony");
-		cliente.setSobrenome("Vergara");
-		
+		cliente.setId(1L);
 		oficina = new Oficina();
-		oficina.setId(20L);
-		oficina.setNomeOficina("Careca Motors");
-		
+		oficina.setId(1L);
 		detalheServico = new DetalheServico();
-		detalheServico.setId(1L);
-		detalheServico.setData(LocalDateTime.now());
-		detalheServico.setDescricao("Realizado troca de oleo");
-		detalheServico.setQuantidade(1);
-		detalheServico.setValor(100);
-		detalheServico.setOrdemServico(ordemServico);
-		
-		detalhesDosServicos = new ArrayList<DetalheServico>();
-		detalhesDosServicos.add(detalheServico);
-		
-		status = new StatusOrdemServico();
-		status.setId(1L);
-		status.setTipoStatus(Status.ATRASADO.getCode());
-		status.setOrdemServico(ordemServico);
-		
 		parcela1 = new Parcela();
-		parcela1.setDataVencimento(LocalDate.now().plusDays(7));
-		parcela1.setValorParcela(50);
-		parcela1.setStatusParcela(Status.AGENDADO);
-		parcela1.setOrdemServico(ordemServico);
-		
 		parcela2 = new Parcela();
-		parcela2.setDataVencimento(LocalDate.now().plusDays(14));
-		parcela2.setValorParcela(50);
-		parcela2.setStatusParcela(Status.AGENDADO);
-		parcela2.setOrdemServico(ordemServico);
-		
-		listaDeParcelas = new ArrayList<Parcela>();
-		listaDeParcelas.add(parcela1);
-		listaDeParcelas.add(parcela2);
-		
 		pagamento = new Pagamento();
-		pagamento.setDataPagamento(LocalDateTime.now());
-		pagamento.setId(122L);
-		pagamento.setValorPago(100);
-		pagamento.setOrdemServico(ordemServico);
-		
-		listaPagamento = new ArrayList<Pagamento>();
-		listaPagamento.add(pagamento);
-		
 		ordemServico = new OrdemServico();
-		ordemServico.setId(1L);
-		ordemServico.setQuantidadeParcelas(2);
-		ordemServico.setCliente(cliente);
-		ordemServico.setOficina(oficina);
-		ordemServico.setDetalheServico(detalhesDosServicos);
-		ordemServico.setDataInicio(LocalDateTime.now());
-		ordemServico.setTipoPagamento(TipoPagamento.SEMANAL);
-		ordemServico.setStatusOrdemServico(status);
-		
+		status = new StatusOrdemServico();
 	}
 	
 	@Test
-	void deveCriarOrdemServicoParceladaESemPagamentoDeEntrada() {
+	void deveCriarOrdemServicoParceladaComPagamentoEmpty() {
 		
-		when(CLIENTE_REPOSITORY.findById(cliente.getId())).thenReturn(Optional.of(cliente));
-		when(OFICINA_REPOSITORY.findById(oficina.getId())).thenReturn(Optional.of(oficina));
-		when(ORDEM_SERVICO_REPOSITORY.save(ordemServico)).thenReturn(ordemServico);
+		ordemServico.setId(1L);
 		
-		when(STATUS_ORDEM_SERVICO.save(ordemServico.getId())).thenReturn(status);
+		List<DetalheServico> detalhesDosServicos = new ArrayList<>();
 		
-		when(DETALHE_SERVICO_SERVICE.save(detalheServico.getId(), ordemServico.getDetalheServico())).thenAnswer(invocation -> {
-			status.setTipoStatus(Status.AGENDADO.getCode());
+		this.detalheServico.setValor(100);
+		detalhesDosServicos.add(detalheServico);
+		
+		List<Parcela> listaDeParcelas = new ArrayList<>();
+		this.parcela1.setValorParcela(50);
+		this.parcela2.setValorParcela(50);
+		listaDeParcelas.add(parcela1);
+		listaDeParcelas.add(parcela2);
+		
+		ordemServico.setValorTotal(100);
+		ordemServico.setQuantidadeParcelas(2);
+		ordemServico.setStatusOrdemServico(status);
+		ordemServico.setParcela(listaDeParcelas);
+		ordemServico.setDetalheServico(detalhesDosServicos);
+		
+		when(CLIENTE_REPOSITORY.findById(1L)).thenReturn(Optional.of(cliente));
+		when(OFICINA_REPOSITORY.findById(1L)).thenReturn(Optional.of(oficina));
+		
+		when(ORDEM_SERVICO_REPOSITORY.save(this.ordemServico)).thenReturn(this.ordemServico);
+		
+		when(STATUS_ORDEM_SERVICO.save(1L)).thenReturn(status);
+		
+		when(DETALHE_SERVICO_SERVICE.save(1L, ordemServico.getDetalheServico())).thenAnswer(invocation -> {
+			this.status.setTipoStatus(Status.AGENDADO.getCode());
 			return detalhesDosServicos;
 		});
 		
-		when(PAGAMENTO_SERVICE.save(ordemServico.getId(), new ArrayList<Pagamento>())).thenReturn(new ArrayList<Pagamento>());
-		when(PARCELA_SERVICE.save(ordemServico.getId(), ordemServico.getQuantidadeParcelas())).thenReturn(listaDeParcelas);
+		when(PAGAMENTO_SERVICE.save(1L, new ArrayList<Pagamento>())).thenAnswer(invocation -> {
+			this.status.setSaldoDevedor(ordemServico.getValorTotal());
+			return new ArrayList<Pagamento>();
+		});
+		
+		when(PARCELA_SERVICE.save(1L, ordemServico.getQuantidadeParcelas())).thenReturn(listaDeParcelas);
 		
 		OrdemServico ordemCriada = servico.save(ordemServico, cliente.getId(), oficina.getId());
-			
-		Assertions.assertTrue(ordemCriada.getPagamento().isEmpty());
-		Assertions.assertTrue(ordemServico.getQuantidadeParcelas() > 0);
-		Assertions.assertEquals(ordemCriada.getParcela().size(), ordemServico.getQuantidadeParcelas());
-		Assertions.assertEquals(Status.AGENDADO, ordemCriada.getStatusOrdemServico().getTipoStatus());
+		
+		verify(this.PARCELA_SERVICE).save(ordemServico.getId(), ordemServico.getQuantidadeParcelas());
+		
+		Assertions.assertEquals(Status.AGENDADO, ordemServico.getStatusOrdemServico().getTipoStatus());
+		Assertions.assertTrue(this.status.getSaldoDevedor() > 0);
+		
+		Assertions.assertTrue(ordemServico.getPagamento().isEmpty());
+		
+		assertEquals(ordemServico.getQuantidadeParcelas(), ordemServico.getParcela().size());
+	}
+	
+	void deveRetornarExceptionAoCriarOrdemServicoComPagamentoZero() {
+		
 	}
 
 }
