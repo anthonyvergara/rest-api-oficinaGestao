@@ -78,7 +78,7 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		ordemServico.setInvoiceNumber(this.generateInvoiceNumber());
 		
 		List<Pagamento> pagamentosNoAtoDaCriacaoDaOrdem = new ArrayList<>(ordemServico.getPagamento());
-		ordemServico.getPagamento().clear(); // Remove temporariamente os valores para não fazer parte da atualização em detalheServico
+		ordemServico.getPagamento().clear(); // Remove temporariamente os valores para não atualizar SaldoDevedor subtraido de Pagamentos ao chamar StatusOrdemServico em DetalheServicoImpl
 		
 		ordemServico = this.ORDEM_SERVICO_REPOSITORY.save(ordemServico);
 		
