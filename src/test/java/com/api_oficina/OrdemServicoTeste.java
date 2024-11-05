@@ -11,16 +11,21 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.api.oficina.exceptions.ValidacaoException;
+import com.api.oficina.exceptions.ValidacaoExceptionHandler;
 import com.api.oficina.model.Cliente;
 import com.api.oficina.model.DetalheServico;
 import com.api.oficina.model.Oficina;
@@ -39,6 +44,8 @@ import com.api.oficina.serviceImpl.OrdemServicoImpl;
 import com.api.oficina.serviceImpl.PagamentoServiceImpl;
 import com.api.oficina.serviceImpl.ParcelaServiceImpl;
 import com.api.oficina.serviceImpl.StatusOrdemServicoImpl;
+
+import jakarta.validation.ConstraintViolationException;
 
 @ExtendWith(MockitoExtension.class)
 public class OrdemServicoTeste {
@@ -59,6 +66,9 @@ public class OrdemServicoTeste {
 	private StatusOrdemServicoImpl STATUS_ORDEM_SERVICO;
 	@Mock
 	private ParcelaServiceImpl PARCELA_SERVICE;
+	
+	@MockBean
+    private ValidacaoExceptionHandler globalExceptionHandler;
 	
 	@InjectMocks
 	private OrdemServicoImpl servico;
@@ -83,6 +93,9 @@ public class OrdemServicoTeste {
 		pagamento = new Pagamento();
 		ordemServico = new OrdemServico();
 		status = new StatusOrdemServico();
+		
+		ordemServico.setQuantidadeParcelas(2);
+		ordemServico.setStatusOrdemServico(status);
 	}
 	
 	@Test
@@ -101,11 +114,9 @@ public class OrdemServicoTeste {
 		listaDeParcelas.add(parcela1);
 		listaDeParcelas.add(parcela2);
 		
-		ordemServico.setValorTotal(100);
-		ordemServico.setQuantidadeParcelas(2);
-		ordemServico.setStatusOrdemServico(status);
 		ordemServico.setParcela(listaDeParcelas);
 		ordemServico.setDetalheServico(detalhesDosServicos);
+		ordemServico.setValorTotal(100);
 		
 		when(CLIENTE_REPOSITORY.findById(1L)).thenReturn(Optional.of(cliente));
 		when(OFICINA_REPOSITORY.findById(1L)).thenReturn(Optional.of(oficina));
@@ -138,8 +149,39 @@ public class OrdemServicoTeste {
 		assertEquals(ordemServico.getQuantidadeParcelas(), ordemServico.getParcela().size());
 	}
 	
-	void deveRetornarExceptionAoCriarOrdemServicoComPagamentoZero() {
+	@Test
+	public void deveCriarOrdemServicoComPagamentoTotal() {
 		
+		ordemServico.setId(1L);
+		
+		List<Pagamento> listaDePagamentos = new ArrayList<>();
+		this.pagamento.setValorPago(100);
+		
+		List<DetalheServico> detalhesDosServicos = new ArrayList<>();
+		this.detalheServico.setValor(100);
+		detalhesDosServicos.add(detalheServico);
+		
+		ordemServico.setDetalheServico(detalhesDosServicos);
+		ordemServico.setPagamento(listaDePagamentos);
+		ordemServico.setValorTotal(100);
+		
+		when(CLIENTE_REPOSITORY.findById(cliente.getId())).thenReturn(Optional.of(cliente));
+		when(OFICINA_REPOSITORY.findById(oficina.getId())).thenReturn(Optional.of(oficina));
+		
+		when(ORDEM_SERVICO_REPOSITORY.save(this.ordemServico)).thenReturn(this.ordemServico);
+		
+		when(STATUS_ORDEM_SERVICO.save(ordemServico.getId())).thenReturn(status);
+		
+		when(DETALHE_SERVICO_SERVICE.save(ordemServico.getId(), ordemServico.getDetalheServico())).thenReturn(detalhesDosServicos);
+		
+		when(PAGAMENTO_SERVICE.save(ordemServico.getId(), new ArrayList<Pagamento>())).thenAnswer(invocation -> {
+			this.ordemServico.getStatusOrdemServico().setTipoStatus(Status.PAGO.getCode());
+			return listaDePagamentos;
+		});
+		
+		OrdemServico ordemCriada = this.servico.save(ordemServico, cliente.getId(), oficina.getId());
+		
+		assertEquals(Status.PAGO, ordemServico.getStatusOrdemServico().getTipoStatus());
 	}
-
+	
 }
