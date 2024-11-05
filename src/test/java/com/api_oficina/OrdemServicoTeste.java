@@ -4,27 +4,22 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.api.oficina.exceptions.ValidacaoException;
 import com.api.oficina.exceptions.ValidacaoExceptionHandler;
 import com.api.oficina.model.Cliente;
 import com.api.oficina.model.DetalheServico;
@@ -34,18 +29,15 @@ import com.api.oficina.model.Pagamento;
 import com.api.oficina.model.Parcela;
 import com.api.oficina.model.StatusOrdemServico;
 import com.api.oficina.modelEnum.Status;
-import com.api.oficina.modelEnum.TipoPagamento;
 import com.api.oficina.repository.ClienteRepository;
 import com.api.oficina.repository.OficinaRepository;
 import com.api.oficina.repository.OrdemServicoRepository;
-import com.api.oficina.service.DetalheServicoService;
 import com.api.oficina.serviceImpl.DetalheServicoImpl;
 import com.api.oficina.serviceImpl.OrdemServicoImpl;
 import com.api.oficina.serviceImpl.PagamentoServiceImpl;
 import com.api.oficina.serviceImpl.ParcelaServiceImpl;
 import com.api.oficina.serviceImpl.StatusOrdemServicoImpl;
 
-import jakarta.validation.ConstraintViolationException;
 
 @ExtendWith(MockitoExtension.class)
 public class OrdemServicoTeste {
@@ -94,7 +86,6 @@ public class OrdemServicoTeste {
 		ordemServico = new OrdemServico();
 		status = new StatusOrdemServico();
 		
-		ordemServico.setQuantidadeParcelas(2);
 		ordemServico.setStatusOrdemServico(status);
 	}
 	
@@ -117,6 +108,7 @@ public class OrdemServicoTeste {
 		ordemServico.setParcela(listaDeParcelas);
 		ordemServico.setDetalheServico(detalhesDosServicos);
 		ordemServico.setValorTotal(100);
+		ordemServico.setQuantidadeParcelas(2);
 		
 		when(CLIENTE_REPOSITORY.findById(1L)).thenReturn(Optional.of(cliente));
 		when(OFICINA_REPOSITORY.findById(1L)).thenReturn(Optional.of(oficina));
@@ -141,12 +133,12 @@ public class OrdemServicoTeste {
 		
 		verify(this.PARCELA_SERVICE).save(ordemServico.getId(), ordemServico.getQuantidadeParcelas());
 		
-		Assertions.assertEquals(Status.AGENDADO, ordemServico.getStatusOrdemServico().getTipoStatus());
+		Assertions.assertEquals(Status.AGENDADO, ordemCriada.getStatusOrdemServico().getTipoStatus());
 		Assertions.assertTrue(this.status.getSaldoDevedor() > 0);
 		
-		Assertions.assertTrue(ordemServico.getPagamento().isEmpty());
+		Assertions.assertTrue(ordemCriada.getPagamento().isEmpty());
 		
-		assertEquals(ordemServico.getQuantidadeParcelas(), ordemServico.getParcela().size());
+		assertEquals(ordemCriada.getQuantidadeParcelas(), ordemServico.getParcela().size());
 	}
 	
 	@Test
@@ -181,7 +173,62 @@ public class OrdemServicoTeste {
 		
 		OrdemServico ordemCriada = this.servico.save(ordemServico, cliente.getId(), oficina.getId());
 		
-		assertEquals(Status.PAGO, ordemServico.getStatusOrdemServico().getTipoStatus());
+		assertEquals(Status.PAGO, ordemCriada.getStatusOrdemServico().getTipoStatus());
+		assertTrue(ordemCriada.getParcela().isEmpty());
+		assertEquals(0, ordemCriada.getQuantidadeParcelas());
+	}
+	
+	@Test
+	public void deveCriarOrdemServicoParceladoComPagamentoParcial() {
+		
+		ordemServico.setId(1L);
+		
+		List<Parcela> listaDeParcelas = new ArrayList<>();
+		parcela1.setValorParcela(40);
+		parcela2.setValorParcela(40);
+		listaDeParcelas.add(parcela1);
+		listaDeParcelas.add(parcela2);
+		
+		List<Pagamento> listaDePagamentos = new ArrayList<>();
+		this.pagamento.setValorPago(20);
+		
+		List<DetalheServico> detalhesDosServicos = new ArrayList<>();
+		this.detalheServico.setValor(100);
+		detalhesDosServicos.add(detalheServico);
+		
+		ordemServico.setDetalheServico(detalhesDosServicos);
+		ordemServico.setPagamento(listaDePagamentos);
+		ordemServico.setParcela(listaDeParcelas);
+		ordemServico.setValorTotal(100);
+		ordemServico.setQuantidadeParcelas(2);
+		
+		when(CLIENTE_REPOSITORY.findById(cliente.getId())).thenReturn(Optional.of(cliente));
+		when(OFICINA_REPOSITORY.findById(oficina.getId())).thenReturn(Optional.of(oficina));
+		
+		when(ORDEM_SERVICO_REPOSITORY.save(this.ordemServico)).thenReturn(this.ordemServico);
+		
+		when(STATUS_ORDEM_SERVICO.save(ordemServico.getId())).thenReturn(status);
+		
+		when(DETALHE_SERVICO_SERVICE.save(ordemServico.getId(), ordemServico.getDetalheServico())).thenReturn(detalhesDosServicos);
+		
+		when(PAGAMENTO_SERVICE.save(ordemServico.getId(), new ArrayList<Pagamento>())).thenAnswer(invocation -> {
+			this.status.setSaldoDevedor(80);;
+			this.ordemServico.getStatusOrdemServico().setTipoStatus(Status.AGENDADO.getCode());
+			return listaDePagamentos;
+		});
+		
+		when(PARCELA_SERVICE.save(ordemServico.getId(), ordemServico.getQuantidadeParcelas())).thenReturn(listaDeParcelas);
+		
+		OrdemServico ordemCriada = this.servico.save(ordemServico, cliente.getId(), oficina.getId());
+		
+		verify(PARCELA_SERVICE).save(ordemServico.getId(), ordemServico.getQuantidadeParcelas());
+		
+		assertEquals(Status.AGENDADO, ordemCriada.getStatusOrdemServico().getTipoStatus());
+		
+		assertEquals(80, ordemCriada.getStatusOrdemServico().getSaldoDevedor());
+		
+		assertFalse(ordemCriada.getParcela().isEmpty());
+		
 	}
 	
 }
