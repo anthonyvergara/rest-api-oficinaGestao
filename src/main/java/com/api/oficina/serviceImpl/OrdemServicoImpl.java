@@ -64,6 +64,12 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		return findById.get();
 	}
 	
+	public List<OrdemServico> listByIdCliente(Long idCliente) {
+		List<OrdemServico> findByIdCliente = this.ORDEM_SERVICO_REPOSITORY.findOrdemServicoByIdCliente(idCliente);
+		
+		return findByIdCliente;
+	}
+	
 	@Transactional
 	public OrdemServico save(OrdemServico ordemServico, Long idCliente, Long idOficina){
 		

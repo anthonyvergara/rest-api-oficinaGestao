@@ -39,6 +39,11 @@ public class OrdemServicoController {
 		return new ResponseEntity<OrdemServico>(this.ORDEM_SERVICO.listById(id),HttpStatus.OK);
 	}
 	
+	@GetMapping("/cliente/{idCliente}")
+	public ResponseEntity<List<OrdemServico>> findByIdCliente(@PathVariable(value ="idCliente") Long idCliente){
+		return new ResponseEntity<List<OrdemServico>>(this.ORDEM_SERVICO.listByIdCliente(idCliente),HttpStatus.OK);
+	}
+	
 	@PostMapping(value = "/cliente/{idCliente}/oficina/{idOficina}")
 	public ResponseEntity<OrdemServico> save(@RequestBody @Valid OrdemServico ordemServico, 
 											@PathVariable(value = "idCliente") Long idCliente,

@@ -8,6 +8,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import com.api.oficina.model.Cliente;
+import com.api.oficina.model.Endereco;
+import com.api.oficina.model.Telefone;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
@@ -27,6 +29,8 @@ public class ClienteDTO implements Dto<ClienteDTO,Cliente>{
 	private Long numeroDrive;
 	private Long numeroPassaporte;
 	private Long numeroRg;
+	private List<Telefone> telefone;
+	private List<Endereco> endereco;
 	
 	@Override
 	public ClienteDTO convertToDto(Cliente cliente) {

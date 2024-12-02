@@ -90,7 +90,7 @@ public class OrdemServicoTeste {
 	}
 	
 	@Test
-	void deveCriarOrdemServicoParceladaComPagamentoEmpty() {
+	void deveCriarOrdemServicoParceladaComPagamentoVazio() {
 		
 		ordemServico.setId(1L);
 		

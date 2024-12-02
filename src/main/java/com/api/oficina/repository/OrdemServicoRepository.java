@@ -1,5 +1,6 @@
 package com.api.oficina.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
@@ -12,5 +13,11 @@ public interface OrdemServicoRepository extends CrudRepository<OrdemServico, Lon
 	
 	@Query(value = "select p from OrdemServico p where p.invoiceNumber = :invoiceNumber")
 	public Optional<OrdemServico> findByInvoice(@Param("invoiceNumber") Long invoiceNumber);
+	
+	@Query(value =""" 
+			select * from ordem_servico os
+			WHERE os.cliente_id = %:idCliente%
+			""", nativeQuery = true)
+	public List<OrdemServico> findOrdemServicoByIdCliente(@Param("idCliente") Long idCliente);
 
 }
