@@ -8,7 +8,7 @@ Atualmente, estou focado em aprimorar minhas habilidades e conceitos em desenvol
 <br>
 
 ## 🖥️ FUNCIONALIDADES PRINCIPAIS
-* Gerenciamento de clientes e veículos
+* Gerenciamento de Oficina, Clientes, Ordens de Servico, Pagamento, Parcelamento.
 * Agendamento de serviços
 * Controle de histórico de atendimentos
 * Geração de relatórios e análises
