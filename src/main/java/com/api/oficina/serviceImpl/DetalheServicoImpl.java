@@ -41,7 +41,7 @@ public class DetalheServicoImpl implements DetalheServicoService{
 				.orElseThrow(() -> new IllegalArgumentException("OrdemServico não existe!")));
 		
 		double valorTotal = ordemServico.get().getValorTotal();
-		double valorTotalAtualizado = valorTotal +  Invoice.calcularServico(servicos, new CalculoServicoPadrao(ordemServico.get().getVat()));
+		double valorTotalAtualizado = /*valorTotal */ Invoice.calcularServico(servicos, new CalculoServicoPadrao(ordemServico.get().getVat()));
 		ordemServico.get().setValorTotal(valorTotalAtualizado);
 		
 		for(DetalheServico servico : servicos) {

@@ -40,6 +40,11 @@ public class ClienteController {
 		return new ResponseEntity<ClienteDTO>(this.CLIENTE_SERVICE.findById(id),HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "/ordemServico/{idOrdemServico}")
+	public ResponseEntity<ClienteDTO> findByIdOrdemServico(@PathVariable(value="idOrdemServico") Long idOrdemServico){
+		return new ResponseEntity<ClienteDTO>(this.CLIENTE_SERVICE.findByIdOrdemServico(idOrdemServico),HttpStatus.OK);
+	}
+	
 	@PostMapping(value = "/{idOficina}")
 	public ResponseEntity<ClienteDTO> save(@RequestBody Cliente cliente, @PathVariable(value = "idOficina") Long id){
 		return new ResponseEntity<ClienteDTO>(this.CLIENTE_SERVICE.save(cliente, id),HttpStatus.OK);

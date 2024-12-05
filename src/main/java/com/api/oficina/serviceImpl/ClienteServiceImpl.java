@@ -95,4 +95,10 @@ public class ClienteServiceImpl implements ClienteService{
 		
 	}
 
+	@Override
+	public ClienteDTO findByIdOrdemServico(Long idOrdemServico) {
+		Cliente cliente = this.CLIENTE_REPOSITORY.findByIdOrdemServico(idOrdemServico);
+		return (ClienteDTO) DTO.convertToDto(cliente);
+	}
+
 }
