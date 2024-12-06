@@ -40,7 +40,7 @@ public class ClienteController {
 		return new ResponseEntity<ClienteDTO>(this.CLIENTE_SERVICE.findById(id),HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/ordemServico/{idOrdemServico}")
+	@GetMapping(value = "/ordemServico/{idOrdemServico}", produces = "application/json")
 	public ResponseEntity<ClienteDTO> findByIdOrdemServico(@PathVariable(value="idOrdemServico") Long idOrdemServico){
 		return new ResponseEntity<ClienteDTO>(this.CLIENTE_SERVICE.findByIdOrdemServico(idOrdemServico),HttpStatus.OK);
 	}

@@ -12,6 +12,7 @@ import org.hibernate.annotations.ForeignKey;
 import com.api.oficina.modelEnum.TipoPagamento;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
@@ -57,7 +58,6 @@ public class OrdemServico implements Serializable{
 	
 	private int quantidadeParcelas;
 	
-	@JsonIgnore
 	@ForeignKey(name = "id_cliente")
 	@ManyToOne
 	private Cliente cliente;

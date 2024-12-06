@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.hibernate.annotations.ForeignKey;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -44,6 +45,7 @@ public class Cliente extends Pessoa implements Serializable, Comparable<Cliente>
 	@OneToMany(mappedBy = "cliente")
 	private List<DocumentoImg> documentos = new ArrayList<>();
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "cliente")
 	private Set<OrdemServico> ordemServico = new HashSet<OrdemServico>();
 	

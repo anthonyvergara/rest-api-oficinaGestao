@@ -3,6 +3,7 @@ package com.api.oficina.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -45,7 +46,7 @@ public class OrdemServicoController {
 		return new ResponseEntity<List<OrdemServico>>(this.ORDEM_SERVICO.listByIdCliente(idCliente),HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "/cliente/{idCliente}/oficina/{idOficina}")
+	@PostMapping(value = "/cliente/{idCliente}/oficina/{idOficina}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<OrdemServico> save(@RequestBody @Valid OrdemServico ordemServico, 
 											@PathVariable(value = "idCliente") Long idCliente,
 											@PathVariable(value = "idOficina") Long idOficina) throws Exception{
