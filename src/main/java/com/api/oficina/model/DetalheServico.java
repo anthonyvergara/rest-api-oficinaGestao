@@ -2,7 +2,6 @@ package com.api.oficina.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import org.hibernate.annotations.ForeignKey;
 
@@ -16,6 +15,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +27,7 @@ public class DetalheServico implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	public DetalheServico() {
-		this.setData(data.now());
+		this.setData(LocalDateTime.now());
 	}
 
 	@Id
@@ -43,7 +43,7 @@ public class DetalheServico implements Serializable{
 	private Long milhagem;
 	
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime data;
 	
 	private double valor;
@@ -52,5 +52,12 @@ public class DetalheServico implements Serializable{
 	@ForeignKey(name = "id_ordemServico")
 	@ManyToOne
 	private OrdemServico ordemServico;
+	
+	@PrePersist
+    public void prePersist() {
+        if (this.data == null) {
+            this.data = LocalDateTime.now();
+        }
+    }
 	
 }

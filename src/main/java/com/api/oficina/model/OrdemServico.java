@@ -24,6 +24,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,7 +36,7 @@ public class OrdemServico implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	public OrdemServico() {
-		this.setDataInicio(dataInicio.now());
+		this.setDataInicio(LocalDateTime.now());
 	}
 
 	@Id
@@ -88,4 +89,11 @@ public class OrdemServico implements Serializable{
 			this.tipoPagamento = tipoPagamento.getCode();
 		}
 	}
+	
+	@PrePersist
+    public void prePersist() {
+        if (this.dataInicio == null) {
+            this.dataInicio = LocalDateTime.now();
+        }
+    }
 }
