@@ -57,6 +57,23 @@ public class OrdemServicoImpl implements OrdemServicoService{
 	}
 	
 	@Override
+	public List<OrdemServico> listAllByIdOficina(Long idOficina) {
+		
+		
+		List<OrdemServico> listaOrdemServico = this.ORDEM_SERVICO_REPOSITORY.findAllByOficina_Id(2L);
+		
+		listaOrdemServico.forEach(ordem -> {
+			System.out.print("atual: " );
+			System.out.println(ordem.getStatusOrdemServico().getTipoStatus());
+			ordem.setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.update(ordem.getStatusOrdemServico()));
+			System.out.print("depois: " );
+			System.out.println(ordem.getStatusOrdemServico().getTipoStatus());
+		});
+		
+		return listaOrdemServico;
+	}
+	
+	@Override
 	public OrdemServico listById(Long id) {
 		Optional<OrdemServico> findById = Optional.of(this.ORDEM_SERVICO_REPOSITORY.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Ordem Servico não existe!")));

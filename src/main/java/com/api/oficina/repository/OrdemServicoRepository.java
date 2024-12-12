@@ -19,5 +19,7 @@ public interface OrdemServicoRepository extends CrudRepository<OrdemServico, Lon
 			WHERE os.cliente_id = %:idCliente%
 			""", nativeQuery = true)
 	public List<OrdemServico> findOrdemServicoByIdCliente(@Param("idCliente") Long idCliente);
+	
+	public List<OrdemServico> findAllByOficina_Id(Long oficinaId);
 
 }

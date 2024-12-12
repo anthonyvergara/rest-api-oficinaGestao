@@ -65,7 +65,7 @@ public class Parcelas {
 		
 		for(int i = 0; i<valorParcelaAtualizado.size(); i++) {
 			
-			if(valorParcelaAtualizado.get(i) != 0.0) {
+			if(valorParcelaAtualizado.get(i) != 0.0) {  // ZERO CORRESPONDE A PARCELAS PAGAS, POREM DEVO REFATORAR ESSE CODIGO!
 				parcelasNaoPagas.get(i).setValorParcela(valorParcelaAtualizado.get(i));
 			}else {
 				parcelasNaoPagas.get(i).setStatusParcela(Status.PAGO);

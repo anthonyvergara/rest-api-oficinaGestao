@@ -36,6 +36,12 @@ public class OrdemServicoController {
 	public ResponseEntity<List<OrdemServico>> listAll(){
 		return new ResponseEntity<List<OrdemServico>>(this.ORDEM_SERVICO.listAll(),HttpStatus.OK);
 	}
+	
+	@GetMapping("/oficina/{idOficina}")
+	public ResponseEntity<List<OrdemServico>> listAll(@PathVariable(value ="idOficina") Long idOficina){
+		return new ResponseEntity<List<OrdemServico>>(this.ORDEM_SERVICO.listAllByIdOficina(idOficina),HttpStatus.OK);
+	}
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<OrdemServico> listById(@PathVariable(value="id") Long id){
 		return new ResponseEntity<OrdemServico>(this.ORDEM_SERVICO.listById(id),HttpStatus.OK);
