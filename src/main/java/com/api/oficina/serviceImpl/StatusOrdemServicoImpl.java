@@ -49,61 +49,13 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 		return statusOS;
 	}
 	
-	private StatusOrdemServico atualizaProximoVencimento(OrdemServico ordemServico) {
-		StatusOrdemServico status = ordemServico.getStatusOrdemServico();
-		
-		Optional<LocalDate> proximoVencimento = ordemServico.getParcela().stream()
-				.filter(parcela -> parcela.getStatusParcela() != Status.PAGO)
-				.map(Parcela::getDataVencimento)
-				.min(Comparator.naturalOrder());
-		
-		if(proximoVencimento.isPresent()) {
-			status.setProximoVencimento(proximoVencimento.get());
-		}else {
-			status.setProximoVencimento(null);
-		}
-			
-		return status;
-	}
-	
-	private StatusOrdemServico atualizaValorProximaParcela (OrdemServico ordemServico) {
-		StatusOrdemServico status = ordemServico.getStatusOrdemServico();
-		
-		Optional<Double> valorProximaParcela = ordemServico.getParcela().stream() // LISTA A PROXIMA PARCELA IGNORANDO AS PAGAS E ATRASADAS
-				.filter(parcela -> parcela.getStatusParcela() != Status.PAGO && parcela.getStatusParcela() != Status.ATRASADO)
-				.map(Parcela::getValorParcela)
-				.min(Comparator.naturalOrder());
-		
-		if(valorProximaParcela.isPresent()) {
-			status.setValorProximaParcela(valorProximaParcela.get());
-		}else {
-			status.setValorProximaParcela(0.0);
-		}
-		
-		return status;
-	}
-	
-	private List<Parcela> atualizarStatusParcelas(OrdemServico ordemServico) {
-		List<Parcela> parcelas = ordemServico.getParcela();
-		
-		LocalDate dataAtual = LocalDate.now();
-		
-		parcelas.forEach(parcela -> {
-			if(parcela.getDataVencimento().isBefore(dataAtual)) {
-				parcela.setStatusParcela(Status.ATRASADO);
-			}
-		});
-		
-		return parcelas;
-	}
-	
 	@Override
 	public StatusOrdemServico update(StatusOrdemServico statusOS) {
 		OrdemServico ordemServico = statusOS.getOrdemServico();
 		
 		boolean parcelaAtrasada = false;
 		
-		// VERIFICA SE EXISTE PARCELAMENTOS PARA ATUALIZAR O STATUS
+		// VERIFICA SE EXISTEM PARCELAMENTOS PARA ATUALIZAR O STATUS
 		if(! ordemServico.getParcela().isEmpty())	{
 			
 			ordemServico.setStatusOrdemServico(this.atualizaProximoVencimento(ordemServico));
@@ -122,7 +74,7 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 		double valorTotalOrdemServico = ordemServico.getValorTotal();
 		double valorTotalPagamento = 0;
 		
-		// VERIFICA SE EXISTE PAGAMENTOS PARA ATUALIZAR O ULTIMO PAGAMENTO E SALDO DEVEDOR
+		// VERIFICA SE EXISTEm PAGAMENTOS PARA ATUALIZAR O ULTIMO PAGAMENTO E SALDO DEVEDOR
 		if(! ordemServico.getPagamento().isEmpty()) {
 			Optional<LocalDateTime> ultimoPagamento = ordemServico.getPagamento().stream()
 					.filter(valores -> valores.getValorPago() > 0)
@@ -150,6 +102,54 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 		this.STATUS_SERVICO_REPOSITORY.save(statusOS);
 				
 		return statusOS;
+	}
+	
+	private StatusOrdemServico atualizaProximoVencimento(OrdemServico ordemServico) {
+		StatusOrdemServico status = ordemServico.getStatusOrdemServico();
+		
+		Optional<LocalDate> proximoVencimento = ordemServico.getParcela().stream()
+				.filter(parcela -> parcela.getStatusParcela() == Status.AGENDADO)
+				.map(Parcela::getDataVencimento)
+				.min(Comparator.naturalOrder());
+		
+		if(proximoVencimento.isPresent()) {
+			status.setProximoVencimento(proximoVencimento.get());
+		}else {
+			status.setProximoVencimento(null);
+		}
+			
+		return status;
+	}
+	
+	private StatusOrdemServico atualizaValorProximaParcela (OrdemServico ordemServico) {
+		StatusOrdemServico status = ordemServico.getStatusOrdemServico();
+		
+		Optional<Double> valorProximaParcela = ordemServico.getParcela().stream() // LISTA A PROXIMA PARCELA IGNORANDO AS PAGAS E ATRASADAS
+				.filter(parcela -> parcela.getStatusParcela() == Status.AGENDADO)
+				.map(Parcela::getValorParcela)
+				.min(Comparator.naturalOrder());
+		
+		if(valorProximaParcela.isPresent()) {
+			status.setValorProximaParcela(valorProximaParcela.get());
+		}else {
+			status.setValorProximaParcela(0.0);
+		}
+		
+		return status;
+	}
+	
+	private List<Parcela> atualizarStatusParcelas(OrdemServico ordemServico) {
+		List<Parcela> parcelas = ordemServico.getParcela();
+		
+		LocalDate dataAtual = LocalDate.now();
+		
+		parcelas.forEach(parcela -> {
+			if(parcela.getDataVencimento().isBefore(dataAtual)) {
+				parcela.setStatusParcela(Status.ATRASADO);
+			}
+		});
+		
+		return parcelas;
 	}
 	
 }
