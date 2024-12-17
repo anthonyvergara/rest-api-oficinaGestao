@@ -52,7 +52,7 @@ public class ClienteTeste {
 		cliente.setNome("Anthony");
 		cliente.setEmail("anthonyverg@icloud.com");
 		
-		clienteDTO = new ClienteDTO(cliente.getId(),cliente.getNome(),null,null,cliente.getEmail(),null,null,null);
+		clienteDTO = new ClienteDTO(cliente.getId(),cliente.getNome(),null,null,cliente.getEmail(),null,null,null,null,null);
 		
 	}
 	
