@@ -34,8 +34,8 @@ public class PagamentoServiceImpl implements PagamentoService{
 		this.STATUS_ORDEM_SERVICO = statusOrdemServico;
 	}
 	
-	@Transactional
 	@Override
+	@Transactional
 	public List<Pagamento> save(Long idOrdemServico, List<Pagamento> pagamentos) {
 		Optional<OrdemServico> ordemServico = Optional.of(this.ORDEM_SERVICO_REPOSITORY.findById(idOrdemServico)
 				.orElseThrow(()-> new IllegalArgumentException("OrdemServico não existe!")));

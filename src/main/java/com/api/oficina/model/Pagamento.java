@@ -16,6 +16,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -26,6 +27,10 @@ import lombok.Setter;
 public class Pagamento implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
+	
+	public Pagamento() {
+		this.setDataPagamento(LocalDateTime.now());
+	}
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,7 +48,10 @@ public class Pagamento implements Serializable{
 	@ManyToOne
 	private OrdemServico ordemServico;
 	
-	public Pagamento() {
-		this.dataPagamento = LocalDateTime.now();
-	}
+	@PrePersist
+    public void prePersist() {
+        if (this.dataPagamento == null) {
+            this.dataPagamento = LocalDateTime.now();
+        }
+    }
 }

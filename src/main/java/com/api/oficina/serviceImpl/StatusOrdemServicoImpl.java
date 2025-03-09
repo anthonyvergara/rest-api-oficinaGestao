@@ -35,6 +35,18 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 	}
 	
 	@Override
+	public StatusOrdemServico listById(Long idOrdemServico) {
+		
+		Optional<StatusOrdemServico> statusOrdemServico = Optional.ofNullable(this.STATUS_SERVICO_REPOSITORY.findByIdOrdemServico(idOrdemServico));
+
+		if (statusOrdemServico == null || !statusOrdemServico.isPresent()) {
+		    throw new IllegalArgumentException("Status de Ordem de Serviço não encontrado");
+		}
+
+		return statusOrdemServico.get();
+	}
+	
+	@Override
 	public StatusOrdemServico save(Long idOrdemServico) {
 		
 		Optional<OrdemServico> ordemServico = Optional.of(this.ORDEM_SERVICO_REPOSITORY.findById(idOrdemServico)

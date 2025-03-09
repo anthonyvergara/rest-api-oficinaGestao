@@ -16,6 +16,8 @@ import com.api.oficina.repository.ParcelaRepository;
 import com.api.oficina.service.ParcelaService;
 import com.api.oficina.util.parcela.CalculoParcelamentoSemJuros;
 
+import jakarta.transaction.Transactional;
+
 
 @Service
 public class ParcelaServiceImpl implements ParcelaService{
@@ -61,6 +63,7 @@ public class ParcelaServiceImpl implements ParcelaService{
 		return listaParcelas;
 	}
 	
+	@Transactional
 	@Override
 	public List<Parcela> update(Long idOrdemServico, int quantidadeParcelas) {
 		

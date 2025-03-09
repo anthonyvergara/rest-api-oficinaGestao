@@ -55,6 +55,9 @@ public class CalculoParcelamentoSemJuros implements CalculoParcelamento{
 		 
 		 while(restoPagamento > 0) {
 			 //Verifica se valor da parcela é menor que o valor pago.
+			 if(parcelasNaoPagas.size() == i) {
+				 break;
+			 }
 			 if(parcelasNaoPagas.get(i) < restoPagamento) {
 				 restoPagamento = restoPagamento - parcelasNaoPagas.get(i);
 				 parcelasNaoPagas.set(i, 0.0);

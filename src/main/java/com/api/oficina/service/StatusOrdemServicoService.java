@@ -7,5 +7,6 @@ public interface StatusOrdemServicoService {
 	
 	public StatusOrdemServico save(Long idOrdemServico);
 	public StatusOrdemServico update(StatusOrdemServico statusOS);
+	public StatusOrdemServico listById(Long irOrdemServico);
 	
 }
