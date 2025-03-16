@@ -156,7 +156,7 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 		LocalDate dataAtual = LocalDate.now();
 		
 		parcelas.forEach(parcela -> {
-			if(parcela.getDataVencimento().isBefore(dataAtual)) {
+			if(parcela.getDataVencimento().isBefore(dataAtual) && parcela.getStatusParcela() != Status.PAGO) {
 				parcela.setStatusParcela(Status.ATRASADO);
 			}
 		});
