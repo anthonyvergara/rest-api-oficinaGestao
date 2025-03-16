@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,5 +38,10 @@ public class DetalheServicoController {
 	@GetMapping(value = "/ordemServico/{idOrdemServico}")
 	public ResponseEntity<List<DetalheServico>> listByIdOrdemServico(@PathVariable(value = "idOrdemServico")Long idOrdemServico){
 		return new ResponseEntity<List<DetalheServico>>(this.DETALHE_SERVICO_SERVICE.listByIdOrdemServico(idOrdemServico),HttpStatus.OK);
+	}
+	
+	@PutMapping(value = "/{idOrdemServico}")
+	public ResponseEntity<List<DetalheServico>> update(@RequestBody List<DetalheServico> servicos, @PathVariable(value = "idOrdemServico") Long id){
+		return new ResponseEntity<List<DetalheServico>>(this.DETALHE_SERVICO_SERVICE.save(id, servicos), HttpStatus.OK);
 	}
 }
