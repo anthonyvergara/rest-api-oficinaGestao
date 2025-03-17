@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import com.api.oficina.serviceImpl.DetalheServicoImpl;
 
 @RestController
 @RequestMapping(value = "/oficina/detalheServico")
+@CrossOrigin(origins = "http://localhost:4200")
 public class DetalheServicoController {
 
 	private final DetalheServicoImpl DETALHE_SERVICO_SERVICE;
@@ -42,6 +44,6 @@ public class DetalheServicoController {
 	
 	@PutMapping(value = "/{idOrdemServico}")
 	public ResponseEntity<List<DetalheServico>> update(@RequestBody List<DetalheServico> servicos, @PathVariable(value = "idOrdemServico") Long id){
-		return new ResponseEntity<List<DetalheServico>>(this.DETALHE_SERVICO_SERVICE.save(id, servicos), HttpStatus.OK);
+		return new ResponseEntity<List<DetalheServico>>(this.DETALHE_SERVICO_SERVICE.update(id, servicos), HttpStatus.OK);
 	}
 }
