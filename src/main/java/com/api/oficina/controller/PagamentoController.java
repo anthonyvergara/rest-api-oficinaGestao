@@ -17,7 +17,6 @@ import com.api.oficina.service.PagamentoService;
 
 @RestController
 @RequestMapping(value = "/oficina/pagamento")
-@CrossOrigin(origins = "http://localhost:4200")
 public class PagamentoController {
 	
 	private final PagamentoService PAGAMENTO_SERVICE;

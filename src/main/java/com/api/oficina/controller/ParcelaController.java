@@ -15,7 +15,6 @@ import com.api.oficina.serviceImpl.ParcelaServiceImpl;
 
 @RestController
 @RequestMapping(value = "/oficina/parcelamento")
-@CrossOrigin(origins = "http://localhost:4200")
 public class ParcelaController {
 	
 	private final ParcelaServiceImpl  PARCELAMENTO_SERVICE;

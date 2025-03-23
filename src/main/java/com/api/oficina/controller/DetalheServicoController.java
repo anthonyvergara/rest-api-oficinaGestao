@@ -18,7 +18,6 @@ import com.api.oficina.serviceImpl.DetalheServicoImpl;
 
 @RestController
 @RequestMapping(value = "/oficina/detalheServico")
-@CrossOrigin(origins = "http://localhost:4200")
 public class DetalheServicoController {
 
 	private final DetalheServicoImpl DETALHE_SERVICO_SERVICE;

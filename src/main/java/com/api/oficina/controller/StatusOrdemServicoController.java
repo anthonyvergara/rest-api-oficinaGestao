@@ -13,7 +13,6 @@ import com.api.oficina.service.StatusOrdemServicoService;
 
 @RestController
 @RequestMapping(value = "/oficina/status")
-@CrossOrigin(origins = "http://localhost:4200")
 public class StatusOrdemServicoController {
 	
 	private StatusOrdemServicoService STATUS_ORDEM_SERVICO_SERVICE;

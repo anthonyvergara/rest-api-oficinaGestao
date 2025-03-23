@@ -23,7 +23,6 @@ import jakarta.validation.Valid;
 @RestController
 @Validated
 @RequestMapping(value = "/oficina/ordemServico")
-@CrossOrigin(origins = "http://localhost:4200")
 public class OrdemServicoController {
 
 	private final OrdemServicoImpl ORDEM_SERVICO;
