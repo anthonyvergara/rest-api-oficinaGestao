@@ -29,7 +29,7 @@ import lombok.Setter;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Setter @Getter @EqualsAndHashCode
+@Setter @Getter
 public abstract class Pessoa implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -55,4 +55,21 @@ public abstract class Pessoa implements Serializable{
 	@OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
 	private List<Telefone> telefone = new ArrayList<Telefone>();
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Pessoa other = (Pessoa) obj;
+		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+	
 }

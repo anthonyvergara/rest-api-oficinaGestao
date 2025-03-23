@@ -33,6 +33,13 @@ public class ClienteServiceImpl implements ClienteService{
 		Collections.sort(cliente);
 		return DTO.listToDto(cliente);
 	}
+	
+	@Override
+	public List<ClienteDTO> findByNameContains(String name){
+		List<Cliente> cliente = this.CLIENTE_REPOSITORY.findByNomeContainingIgnoreCase(name);
+		Collections.sort(cliente);
+		return DTO.listToDto(cliente);
+	}
 
 	@Override
 	public ClienteDTO save(Cliente cliente, Long idOficina) {

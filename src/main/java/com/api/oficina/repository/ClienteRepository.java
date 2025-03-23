@@ -1,5 +1,6 @@
 package com.api.oficina.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
@@ -13,5 +14,5 @@ public interface ClienteRepository extends CrudRepository<Cliente, Long>{
 	@Query("SELECT o.cliente FROM OrdemServico o WHERE o.id = :idOrdem")
 	Cliente findByIdOrdemServico(@Param("idOrdem") Long idOrdem);
 
-	
+	List<Cliente> findByNomeContainingIgnoreCase(String nome);
 }

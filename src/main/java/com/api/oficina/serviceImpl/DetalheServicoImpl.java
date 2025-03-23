@@ -1,5 +1,6 @@
 package com.api.oficina.serviceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +48,38 @@ public class DetalheServicoImpl implements DetalheServicoService{
 		for(DetalheServico servico : servicos) {
 			servico.setOrdemServico(ordemServico.get());
 			this.DETALHE_SERVICO_REPOSITORY.save(servico);
+		}
+		
+		verificarParcelamento(ordemServico.get());
+		
+		return servicos;
+	}
+	
+	@Transactional
+	@Override
+	public List<DetalheServico> update(Long idOrdemServico, List<DetalheServico> servicos){
+		Optional<OrdemServico> ordemServico  = Optional.of(this.ORDEM_SERVICO_REPOSITORY.findById(idOrdemServico)
+				.orElseThrow(() -> new IllegalArgumentException("OrdemServico não existe!")));
+		
+		double valorTotal = ordemServico.get().getValorTotal();
+		double valorTotalAtualizado = /*valorTotal */ Invoice.calcularServico(servicos, new CalculoServicoPadrao(ordemServico.get().getVat()));
+		ordemServico.get().setValorTotal(valorTotalAtualizado);
+		
+		int i = 0;
+		for(DetalheServico servico : servicos) {
+			servico.setOrdemServico(ordemServico.get());
+			servicos.set(i, this.DETALHE_SERVICO_REPOSITORY.save(servico));
+			i++;
+		}
+		
+		List<DetalheServico> detalheServico = this.DETALHE_SERVICO_REPOSITORY.listByIdOrdemServico(idOrdemServico);
+		
+		for(DetalheServico servico : detalheServico) {
+			
+			if(!servicos.contains(servico)) {
+				this.DETALHE_SERVICO_REPOSITORY.delete(servico);
+			}
+			
 		}
 		
 		verificarParcelamento(ordemServico.get());

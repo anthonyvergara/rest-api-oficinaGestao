@@ -12,5 +12,6 @@ public interface ClienteService {
 	public ClienteDTO findById(Long id);
 	public ClienteDTO save(Cliente cliente, Long idOficina);
 	public ClienteDTO update(Cliente cliente);
+	public List<ClienteDTO> findByNameContains(String name);
 	public void deleteById(Long id);
 }

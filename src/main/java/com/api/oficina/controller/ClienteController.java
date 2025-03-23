@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.oficina.dto.ClienteDTO;
@@ -32,6 +33,11 @@ public class ClienteController {
 	@GetMapping(value = "")
 	public ResponseEntity<List<ClienteDTO>> listAll(){
 		return new ResponseEntity<List<ClienteDTO>>(this.CLIENTE_SERVICE.listAll(), HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/")
+	public ResponseEntity<List<ClienteDTO>> findByNameContains(@RequestParam String name){
+		return new ResponseEntity<List<ClienteDTO>>(this.CLIENTE_SERVICE.findByNameContains(name),HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/{id}")

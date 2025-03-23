@@ -30,7 +30,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Setter @Getter @EqualsAndHashCode
+@Setter @Getter
 public class OrdemServico implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -96,4 +96,23 @@ public class OrdemServico implements Serializable{
             this.dataInicio = LocalDateTime.now();
         }
     }
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		OrdemServico other = (OrdemServico) obj;
+		return Objects.equals(id, other.id);
+	}
+	
+	
 }

@@ -27,7 +27,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Setter @Getter @EqualsAndHashCode
+@Setter @Getter
 public class Oficina implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -60,4 +60,22 @@ public class Oficina implements Serializable{
 	@OneToMany(mappedBy = "oficina")
 	private Set<OrdemServico> ordemServico = new HashSet<OrdemServico>();
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(Id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Oficina other = (Oficina) obj;
+		return Objects.equals(Id, other.Id);
+	}
+
+	
 }

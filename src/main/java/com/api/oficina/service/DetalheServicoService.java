@@ -10,5 +10,6 @@ public interface DetalheServicoService {
 	public List<DetalheServico> save(Long idOrdemServico, List<DetalheServico> servicos);
 	public List<DetalheServico> listByPlaca(String placa, Long idOrdemServico);
 	public List<DetalheServico> listByIdOrdemServico(Long idOrdemServico);
+	public List<DetalheServico> update(Long idOrdemServico, List<DetalheServico> servicos);
 	
 }
