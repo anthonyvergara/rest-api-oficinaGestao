@@ -30,7 +30,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Setter @Getter
 public class OrdemServico implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -113,6 +112,110 @@ public class OrdemServico implements Serializable{
 		OrdemServico other = (OrdemServico) obj;
 		return Objects.equals(id, other.id);
 	}
-	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getInvoiceNumber() {
+		return invoiceNumber;
+	}
+
+	public void setInvoiceNumber(Long invoiceNumber) {
+		this.invoiceNumber = invoiceNumber;
+	}
+
+	public int getVat() {
+		return vat;
+	}
+
+	public void setVat(int vat) {
+		this.vat = vat;
+	}
+
+	public LocalDateTime getDataInicio() {
+		return dataInicio;
+	}
+
+	public void setDataInicio(LocalDateTime dataInicio) {
+		this.dataInicio = dataInicio;
+	}
+
+	public double getValorTotal() {
+		return valorTotal;
+	}
+
+	public void setValorTotal(double valorTotal) {
+		this.valorTotal = valorTotal;
+	}
+
+	public String getObservacao() {
+		return observacao;
+	}
+
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
+	}
+
+	public int getQuantidadeParcelas() {
+		return quantidadeParcelas;
+	}
+
+	public void setQuantidadeParcelas(int quantidadeParcelas) {
+		this.quantidadeParcelas = quantidadeParcelas;
+	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+
+	public Oficina getOficina() {
+		return oficina;
+	}
+
+	public void setOficina(Oficina oficina) {
+		this.oficina = oficina;
+	}
+
+	public List<DetalheServico> getDetalheServico() {
+		return detalheServico;
+	}
+
+	public void setDetalheServico(List<DetalheServico> detalheServico) {
+		this.detalheServico = detalheServico;
+	}
+
+	public List<Pagamento> getPagamento() {
+		return pagamento;
+	}
+
+	public void setPagamento(List<Pagamento> pagamento) {
+		this.pagamento = pagamento;
+	}
+
+	public StatusOrdemServico getStatusOrdemServico() {
+		return statusOrdemServico;
+	}
+
+	public void setStatusOrdemServico(StatusOrdemServico statusOrdemServico) {
+		this.statusOrdemServico = statusOrdemServico;
+	}
+
+	public List<Parcela> getParcela() {
+		return parcela;
+	}
+
+	public void setParcela(List<Parcela> parcela) {
+		this.parcela = parcela;
+	}
+
 	
 }

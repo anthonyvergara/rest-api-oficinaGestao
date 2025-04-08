@@ -27,7 +27,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Setter @Getter
 public class Oficina implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -75,6 +74,70 @@ public class Oficina implements Serializable{
 			return false;
 		Oficina other = (Oficina) obj;
 		return Objects.equals(Id, other.Id);
+	}
+
+	public Long getId() {
+		return Id;
+	}
+
+	public void setId(Long id) {
+		Id = id;
+	}
+
+	public String getNomeOficina() {
+		return nomeOficina;
+	}
+
+	public void setNomeOficina(String nomeOficina) {
+		this.nomeOficina = nomeOficina;
+	}
+
+	public Long getCompanyNumber() {
+		return companyNumber;
+	}
+
+	public void setCompanyNumber(Long companyNumber) {
+		this.companyNumber = companyNumber;
+	}
+
+	public Long getVatNumber() {
+		return vatNumber;
+	}
+
+	public void setVatNumber(Long vatNumber) {
+		this.vatNumber = vatNumber;
+	}
+
+	public List<DonoOficina> getDonoOficina() {
+		return donoOficina;
+	}
+
+	public void setDonoOficina(List<DonoOficina> donoOficina) {
+		this.donoOficina = donoOficina;
+	}
+
+	public OficinaEndereco getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(OficinaEndereco endereco) {
+		this.endereco = endereco;
+	}
+
+	public Set<Cliente> getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Set<Cliente> cliente) {
+		this.cliente = cliente;
+	}
+
+	public Set<OrdemServico> getOrdemServico() {
+		return ordemServico;
+	}
+
+	public void setOrdemServico(Set<OrdemServico> ordemServico) {
+		this.ordemServico = ordemServico;
 	}
 
 	

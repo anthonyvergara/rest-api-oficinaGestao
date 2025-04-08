@@ -21,7 +21,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Setter @Getter @EqualsAndHashCode
 public class Parcela implements Serializable, Comparable<Parcela>{
 
 	private static final long serialVersionUID = 1L;
@@ -81,4 +80,29 @@ public class Parcela implements Serializable, Comparable<Parcela>{
 	public int hashCode() {
 		return Objects.hash(id);
 	}
+
+	public double getValorParcela() {
+		return valorParcela;
+	}
+
+	public void setValorParcela(double valorParcela) {
+		this.valorParcela = valorParcela;
+	}
+
+	public LocalDate getDataVencimento() {
+		return dataVencimento;
+	}
+
+	public void setDataVencimento(LocalDate dataVencimento) {
+		this.dataVencimento = dataVencimento;
+	}
+
+	public OrdemServico getOrdemServico() {
+		return ordemServico;
+	}
+
+	public void setOrdemServico(OrdemServico ordemServico) {
+		this.ordemServico = ordemServico;
+	}
+
 }

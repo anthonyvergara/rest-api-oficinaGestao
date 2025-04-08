@@ -22,7 +22,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Setter @Getter
 public class Cliente extends Pessoa implements Serializable, Comparable<Cliente>{
 
 	private static final long serialVersionUID = 1L;
@@ -74,5 +73,63 @@ public class Cliente extends Pessoa implements Serializable, Comparable<Cliente>
 		
 		return this.getNome().compareTo(o.getNome());
 	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getNumeroDrive() {
+		return numeroDrive;
+	}
+
+	public void setNumeroDrive(Long numeroDrive) {
+		this.numeroDrive = numeroDrive;
+	}
+
+	public Long getNumeroPassaporte() {
+		return numeroPassaporte;
+	}
+
+	public void setNumeroPassaporte(Long numeroPassaporte) {
+		this.numeroPassaporte = numeroPassaporte;
+	}
+
+	public Long getNumeroRg() {
+		return numeroRg;
+	}
+
+	public void setNumeroRg(Long numeroRg) {
+		this.numeroRg = numeroRg;
+	}
+
+	public Oficina getOficina() {
+		return oficina;
+	}
+
+	public void setOficina(Oficina oficina) {
+		this.oficina = oficina;
+	}
+
+	public List<DocumentoImg> getDocumentos() {
+		return documentos;
+	}
+
+	public void setDocumentos(List<DocumentoImg> documentos) {
+		this.documentos = documentos;
+	}
+
+	public Set<OrdemServico> getOrdemServico() {
+		return ordemServico;
+	}
+
+	public void setOrdemServico(Set<OrdemServico> ordemServico) {
+		this.ordemServico = ordemServico;
+	}
+	
+	
 
 }

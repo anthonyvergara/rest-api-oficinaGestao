@@ -16,7 +16,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Setter @Getter
 public class DonoOficina extends Pessoa implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -54,7 +53,39 @@ public class DonoOficina extends Pessoa implements Serializable{
 		DonoOficina other = (DonoOficina) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
+	public List<Oficina> getOficina() {
+		return oficina;
+	}
+
+	public void setOficina(List<Oficina> oficina) {
+		this.oficina = oficina;
+	}
+	
+	
+	
 }
