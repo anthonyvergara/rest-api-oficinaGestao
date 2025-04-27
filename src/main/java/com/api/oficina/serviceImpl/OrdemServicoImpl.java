@@ -63,11 +63,7 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		List<OrdemServico> listaOrdemServico = this.ORDEM_SERVICO_REPOSITORY.findAllByOficina_Id(2L);
 		
 		listaOrdemServico.forEach(ordem -> {
-			System.out.print("atual: " );
-			System.out.println(ordem.getStatusOrdemServico().getTipoStatus());
 			ordem.setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.update(ordem.getStatusOrdemServico()));
-			System.out.print("depois: " );
-			System.out.println(ordem.getStatusOrdemServico().getTipoStatus());
 		});
 		
 		return listaOrdemServico;
@@ -100,27 +96,19 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		ordemServico.setOficina(oficina.get());
 		ordemServico.setInvoiceNumber(this.generateInvoiceNumber());
 		
-		System.out.println("VALOR TOTA1L: "+ordemServico.getValorTotal());
-		
+
 		List<Pagamento> pagamentosNoAtoDaCriacaoDaOrdem = new ArrayList<>(ordemServico.getPagamento());
 		ordemServico.getPagamento().clear(); // Remove temporariamente os valores para não atualizar SaldoDevedor subtraido de Pagamentos ao chamar StatusOrdemServico em DetalheServicoImpl
 		
-		System.out.println("VALOR TOTA2L: "+ordemServico.getValorTotal());
-		
+
 		ordemServico = this.ORDEM_SERVICO_REPOSITORY.save(ordemServico);
 		
 		ordemServico.setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.save(ordemServico.getId()));
 		
-		System.out.println("VALOR TOTA3L: "+ordemServico.getValorTotal());
-		
-		
+
 		ordemServico.setDetalheServico(this.DETALHE_SERVICO_SERVICE.save(ordemServico.getId(), ordemServico.getDetalheServico()));
 		
-		System.out.println("VALOR TOTA4L: "+ordemServico.getValorTotal());
-		
 		ordemServico.setPagamento(this.PAGAMENTO_SERVICE.save(ordemServico.getId(), pagamentosNoAtoDaCriacaoDaOrdem));
-		
-		System.out.println("VALOR TOTA5L: "+ordemServico.getValorTotal());
 		
 		validarVerificacaoCondicional(ordemServico);
 		
@@ -137,7 +125,6 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		// DEVE DEVE PARCELAR O VALOR NO MINIMO 1 VEZ
 		if(ordemServico.getQuantidadeParcelas() == 0 && ordemServico.getPagamento().isEmpty()) {
 			ordemServico.setQuantidadeParcelas(1);
-			System.out.println("passo aqui 1");
 		}
 		
 		if(!ordemServico.getPagamento().isEmpty()) {
@@ -151,7 +138,6 @@ public class OrdemServicoImpl implements OrdemServicoService{
 			// DEVE PARCELAR O RESTANTE NO MINIMO 1 VEZ
 			if(ordemServico.getPagamento().get(0).getValorPago() < ordemServico.getValorTotal() && ordemServico.getQuantidadeParcelas() == 0) {
 				ordemServico.setQuantidadeParcelas(1);
-				System.out.println("passo aqui 2");
 			}
 		}
 		
