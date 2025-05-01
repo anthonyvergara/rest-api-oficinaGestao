@@ -63,8 +63,8 @@ public class ClienteController {
 		return ResponseEntity.ok().build();
 	}
 	
-	@PutMapping(value = "")
-	public ResponseEntity<ClienteDTO> update(@RequestBody Cliente cliente){
-		return new ResponseEntity<ClienteDTO>(this.CLIENTE_SERVICE.update(cliente),HttpStatus.OK);
+	@PutMapping(value = "/{idOficina}")
+	public ResponseEntity<ClienteDTO> update(@RequestBody Cliente cliente, @PathVariable(value = "idOficina") Long idOficina){
+		return new ResponseEntity<ClienteDTO>(this.CLIENTE_SERVICE.update(cliente, idOficina),HttpStatus.OK);
 	}
 }
