@@ -17,9 +17,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 public class DetalheServico implements Serializable{
@@ -41,7 +38,11 @@ public class DetalheServico implements Serializable{
 	private int quantidade;
 	
 	private Long milhagem;
-	
+
+	private String nomeMotorista;
+
+	private String observacao;
+
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime data;
@@ -140,7 +141,20 @@ public class DetalheServico implements Serializable{
 	public void setOrdemServico(OrdemServico ordemServico) {
 		this.ordemServico = ordemServico;
 	}
-	
-	
-	
+
+	public String getNomeMotorista() {
+		return nomeMotorista;
+	}
+
+	public void setNomeMotorista(String nomeMotorista) {
+		this.nomeMotorista = nomeMotorista;
+	}
+
+	public String getObservacao() {
+		return observacao;
+	}
+
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
+	}
 }
