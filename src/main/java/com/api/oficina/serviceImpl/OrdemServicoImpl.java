@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import com.api.oficina.modelEnum.TipoPagamento;
 import org.springframework.stereotype.Service;
 
 import com.api.oficina.component.Invoice;
@@ -180,7 +181,27 @@ public class OrdemServicoImpl implements OrdemServicoService{
 			this.ORDEM_SERVICO_REPOSITORY.deleteById(id);
 		}
 	}
-	
+
+	@Transactional
+	@Override
+	public OrdemServico updateFields(OrdemServico ordemServico, Long idCliente, Long idOficina) {
+
+		Cliente client_id = this.CLIENTE_REPOSITORY.findById(idCliente)
+				.orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado!"));
+
+		Oficina oficina_id = this.OFICINA_REPOSITORY.findById(idOficina)
+				.orElseThrow(() -> new IllegalArgumentException("Oficina não encontrada!"));
+
+
+		OrdemServico ordem = this.ORDEM_SERVICO_REPOSITORY.findById(ordemServico.getId())
+				.orElseThrow(() -> new IllegalArgumentException("Ordem de serviço não encontrada!"));
+
+		ordem.setObservacao(ordemServico.getObservacao());
+
+		this.ORDEM_SERVICO_REPOSITORY.save(ordem);
+		return ordem;
+	}
+
 	private void deleteAll() {
 		this.ORDEM_SERVICO_REPOSITORY.deleteAll();
 	}
