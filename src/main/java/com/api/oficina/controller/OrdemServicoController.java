@@ -6,14 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.api.oficina.model.OrdemServico;
 import com.api.oficina.serviceImpl.OrdemServicoImpl;
@@ -64,7 +57,15 @@ public class OrdemServicoController {
 		this.ORDEM_SERVICO.delete(id);
 		return ResponseEntity.ok().build();
 	}
-	
+
+	@PatchMapping(value = "/cliente/{idCliente}/oficina/{idOficina}")
+	public ResponseEntity<OrdemServico> updateFields(@RequestBody OrdemServico ordemServico,
+													 @PathVariable(value = "idCliente") Long idCliente,
+														@PathVariable(value = "idOficina") Long idOficina){
+
+		return new ResponseEntity<OrdemServico>(this.ORDEM_SERVICO.updateFields(ordemServico, idCliente, idOficina),HttpStatus.OK);
+	}
+
 //	@DeleteMapping
 //	public ResponseEntity<String> deleteAll(){
 //		this.ORDEM_SERVICO.deleteAll();

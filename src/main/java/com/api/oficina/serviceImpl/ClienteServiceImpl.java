@@ -1,9 +1,15 @@
 package com.api.oficina.serviceImpl;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import com.api.oficina.model.Endereco;
+import com.api.oficina.model.Telefone;
+import com.api.oficina.modelEnum.TipoTelefone;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.api.oficina.dto.ClienteDTO;
@@ -41,25 +47,22 @@ public class ClienteServiceImpl implements ClienteService{
 		return DTO.listToDto(cliente);
 	}
 
+	@Transactional
 	@Override
 	public ClienteDTO save(Cliente cliente, Long idOficina) {
 		
-		Optional<Oficina> findOficina = Optional.of(this.OFICINA_REPOSITORY.findById(idOficina)
-				.orElseThrow(()-> new IllegalArgumentException("Oficina não existe!")));
+		Oficina findOficina = this.OFICINA_REPOSITORY.findById(idOficina)
+				.orElseThrow(()-> new IllegalArgumentException("Oficina não existe!"));
 		
-		if(findOficina.isEmpty()) {
-			throw new RuntimeException();
-		}else {
-			cliente.setOficina(findOficina.get());
-			
-			for(int i = 0; i< cliente.getEndereco().size(); i++) {
-				cliente.getEndereco().get(i).setPessoa(cliente);
-			}
-			for(int i = 0; i< cliente.getTelefone().size(); i++) {
-				cliente.getTelefone().get(i).setPessoa(cliente);
-			}
+		cliente.setOficina(findOficina);
+
+		for(int i = 0; i< cliente.getEndereco().size(); i++) {
+			cliente.getEndereco().get(i).setPessoa(cliente);
 		}
-		
+		for(int i = 0; i< cliente.getTelefone().size(); i++) {
+			cliente.getTelefone().get(i).setPessoa(cliente);
+		}
+
 		this.CLIENTE_REPOSITORY.save(cliente);
 		return (ClienteDTO) DTO.convertToDto(cliente);
 	}
@@ -70,14 +73,20 @@ public class ClienteServiceImpl implements ClienteService{
 		Optional<Cliente> find = this.CLIENTE_REPOSITORY.findById(id);
 		if(find.isEmpty()) {
 			throw new RuntimeException();
-		}else {
-			return (ClienteDTO) DTO.convertToDto(find.get());
 		}
-		
+
+		return (ClienteDTO) DTO.convertToDto(find.get());
 	}
 
+
+	@Transactional
 	@Override
-	public ClienteDTO update(Cliente cliente) {
+	public ClienteDTO update(Cliente cliente, Long idOficina) {
+
+		Oficina findOficina = this.OFICINA_REPOSITORY.findById(idOficina)
+				.orElseThrow(() -> new IllegalArgumentException("Oficina não existe!"));
+
+		cliente.setOficina(findOficina);
 		
 		for(int i = 0; i<cliente.getTelefone().size(); i++) {
 			cliente.getTelefone().get(i).setPessoa(cliente);
@@ -85,6 +94,7 @@ public class ClienteServiceImpl implements ClienteService{
 		for(int i = 0; i<cliente.getEndereco().size(); i++) {
 			cliente.getEndereco().get(i).setPessoa(cliente);
 		}
+
 		this.CLIENTE_REPOSITORY.save(cliente);
 		
 		return (ClienteDTO) DTO.convertToDto(cliente);

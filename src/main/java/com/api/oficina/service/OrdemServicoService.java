@@ -11,6 +11,7 @@ public interface OrdemServicoService {
 	public OrdemServico listById(Long id);
 	public OrdemServico save(OrdemServico ordemServico, Long idCliente, Long idOficina);
 	public OrdemServico update(OrdemServico ordemServico);
+	public OrdemServico updateFields(OrdemServico ordemServico, Long idCliente, Long idOficina);
 	public void delete(Long id);
 	
 }

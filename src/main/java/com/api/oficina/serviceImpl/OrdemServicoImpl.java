@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import com.api.oficina.modelEnum.TipoPagamento;
 import org.springframework.stereotype.Service;
 
 import com.api.oficina.component.Invoice;
@@ -63,11 +64,7 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		List<OrdemServico> listaOrdemServico = this.ORDEM_SERVICO_REPOSITORY.findAllByOficina_Id(2L);
 		
 		listaOrdemServico.forEach(ordem -> {
-			System.out.print("atual: " );
-			System.out.println(ordem.getStatusOrdemServico().getTipoStatus());
 			ordem.setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.update(ordem.getStatusOrdemServico()));
-			System.out.print("depois: " );
-			System.out.println(ordem.getStatusOrdemServico().getTipoStatus());
 		});
 		
 		return listaOrdemServico;
@@ -100,27 +97,19 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		ordemServico.setOficina(oficina.get());
 		ordemServico.setInvoiceNumber(this.generateInvoiceNumber());
 		
-		System.out.println("VALOR TOTA1L: "+ordemServico.getValorTotal());
-		
+
 		List<Pagamento> pagamentosNoAtoDaCriacaoDaOrdem = new ArrayList<>(ordemServico.getPagamento());
 		ordemServico.getPagamento().clear(); // Remove temporariamente os valores para não atualizar SaldoDevedor subtraido de Pagamentos ao chamar StatusOrdemServico em DetalheServicoImpl
 		
-		System.out.println("VALOR TOTA2L: "+ordemServico.getValorTotal());
-		
+
 		ordemServico = this.ORDEM_SERVICO_REPOSITORY.save(ordemServico);
 		
 		ordemServico.setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.save(ordemServico.getId()));
 		
-		System.out.println("VALOR TOTA3L: "+ordemServico.getValorTotal());
-		
-		
+
 		ordemServico.setDetalheServico(this.DETALHE_SERVICO_SERVICE.save(ordemServico.getId(), ordemServico.getDetalheServico()));
 		
-		System.out.println("VALOR TOTA4L: "+ordemServico.getValorTotal());
-		
 		ordemServico.setPagamento(this.PAGAMENTO_SERVICE.save(ordemServico.getId(), pagamentosNoAtoDaCriacaoDaOrdem));
-		
-		System.out.println("VALOR TOTA5L: "+ordemServico.getValorTotal());
 		
 		validarVerificacaoCondicional(ordemServico);
 		
@@ -137,7 +126,6 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		// DEVE DEVE PARCELAR O VALOR NO MINIMO 1 VEZ
 		if(ordemServico.getQuantidadeParcelas() == 0 && ordemServico.getPagamento().isEmpty()) {
 			ordemServico.setQuantidadeParcelas(1);
-			System.out.println("passo aqui 1");
 		}
 		
 		if(!ordemServico.getPagamento().isEmpty()) {
@@ -151,7 +139,6 @@ public class OrdemServicoImpl implements OrdemServicoService{
 			// DEVE PARCELAR O RESTANTE NO MINIMO 1 VEZ
 			if(ordemServico.getPagamento().get(0).getValorPago() < ordemServico.getValorTotal() && ordemServico.getQuantidadeParcelas() == 0) {
 				ordemServico.setQuantidadeParcelas(1);
-				System.out.println("passo aqui 2");
 			}
 		}
 		
@@ -194,7 +181,27 @@ public class OrdemServicoImpl implements OrdemServicoService{
 			this.ORDEM_SERVICO_REPOSITORY.deleteById(id);
 		}
 	}
-	
+
+	@Transactional
+	@Override
+	public OrdemServico updateFields(OrdemServico ordemServico, Long idCliente, Long idOficina) {
+
+		Cliente client_id = this.CLIENTE_REPOSITORY.findById(idCliente)
+				.orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado!"));
+
+		Oficina oficina_id = this.OFICINA_REPOSITORY.findById(idOficina)
+				.orElseThrow(() -> new IllegalArgumentException("Oficina não encontrada!"));
+
+
+		OrdemServico ordem = this.ORDEM_SERVICO_REPOSITORY.findById(ordemServico.getId())
+				.orElseThrow(() -> new IllegalArgumentException("Ordem de serviço não encontrada!"));
+
+		ordem.setObservacao(ordemServico.getObservacao());
+
+		this.ORDEM_SERVICO_REPOSITORY.save(ordem);
+		return ordem;
+	}
+
 	private void deleteAll() {
 		this.ORDEM_SERVICO_REPOSITORY.deleteAll();
 	}

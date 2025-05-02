@@ -78,7 +78,6 @@ public class StatusOrdemServicoImpl implements StatusOrdemServicoService{
 			
 			parcelaAtrasada = ordemServico.getParcela().stream()
 			.anyMatch(parcela -> parcela.getStatusParcela() == Status.ATRASADO);
-			System.out.println(parcelaAtrasada); 
 			// PRECISO INCLUR CONDICIONAL PARA VERIFICAR PARCELA ATRASADA E MUDAR SEU STATUS ANTES DE PASSAR POR ESTE STREAM
 			
 		}
