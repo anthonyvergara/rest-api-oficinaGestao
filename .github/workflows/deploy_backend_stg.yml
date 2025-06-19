@@ -1,0 +1,55 @@
+name: Deploy Backend Spring Boot via Zip
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build do projeto com Maven
+        run: mvn clean package -DskipTests
+
+      - name: Zip do arquivo .jar
+        run: |
+          mkdir deploy
+          cp target/*.jar deploy/
+          zip -j deploy.zip deploy/*.jar
+
+      - name: Enviar deploy.zip para a VPS
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "deploy.zip"
+          target: "/tmp/"
+
+      - name: Acessar VPS, descompactar .jar, rebuild e subir containers
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            APP_DIR=/root/app
+            mkdir -p $APP_DIR/target
+            rm -f /root/app/target/*.jar
+            unzip -o /tmp/deploy.zip -d $APP_DIR/target/
+            rm /tmp/deploy.zip
+            cd $APP_DIR
+            docker-compose down
+            docker-compose build --no-cache
+            docker-compose up -d

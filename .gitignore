@@ -18,7 +18,7 @@ target/
 *.iws
 *.iml
 *.ipr
-
+*.zip
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -39,3 +39,6 @@ src/main/resources/application.properties
 ###
 docker-compose.yml
 .env
+
+docker-compose-stg.yml
+application.properties2
