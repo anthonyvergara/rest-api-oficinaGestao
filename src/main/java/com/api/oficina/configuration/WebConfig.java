@@ -12,15 +12,19 @@ public class WebConfig implements WebMvcConfigurer{
 	
 	private static final Logger logger = LoggerFactory.getLogger(WebConfig.class);
 	
-	@Value("${cliente.origin}")
-    private String clienteOrigin;
-	
+	@Value("${cliente.origin.www}")
+    private String cliente_origin_www;
+
+    @Value("${cliente.origin.sem.www}")
+    private String cliente_origin_sem_www;
+
 	@Override
     public void addCorsMappings(CorsRegistry registry) {
-		logger.info("Cliente Origin: {}", clienteOrigin);  
-		
+		logger.info("Cliente Origin www: {}", cliente_origin_www);
+        logger.info("Cliente Origin sem www: {}", cliente_origin_sem_www);
+
         registry.addMapping("/**")
-                .allowedOrigins(clienteOrigin)  // Usando a variável de ambiente
+                .allowedOrigins(cliente_origin_www, cliente_origin_sem_www)  // Usando a variável de ambiente
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
                 .allowedHeaders("*")
                 .allowCredentials(true);
