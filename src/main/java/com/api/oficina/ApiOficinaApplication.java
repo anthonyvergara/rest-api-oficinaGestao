@@ -31,7 +31,7 @@ public class ApiOficinaApplication {
 	@Bean
 	public CommandLineRunner run() throws Exception {
 		return args -> {
-			System.out.println("Sistema Inicado");
+			System.out.println("Sistema Inicado.");
 		};
 	}
 
