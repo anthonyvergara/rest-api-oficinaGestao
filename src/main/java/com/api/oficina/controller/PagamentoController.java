@@ -4,12 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.api.oficina.model.Pagamento;
 import com.api.oficina.service.PagamentoService;
@@ -28,6 +23,11 @@ public class PagamentoController {
 	@PostMapping(value = "/ordemServico/{idOrdemServico}")
 	public ResponseEntity<List<Pagamento>> save(@RequestBody List<Pagamento> pagamento, @PathVariable(value = "idOrdemServico") Long idOrdemServico){
 		return new ResponseEntity<List<Pagamento>>(this.PAGAMENTO_SERVICE.save(idOrdemServico, pagamento),HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/ordemServico/{idOrdemServico}")
+	public ResponseEntity<List<Pagamento>> findByIdOrdemServico(@PathVariable(value = "idOrdemServico") Long idOrdemServico){
+		return new ResponseEntity<List<Pagamento>>(this.PAGAMENTO_SERVICE.findByIdOrdemServico(idOrdemServico),HttpStatus.OK);
 	}
 
 }
