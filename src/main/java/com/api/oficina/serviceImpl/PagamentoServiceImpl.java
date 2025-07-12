@@ -64,5 +64,12 @@ public class PagamentoServiceImpl implements PagamentoService{
 		
 		return pagamentos;
 	}
-	
+
+	@Override
+	public List<Pagamento> findByIdOrdemServico(Long idOrdemServico) {
+
+		Optional<List<Pagamento>> pagamentos = Optional.ofNullable(this.PAGAMENTO_REPOSITORY.findByIdOrdemServico(idOrdemServico));
+        return pagamentos.orElse(null);
+    }
+
 }

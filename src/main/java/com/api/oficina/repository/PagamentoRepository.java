@@ -12,5 +12,8 @@ public interface PagamentoRepository extends CrudRepository<Pagamento, Long>{
 	
 	@Query(value ="select o from Pagamento p join p.ordemServico o where p.id = :id")
 	public List<Pagamento> getAllByIdOrdemServico(@Param("id") Long id);
+
+	@Query(value = "select p from Pagamento p where p.ordemServico.id = :idOrdemServico")
+	public List<Pagamento> findByIdOrdemServico(@Param("idOrdemServico") Long idOrdemServico);
 	
 }
