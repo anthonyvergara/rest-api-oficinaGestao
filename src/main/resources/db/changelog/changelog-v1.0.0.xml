@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- Criação da tabela booking -->
+    <changeSet id="1" author="system">
+        <createTable tableName="booking">
+            <column name="id" type="bigserial" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="deleted_at" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="date" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="start_time" type="time">
+                <constraints nullable="true"/>
+            </column>
+            <column name="end_time" type="time">
+                <constraints nullable="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="phone" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="plate" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="make" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="model" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="bank" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="amount" type="real">
+                <constraints nullable="true"/>
+            </column>
+            <column name="status" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="author" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="type" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cliente_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pdf_base64" type="oid">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Criação da tabela uploaded_document -->
+    <changeSet id="2" author="system">
+        <createTable tableName="uploaded_document">
+            <column name="id" type="bigserial" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="data" type="oid">
+                <constraints nullable="true"/>
+            </column>
+            <column name="mime_type" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="booking_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Adição de foreign key constraint para booking.cliente_id -->
+    <changeSet id="3" author="system">
+        <addForeignKeyConstraint
+            baseTableName="booking"
+            baseColumnNames="cliente_id"
+            constraintName="fk_booking_cliente"
+            referencedTableName="cliente"
+            referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Adição de foreign key constraint para uploaded_document.booking_id -->
+    <changeSet id="4" author="system">
+        <addForeignKeyConstraint
+            baseTableName="uploaded_document"
+            baseColumnNames="booking_id"
+            constraintName="fk_uploaded_document_booking"
+            referencedTableName="booking"
+            referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

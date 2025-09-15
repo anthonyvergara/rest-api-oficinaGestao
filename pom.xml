@@ -103,6 +103,12 @@
 		    <version>2.2.0</version>
 		</dependency>
 		
+		<!-- LIQUIBASE -->
+		<dependency>
+		    <groupId>org.liquibase</groupId>
+		    <artifactId>liquibase-core</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
