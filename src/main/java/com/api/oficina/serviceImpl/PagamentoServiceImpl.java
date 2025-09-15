@@ -43,6 +43,7 @@ public class PagamentoServiceImpl implements PagamentoService{
 		pagamentos.removeIf(valor -> valor.getValorPago() == 0);
 		
 		double saldoDevedor = ordemServico.get().getStatusOrdemServico().getSaldoDevedor();
+		System.out.println("Saldo Devedor: " + saldoDevedor);
 		double valorTotalPagamentos = pagamentos.stream().mapToDouble(Pagamento::getValorPago).sum();
 		
 		if(saldoDevedor > 0 && valorTotalPagamentos > saldoDevedor) {

@@ -198,6 +198,15 @@ public class OrdemServicoImpl implements OrdemServicoService{
 
 		ordem.setObservacao(ordemServico.getObservacao());
 
+		if(ordem.getVat() > 0 && ordemServico.getVat() == 0) {
+			ordem.setValorTotal(Invoice.calcularServico(ordem.getDetalheServico(), new CalculoServicoPadrao(0)));
+		}
+
+		if(ordemServico.getVat() > 0){
+			ordem.setValorTotal(Invoice.calcularServico(ordem.getDetalheServico(), new CalculoServicoPadrao(ordemServico.getVat())));
+		}
+		ordem.setVat(ordemServico.getVat());
+
 		this.ORDEM_SERVICO_REPOSITORY.save(ordem);
 		return ordem;
 	}
