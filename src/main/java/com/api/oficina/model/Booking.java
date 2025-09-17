@@ -53,6 +53,7 @@ public class Booking implements Serializable {
     private String status;
     private String author;
     private String type;
+    private String referenceNumber;
 
     @JsonIgnore
     @ManyToOne()
@@ -222,6 +223,9 @@ public class Booking implements Serializable {
 
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
+
+    public String getReferenceNumber() { return referenceNumber; }
+    public void setReferenceNumber(String referenceNumber) { this.referenceNumber = referenceNumber; }
 
     @Override
     public boolean equals(Object o) {

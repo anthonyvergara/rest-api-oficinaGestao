@@ -108,5 +108,14 @@
             referencedTableName="booking"
             referencedColumnNames="id"/>
     </changeSet>
+    
+    <!-- Add column -->
+    <changeSet id="001-add-column" author="anthonyvergara">
+        <addColumn tableName="booking">
+            <column name="reference_number" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
