@@ -17,7 +17,6 @@ import java.util.TimeZone;
 
 @SpringBootApplication
 @EntityScan(basePackages = {"com.api.oficina.model"})
-@ComponentScan(basePackages = {"com.api.*"}) //Realizar injeção de dependências.
 @EnableJpaRepositories(basePackages = {"com.api.oficina.infrastructure.repository"}) // Habilita a funcionalidade das interfaces de persistência.
 @EnableTransactionManagement// Gerenciador de transações
 @EnableWebMvc // Ativa o projeto de MVC
