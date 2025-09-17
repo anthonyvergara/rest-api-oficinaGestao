@@ -1,14 +1,9 @@
 package com.api.oficina.serviceImpl;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import com.api.oficina.model.Endereco;
-import com.api.oficina.model.Telefone;
-import com.api.oficina.modelEnum.TipoTelefone;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +11,8 @@ import com.api.oficina.dto.ClienteDTO;
 import com.api.oficina.dto.Dto;
 import com.api.oficina.model.Cliente;
 import com.api.oficina.model.Oficina;
-import com.api.oficina.repository.ClienteRepository;
-import com.api.oficina.repository.OficinaRepository;
+import com.api.oficina.infrastructure.repository.ClienteRepository;
+import com.api.oficina.infrastructure.repository.OficinaRepository;
 import com.api.oficina.service.ClienteService;
 
 @Service

@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.api.oficina.dto.Dto;
 import com.api.oficina.dto.OficinaDTO;
 import com.api.oficina.model.DonoOficina;
 import com.api.oficina.model.Oficina;
-import com.api.oficina.repository.OficinaRepository;
+import com.api.oficina.infrastructure.repository.OficinaRepository;
 import com.api.oficina.service.OficinaService;
 
 @Service

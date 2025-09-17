@@ -1,4 +1,4 @@
-package com.api.oficina.repository;
+package com.api.oficina.infrastructure.repository;
 
 import com.api.oficina.model.Booking;
 import org.springframework.data.jpa.repository.JpaRepository;

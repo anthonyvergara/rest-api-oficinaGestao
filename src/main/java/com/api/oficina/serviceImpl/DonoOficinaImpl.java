@@ -3,13 +3,12 @@ package com.api.oficina.serviceImpl;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.api.oficina.dto.DonoOficinaDTO;
 import com.api.oficina.dto.Dto;
 import com.api.oficina.model.DonoOficina;
-import com.api.oficina.repository.DonoOficinaRepository;
+import com.api.oficina.infrastructure.repository.DonoOficinaRepository;
 import com.api.oficina.service.DonoOficinaService;
 
 @Service

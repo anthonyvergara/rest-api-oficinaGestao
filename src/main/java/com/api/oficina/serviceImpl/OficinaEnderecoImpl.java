@@ -5,12 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.api.oficina.model.Oficina;
 import com.api.oficina.model.OficinaEndereco;
-import com.api.oficina.repository.OficinaEnderecoRepo;
+import com.api.oficina.infrastructure.repository.OficinaEnderecoRepo;
 import com.api.oficina.service.OficinaEnderecoService;
 
 @Service

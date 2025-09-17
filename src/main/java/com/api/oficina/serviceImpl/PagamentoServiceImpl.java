@@ -1,7 +1,6 @@
 package com.api.oficina.serviceImpl;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,10 +9,8 @@ import org.springframework.stereotype.Service;
 import com.api.oficina.component.Parcelas;
 import com.api.oficina.model.OrdemServico;
 import com.api.oficina.model.Pagamento;
-import com.api.oficina.model.Parcela;
-import com.api.oficina.model.StatusOrdemServico;
-import com.api.oficina.repository.OrdemServicoRepository;
-import com.api.oficina.repository.PagamentoRepository;
+import com.api.oficina.infrastructure.repository.OrdemServicoRepository;
+import com.api.oficina.infrastructure.repository.PagamentoRepository;
 import com.api.oficina.service.PagamentoService;
 import com.api.oficina.util.parcela.CalculoParcelamentoSemJuros;
 

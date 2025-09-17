@@ -1,4 +1,4 @@
-package com.api.oficina.repository;
+package com.api.oficina.infrastructure.repository;
 
 import java.util.List;
 

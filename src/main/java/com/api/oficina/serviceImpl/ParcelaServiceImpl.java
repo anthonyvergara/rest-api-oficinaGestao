@@ -11,8 +11,8 @@ import com.api.oficina.component.Parcelas;
 import com.api.oficina.model.OrdemServico;
 import com.api.oficina.model.Parcela;
 import com.api.oficina.modelEnum.Status;
-import com.api.oficina.repository.OrdemServicoRepository;
-import com.api.oficina.repository.ParcelaRepository;
+import com.api.oficina.infrastructure.repository.OrdemServicoRepository;
+import com.api.oficina.infrastructure.repository.ParcelaRepository;
 import com.api.oficina.service.ParcelaService;
 import com.api.oficina.util.parcela.CalculoParcelamentoSemJuros;
 

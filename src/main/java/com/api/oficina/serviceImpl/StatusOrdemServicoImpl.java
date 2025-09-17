@@ -13,11 +13,10 @@ import com.api.oficina.model.Pagamento;
 import com.api.oficina.model.Parcela;
 import com.api.oficina.model.StatusOrdemServico;
 import com.api.oficina.modelEnum.Status;
-import com.api.oficina.repository.OrdemServicoRepository;
-import com.api.oficina.repository.PagamentoRepository;
-import com.api.oficina.repository.StatusOrdemServicoRepository;
+import com.api.oficina.infrastructure.repository.OrdemServicoRepository;
+import com.api.oficina.infrastructure.repository.PagamentoRepository;
+import com.api.oficina.infrastructure.repository.StatusOrdemServicoRepository;
 import com.api.oficina.service.StatusOrdemServicoService;
-import com.fasterxml.jackson.annotation.JacksonInject.Value;
 
 @Service
 public class StatusOrdemServicoImpl implements StatusOrdemServicoService{

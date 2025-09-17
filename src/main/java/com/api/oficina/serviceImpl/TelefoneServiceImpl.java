@@ -3,12 +3,11 @@ package com.api.oficina.serviceImpl;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.api.oficina.model.Pessoa;
 import com.api.oficina.model.Telefone;
-import com.api.oficina.repository.TelefoneRepository;
+import com.api.oficina.infrastructure.repository.TelefoneRepository;
 import com.api.oficina.service.TelefoneService;
 
 @Service

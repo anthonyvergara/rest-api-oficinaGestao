@@ -7,20 +7,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import com.api.oficina.modelEnum.TipoPagamento;
 import org.springframework.stereotype.Service;
 
 import com.api.oficina.component.Invoice;
 import com.api.oficina.model.Cliente;
-import com.api.oficina.model.DetalheServico;
 import com.api.oficina.model.Oficina;
 import com.api.oficina.model.OrdemServico;
 import com.api.oficina.model.Pagamento;
-import com.api.oficina.model.StatusOrdemServico;
 import com.api.oficina.modelEnum.Status;
-import com.api.oficina.repository.ClienteRepository;
-import com.api.oficina.repository.OficinaRepository;
-import com.api.oficina.repository.OrdemServicoRepository;
+import com.api.oficina.infrastructure.repository.ClienteRepository;
+import com.api.oficina.infrastructure.repository.OficinaRepository;
+import com.api.oficina.infrastructure.repository.OrdemServicoRepository;
 import com.api.oficina.service.OrdemServicoService;
 import com.api.oficina.util.servico.CalculoServicoPadrao;
 

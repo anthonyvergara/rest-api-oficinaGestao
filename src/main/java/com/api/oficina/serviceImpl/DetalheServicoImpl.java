@@ -1,6 +1,5 @@
 package com.api.oficina.serviceImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,8 +9,8 @@ import com.api.oficina.component.Invoice;
 import com.api.oficina.model.DetalheServico;
 import com.api.oficina.model.OrdemServico;
 import com.api.oficina.modelEnum.Status;
-import com.api.oficina.repository.DetalheServicoRepository;
-import com.api.oficina.repository.OrdemServicoRepository;
+import com.api.oficina.infrastructure.repository.DetalheServicoRepository;
+import com.api.oficina.infrastructure.repository.OrdemServicoRepository;
 import com.api.oficina.service.DetalheServicoService;
 import com.api.oficina.util.servico.CalculoServicoPadrao;
 
