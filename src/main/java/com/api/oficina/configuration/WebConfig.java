@@ -1,4 +1,4 @@
-package com.api.oficina.infrastructure.configuration;
+package com.api.oficina.configuration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
