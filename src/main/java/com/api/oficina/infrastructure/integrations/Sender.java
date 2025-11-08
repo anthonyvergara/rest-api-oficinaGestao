@@ -37,6 +37,7 @@ public class Sender {
             }
 
             mailSender.send(mimeMessage);
+            System.out.println("Email sent");
         } catch (MessagingException e) {
             System.err.println("Erro ao enviar e-mail: " + e.getMessage());
         }
