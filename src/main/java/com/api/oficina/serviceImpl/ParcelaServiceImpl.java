@@ -67,9 +67,22 @@ public class ParcelaServiceImpl implements ParcelaService{
 	@Override
 	public List<Parcela> update(Long idOrdemServico, int quantidadeParcelas) {
 		
-		Optional<List<Parcela>> parcelasExistentes = Optional.of(this.PARCELAMENTO_REPOSITORY.listByIdOrdemServico(idOrdemServico)
-				.orElseThrow(() -> new IllegalArgumentException("Não existem parcelas para serem atualizadas!")));
-		
+		Optional<List<Parcela>> parcelasExistentes = this.PARCELAMENTO_REPOSITORY.listByIdOrdemServico(idOrdemServico);
+
+		// Se não existem parcelas, busca a ordem de serviço e cria novas parcelas
+		if(parcelasExistentes.isEmpty() || parcelasExistentes.get().isEmpty()) {
+			OrdemServico ordemServico = this.ORDEM_SERVICO_REPOSITORY.findById(idOrdemServico)
+					.orElseThrow(() -> new IllegalArgumentException("OrdemServico não existe!"));
+
+			// Se quantidadeParcelas for 0, não faz nada
+			if(quantidadeParcelas == 0) {
+				return new ArrayList<Parcela>();
+			}
+
+			// Cria novas parcelas
+			return gerarParcelamento(ordemServico, quantidadeParcelas);
+		}
+
 		List<Parcela> novaListaParcelas = new ArrayList<Parcela>();
 		
 		OrdemServico ordemServico = parcelasExistentes.get().get(0).getOrdemServico();
