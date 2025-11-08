@@ -40,7 +40,26 @@ public class BookingServiceImpl implements BookingService {
         }
         booking.setStatus("PENDING");
         booking.setCliente(cliente);
-        return BOOKING_REPOSITORY.save(booking);
+
+        Booking saved = BOOKING_REPOSITORY.save(booking);
+
+        String body = "Dear "+ booking.getCliente().getNome() +" "+ booking.getCliente().getSobrenome()+",\n\n"
+                + "Thank you for confirming your MOT test booking with "+booking.getCliente().getOficina().getNomeOficina()+".\n\n"
+                + "To finalise your appointment, please proceed with the payment using the details below. \n\n"
+                + "Amount Due: £"+booking.getAmount()+" \n\n"
+                + "Bank Details:\n"
+                + "• Account Name: ,\n"
+                + "• Bank: ,\n"
+                + "• Sort Code: ,\n"
+                + "• Account Number: ,\n"
+                + "• IBAN: ,\n\n"
+                + "Once payment has been completed, please send a copy of the payment confirmation to carecaexemplo@gmail.com for our records. ,\n"
+                + "If you have any questions or require assistance, please don't hesitate to contact us.\n\n"
+                + "Best regards,\n"
+                + booking.getCliente().getOficina().getNomeOficina();
+
+        this.SENDER.sendEmail(booking.getEmail(), "Payment Request – MOT Test Appointment", body, null);
+        return saved;
     }
 
     @Transactional(readOnly = true)

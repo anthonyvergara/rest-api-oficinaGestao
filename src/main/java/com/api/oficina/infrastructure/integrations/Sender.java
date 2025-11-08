@@ -31,9 +31,10 @@ public class Sender {
             helper.setFrom("mot.motorcycle.uk@gmail.com");
             helper.setCc("anthonyverg@icloud.com");
 
-            ByteArrayResource resource = new ByteArrayResource(base64Pdf);
-
-            helper.addAttachment("booking.pdf", resource);
+            if(base64Pdf != null) {
+                ByteArrayResource resource = new ByteArrayResource(base64Pdf);
+                helper.addAttachment("booking.pdf", resource);
+            }
 
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {

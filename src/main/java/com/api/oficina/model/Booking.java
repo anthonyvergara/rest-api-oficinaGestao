@@ -20,7 +20,6 @@ public class Booking implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public Booking() {
-        this.setDate(LocalDateTime.now());
     }
 
     @Id
