@@ -2,6 +2,7 @@ package com.api.oficina.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -58,6 +59,9 @@ public class OrdemServico implements Serializable{
 	
 	private int quantidadeParcelas;
 	
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private LocalDate dataPrimeiraParcela;
+
 	@ForeignKey(name = "id_cliente")
 	@ManyToOne
 	private Cliente cliente;
@@ -217,5 +221,13 @@ public class OrdemServico implements Serializable{
 		this.parcela = parcela;
 	}
 
-	
+	public LocalDate getDataPrimeiraParcela() {
+		return dataPrimeiraParcela;
+	}
+
+	public void setDataPrimeiraParcela(LocalDate dataPrimeiraParcela) {
+		this.dataPrimeiraParcela = dataPrimeiraParcela;
+	}
+
+
 }

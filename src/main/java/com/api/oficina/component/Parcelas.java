@@ -36,16 +36,24 @@ public class Parcelas {
 		int valorSomaData = tipoPagamento == TipoPagamento.SEMANAL ? 7 : 30;
 		 
 		if(dataPrimeiraParcela == null) {
-			dataPrimeiraParcela = dataPrimeiraParcela.now().plusDays(valorSomaData);
-		}else {
-			
-			for(int i = 0; i<quantidadeParcelas; i++) {
-				
-				dataPrimeiraParcela = dataPrimeiraParcela.getDayOfWeek() == DayOfWeek.SUNDAY ? dataPrimeiraParcela.plusDays(1) : dataPrimeiraParcela.plusDays(valorSomaData);
+			dataPrimeiraParcela = LocalDate.now().plusDays(valorSomaData);
+		}
+
+		for(int i = 0; i<quantidadeParcelas; i++) {
+			if(i == 0) {
+				// Para a primeira parcela, usa a data fornecida ajustando se cair no domingo
+				dataPrimeiraParcela = dataPrimeiraParcela.getDayOfWeek() == DayOfWeek.SUNDAY ?
+					dataPrimeiraParcela.plusDays(1) : dataPrimeiraParcela;
+				datas.add(dataPrimeiraParcela);
+			} else {
+				// Para as demais parcelas, adiciona o intervalo
+				dataPrimeiraParcela = dataPrimeiraParcela.plusDays(valorSomaData);
+				dataPrimeiraParcela = dataPrimeiraParcela.getDayOfWeek() == DayOfWeek.SUNDAY ?
+					dataPrimeiraParcela.plusDays(1) : dataPrimeiraParcela;
 				datas.add(dataPrimeiraParcela);
 			}
-			
 		}
+
 		return datas;
 	}
 	

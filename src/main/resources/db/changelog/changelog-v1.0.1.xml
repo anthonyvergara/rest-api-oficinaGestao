@@ -5,8 +5,14 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
 
-    <!-- Inclui os changesets das novas tabelas -->
-    <include file="db/changelog/changelog-v1.0.0.xml"/>
-    <include file="db/changelog/changelog-v1.0.1.xml"/>
+    <!-- Adiciona coluna data_primeira_parcela na tabela ordem_servico -->
+    <changeSet id="2" author="system">
+        <addColumn tableName="ordem_servico">
+            <column name="data_primeira_parcela" type="date">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
+
