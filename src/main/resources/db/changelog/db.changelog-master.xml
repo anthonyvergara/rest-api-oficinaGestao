@@ -8,5 +8,6 @@
     <!-- Inclui os changesets das novas tabelas -->
     <include file="db/changelog/changelog-v1.0.0.xml"/>
     <include file="db/changelog/changelog-v1.0.1.xml"/>
-
+    <include file="db/changelog/changelog-v1.0.2-auth.xml"/>
+    <include file="db/changelog/changelog-v1.0.3-recurso-permissao.xml"/>
 </databaseChangeLog>

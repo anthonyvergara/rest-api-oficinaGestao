@@ -12,11 +12,6 @@ import com.api.oficina.model.Endereco;
 import com.api.oficina.model.Telefone;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 @Component
 public class ClienteDTO implements Dto<ClienteDTO,Cliente>{
 	
@@ -149,7 +144,4 @@ public class ClienteDTO implements Dto<ClienteDTO,Cliente>{
 	public void setEndereco(List<Endereco> endereco) {
 		this.endereco = endereco;
 	}
-	
-	
-
 }

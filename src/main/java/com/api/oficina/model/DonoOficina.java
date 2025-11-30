@@ -12,8 +12,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 public class DonoOficina extends Pessoa implements Serializable{
@@ -33,27 +31,19 @@ public class DonoOficina extends Pessoa implements Serializable{
 	@JsonIgnore
 	@ManyToMany(mappedBy = "donoOficina")
 	private List<Oficina> oficina;
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + Objects.hash(id);
-		return result;
+
+	// Constructors
+	public DonoOficina() {
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		DonoOficina other = (DonoOficina) obj;
-		return Objects.equals(id, other.id);
+	public DonoOficina(Long id, String usuario, String senha, List<Oficina> oficina) {
+		this.id = id;
+		this.usuario = usuario;
+		this.senha = senha;
+		this.oficina = oficina;
 	}
 
+	// Getters and Setters
 	public Long getId() {
 		return id;
 	}
@@ -85,7 +75,21 @@ public class DonoOficina extends Pessoa implements Serializable{
 	public void setOficina(List<Oficina> oficina) {
 		this.oficina = oficina;
 	}
-	
-	
-	
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DonoOficina other = (DonoOficina) obj;
+		return Objects.equals(id, other.id);
+	}
 }
