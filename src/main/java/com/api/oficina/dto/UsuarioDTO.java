@@ -1,8 +1,12 @@
 package com.api.oficina.dto;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import com.api.oficina.model.Endereco;
+import com.api.oficina.model.Telefone;
 import com.api.oficina.modelEnum.Role;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -34,6 +38,9 @@ public class UsuarioDTO {
     private List<RecursoPermissaoDTO> recursoPermissoes;
 
     private Boolean ativo;
+
+    private List<Telefone> telefones;
+    private List<Endereco> enderecos;
 
     // Constructors
     public UsuarioDTO() {
@@ -123,5 +130,21 @@ public class UsuarioDTO {
 
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public List<Telefone> getTelefones() {
+        return telefones;
+    }
+
+    public void setTelefones(List<Telefone> telefones) {
+        this.telefones = telefones;
+    }
+
+    public List<Endereco> getEnderecos() {
+        return enderecos;
+    }
+
+    public void setEnderecos(List<Endereco> enderecos) {
+        this.enderecos = enderecos;
     }
 }

@@ -32,7 +32,7 @@ import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "usuario")
-public class Usuario implements Serializable, UserDetails {
+public class Usuario extends Pessoa implements Serializable, UserDetails {
 
     private static final long serialVersionUID = 1L;
 

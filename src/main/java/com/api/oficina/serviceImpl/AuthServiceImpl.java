@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 import com.api.oficina.infrastructure.repository.UsuarioRecursoPermissaoRepository;
 import com.api.oficina.infrastructure.repository.UsuarioRepository;
+import com.api.oficina.model.Endereco;
+import com.api.oficina.model.Telefone;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -118,6 +120,36 @@ public class AuthServiceImpl implements AuthService {
 
         usuario = usuarioRepository.save(usuario);
 
+        // Processar telefones
+        if (usuarioDTO.getTelefones() != null && !usuarioDTO.getTelefones().isEmpty()) {
+            List<Telefone> telefones = new ArrayList<>();
+            for (Telefone telefoneDTO : usuarioDTO.getTelefones()) {
+                Telefone telefone = new Telefone();
+                telefone.setTipo(telefoneDTO.getTipo());
+                telefone.setCountry(telefoneDTO.getCountry());
+                telefone.setDdd(telefoneDTO.getDdd());
+                telefone.setNumero(telefoneDTO.getNumero());
+                telefone.setPessoa(usuario);
+                telefones.add(telefone);
+            }
+            usuario.setTelefone(telefones);
+        }
+
+        // Processar endereços
+        if (usuarioDTO.getEnderecos() != null && !usuarioDTO.getEnderecos().isEmpty()) {
+            List<Endereco> enderecos = new ArrayList<>();
+            for (Endereco enderecoDTO : usuarioDTO.getEnderecos()) {
+                Endereco endereco = new Endereco();
+                endereco.setRua(enderecoDTO.getRua());
+                endereco.setNumero(enderecoDTO.getNumero());
+                endereco.setPostcode(enderecoDTO.getPostcode());
+                endereco.setCidade(enderecoDTO.getCidade());
+                endereco.setPessoa(usuario);
+                enderecos.add(endereco);
+            }
+            usuario.setEndereco(enderecos);
+        }
+
         // Sistema de permissões por recurso
         if (usuarioDTO.getRecursoPermissoes() != null && !usuarioDTO.getRecursoPermissoes().isEmpty()) {
             for (RecursoPermissaoDTO recursoPermissaoDTO : usuarioDTO.getRecursoPermissoes()) {
@@ -168,6 +200,40 @@ public class AuthServiceImpl implements AuthService {
             Oficina oficina = oficinaRepository.findById(usuarioDTO.getOficinaId())
                 .orElseThrow(() -> new RuntimeException("Oficina não encontrada"));
             usuario.setOficina(oficina);
+        }
+
+        // Atualizar telefones
+        if (usuarioDTO.getTelefones() != null) {
+            usuario.getTelefone().clear();
+            for (Telefone telefoneDTO : usuarioDTO.getTelefones()) {
+                Telefone telefone = new Telefone();
+                if (telefoneDTO.getId_telefone() != null) {
+                    telefone.setId_telefone(telefoneDTO.getId_telefone());
+                }
+                telefone.setTipo(telefoneDTO.getTipo());
+                telefone.setCountry(telefoneDTO.getCountry());
+                telefone.setDdd(telefoneDTO.getDdd());
+                telefone.setNumero(telefoneDTO.getNumero());
+                telefone.setPessoa(usuario);
+                usuario.getTelefone().add(telefone);
+            }
+        }
+
+        // Atualizar endereços
+        if (usuarioDTO.getEnderecos() != null) {
+            usuario.getEndereco().clear();
+            for (Endereco enderecoDTO : usuarioDTO.getEnderecos()) {
+                Endereco endereco = new Endereco();
+                if (enderecoDTO.getId_endereco() != null) {
+                    endereco.setId_endereco(enderecoDTO.getId_endereco());
+                }
+                endereco.setRua(enderecoDTO.getRua());
+                endereco.setNumero(enderecoDTO.getNumero());
+                endereco.setPostcode(enderecoDTO.getPostcode());
+                endereco.setCidade(enderecoDTO.getCidade());
+                endereco.setPessoa(usuario);
+                usuario.getEndereco().add(endereco);
+            }
         }
 
         // Atualiza permissões por recurso
@@ -226,6 +292,38 @@ public class AuthServiceImpl implements AuthService {
         dto.setRecursoPermissoes(recursoPermissoes);
         dto.setOficinaId(usuario.getOficina() != null ? usuario.getOficina().getId() : null);
         dto.setAtivo(usuario.getAtivo());
+
+        // Converter telefones
+        if (usuario.getTelefone() != null && !usuario.getTelefone().isEmpty()) {
+            List<Telefone> telefonesDTO = usuario.getTelefone().stream()
+                .map(telefone -> {
+                    Telefone telefoneDTO = new Telefone();
+                    telefoneDTO.setId_telefone(telefone.getId_telefone());
+                    telefoneDTO.setTipo(telefone.getTipo());
+                    telefoneDTO.setCountry(telefone.getCountry());
+                    telefoneDTO.setDdd(telefone.getDdd());
+                    telefoneDTO.setNumero(telefone.getNumero());
+                    return telefoneDTO;
+                })
+                .collect(Collectors.toList());
+            dto.setTelefones(telefonesDTO);
+        }
+
+        // Converter endereços
+        if (usuario.getEndereco() != null && !usuario.getEndereco().isEmpty()) {
+            List<Endereco> enderecosDTO = usuario.getEndereco().stream()
+                .map(endereco -> {
+                    Endereco enderecoDTO = new Endereco();
+                    enderecoDTO.setId_endereco(endereco.getId_endereco());
+                    enderecoDTO.setRua(endereco.getRua());
+                    enderecoDTO.setNumero(endereco.getNumero());
+                    enderecoDTO.setPostcode(endereco.getPostcode());
+                    enderecoDTO.setCidade(endereco.getCidade());
+                    return enderecoDTO;
+                })
+                .collect(Collectors.toList());
+            dto.setEnderecos(enderecosDTO);
+        }
 
         return dto;
     }
