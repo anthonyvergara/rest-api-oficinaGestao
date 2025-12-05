@@ -36,19 +36,6 @@ public class Usuario extends Pessoa implements Serializable, UserDetails {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotBlank(message = "Nome é obrigatório")
-    @Column(nullable = false)
-    private String nome;
-
-    @NotBlank(message = "Email é obrigatório")
-    @Email(message = "Email inválido")
-    @Column(nullable = false, unique = true)
-    private String email;
-
     @NotBlank(message = "Username é obrigatório")
     @Column(nullable = false, unique = true)
     private String username;
@@ -84,9 +71,9 @@ public class Usuario extends Pessoa implements Serializable, UserDetails {
 
     public Usuario(Long id, String nome, String email, String username, String password, Role role, Oficina oficina,
                    Set<UsuarioRecursoPermissao> recursoPermissoes, Boolean ativo, LocalDateTime criadoEm, LocalDateTime atualizadoEm) {
-        this.id = id;
-        this.nome = nome;
-        this.email = email;
+        this.setId(id);
+        this.setNome(nome);
+        this.setEmail(email);
         this.username = username;
         this.password = password;
         this.role = role;
@@ -97,30 +84,7 @@ public class Usuario extends Pessoa implements Serializable, UserDetails {
         this.atualizadoEm = atualizadoEm;
     }
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    // Getters and Setters - removidos getId, setId, getNome, setNome, getEmail, setEmail (herdados de Pessoa)
 
     public void setUsername(String username) {
         this.username = username;

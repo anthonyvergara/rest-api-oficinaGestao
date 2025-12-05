@@ -178,7 +178,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         if (usuarioDTO.getEmail() != null && !usuarioDTO.getEmail().equals(usuario.getEmail())) {
-            if (usuarioRepository.existsByEmail(usuarioDTO.getEmail())) {
+            if (usuarioRepository.existsByEmailAndIdNot(usuarioDTO.getEmail(), id)) {
                 throw new RuntimeException("Email já existe");
             }
             usuario.setEmail(usuarioDTO.getEmail());
