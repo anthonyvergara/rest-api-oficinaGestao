@@ -19,6 +19,11 @@ public class UsuarioDTO {
     @NotBlank(message = "Nome é obrigatório")
     private String nome;
 
+    private String sobrenome;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataNascimento;
+
     @NotBlank(message = "Email é obrigatório")
     @Email(message = "Email inválido")
     private String email;
@@ -46,10 +51,12 @@ public class UsuarioDTO {
     public UsuarioDTO() {
     }
 
-    public UsuarioDTO(Long id, String nome, String email, String username, String password, Role role,
+    public UsuarioDTO(Long id, String nome, String sobrenome, LocalDate dataNascimento, String email, String username, String password, Role role,
                       Long oficinaId, List<RecursoPermissaoDTO> recursoPermissoes, Boolean ativo) {
         this.id = id;
         this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.dataNascimento = dataNascimento;
         this.email = email;
         this.username = username;
         this.password = password;
@@ -76,9 +83,26 @@ public class UsuarioDTO {
         this.nome = nome;
     }
 
+    public String getSobrenome() {
+        return sobrenome;
+    }
+
+    public void setSobrenome(String sobrenome) {
+        this.sobrenome = sobrenome;
+    }
+
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
+
     public String getEmail() {
         return email;
     }
+
 
     public void setEmail(String email) {
         this.email = email;

@@ -111,6 +111,8 @@ public class AuthServiceImpl implements AuthService {
         usuario.setAtivo(true);
         usuario.setCriadoEm(LocalDateTime.now());
         usuario.setAtualizadoEm(LocalDateTime.now());
+        usuario.setSobrenome(usuarioDTO.getSobrenome());
+        usuario.setDataNascimento(usuarioDTO.getDataNascimento());
 
         if (usuarioDTO.getOficinaId() != null) {
             Oficina oficina = oficinaRepository.findById(usuarioDTO.getOficinaId())
@@ -194,6 +196,14 @@ public class AuthServiceImpl implements AuthService {
 
         if (usuarioDTO.getAtivo() != null) {
             usuario.setAtivo(usuarioDTO.getAtivo());
+        }
+
+        if (usuarioDTO.getSobrenome() != null) {
+            usuario.setSobrenome(usuarioDTO.getSobrenome());
+        }
+
+        if (usuarioDTO.getDataNascimento() != null) {
+            usuario.setDataNascimento(usuarioDTO.getDataNascimento());
         }
 
         if (usuarioDTO.getOficinaId() != null) {
@@ -292,6 +302,8 @@ public class AuthServiceImpl implements AuthService {
         dto.setRecursoPermissoes(recursoPermissoes);
         dto.setOficinaId(usuario.getOficina() != null ? usuario.getOficina().getId() : null);
         dto.setAtivo(usuario.getAtivo());
+        dto.setSobrenome(usuario.getSobrenome());
+        dto.setDataNascimento(usuario.getDataNascimento());
 
         // Converter telefones
         if (usuario.getTelefone() != null && !usuario.getTelefone().isEmpty()) {

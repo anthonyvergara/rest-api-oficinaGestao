@@ -18,4 +18,6 @@ public interface ClienteRepository extends CrudRepository<Cliente, Long>{
 			"LOWER(c.sobrenome) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
 			"LOWER(CONCAT(c.nome, ' ', c.sobrenome)) LIKE LOWER(CONCAT('%', :search, '%'))")
 	List<Cliente> findByNomeContainingIgnoreCase(@Param("search") String search);
+
+	List<Cliente> findByOficinaId(Long idOficina);
 }

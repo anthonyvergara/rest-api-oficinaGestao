@@ -91,6 +91,12 @@ public class ClienteServiceImpl implements ClienteService{
 		return (ClienteDTO) DTO.convertToDto(find.get());
 	}
 
+	@Override
+	public List<ClienteDTO> findByIdOficina(Long idOficina) {
+		List<Cliente> clientes = this.CLIENTE_REPOSITORY.findByOficinaId(idOficina);
+		return DTO.listToDto(clientes);
+	}
+
 
 	@Transactional
 	@Override
