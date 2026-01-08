@@ -15,6 +15,8 @@ public class OficinaDTO implements Dto<OficinaDTO, Oficina>{
 	private String nomeOficina;
 	private Long companyNumber;
 	private Long vatNumber;
+	private String email;
+	private String telefone;
 
 
 	@Override
@@ -64,5 +66,21 @@ public class OficinaDTO implements Dto<OficinaDTO, Oficina>{
 
 	public void setVatNumber(Long vatNumber) {
 		this.vatNumber = vatNumber;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
 }

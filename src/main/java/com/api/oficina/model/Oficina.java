@@ -42,6 +42,10 @@ public class Oficina implements Serializable{
 	
 	private Long vatNumber;
 	
+	private String email;
+
+	private String telefone;
+
 	@ManyToMany
 	@JoinTable(
 			name = "oficina_dono",
@@ -106,6 +110,22 @@ public class Oficina implements Serializable{
 
 	public void setVatNumber(Long vatNumber) {
 		this.vatNumber = vatNumber;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
 
 	public List<DonoOficina> getDonoOficina() {

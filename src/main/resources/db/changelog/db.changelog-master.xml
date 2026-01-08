@@ -11,4 +11,5 @@
     <include file="db/changelog/changelog-v1.0.2-auth.xml"/>
     <include file="db/changelog/changelog-v1.0.3-recurso-permissao.xml"/>
     <include file="db/changelog/changelog-v1.0.4-pessoa-fields.xml"/>
+    <include file="db/changelog/changelog-v1.0.5-oficina-contact-fields.xml"/>
 </databaseChangeLog>
