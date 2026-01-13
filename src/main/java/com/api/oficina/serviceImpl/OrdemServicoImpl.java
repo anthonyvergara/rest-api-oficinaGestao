@@ -58,7 +58,7 @@ public class OrdemServicoImpl implements OrdemServicoService{
 	public List<OrdemServico> listAllByIdOficina(Long idOficina) {
 		
 		
-		List<OrdemServico> listaOrdemServico = this.ORDEM_SERVICO_REPOSITORY.findAllByOficina_Id(2L);
+		List<OrdemServico> listaOrdemServico = this.ORDEM_SERVICO_REPOSITORY.findAllByOficina_Id(idOficina);
 		
 		listaOrdemServico.forEach(ordem -> {
 			ordem.setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.update(ordem.getStatusOrdemServico()));

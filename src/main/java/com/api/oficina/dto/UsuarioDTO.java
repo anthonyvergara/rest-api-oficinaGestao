@@ -31,7 +31,6 @@ public class UsuarioDTO {
     @NotBlank(message = "Username é obrigatório")
     private String username;
 
-    @NotBlank(message = "Senha é obrigatória")
     private String password;
 
     @NotNull(message = "Role é obrigatória")
