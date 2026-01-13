@@ -13,5 +13,11 @@ public interface ClienteRepository extends CrudRepository<Cliente, Long>{
 	@Query("SELECT o.cliente FROM OrdemServico o WHERE o.id = :idOrdem")
 	Cliente findByIdOrdemServico(@Param("idOrdem") Long idOrdem);
 
-	List<Cliente> findByNomeContainingIgnoreCase(String nome);
+	@Query("SELECT c FROM Cliente c WHERE " +
+			"LOWER(c.nome) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+			"LOWER(c.sobrenome) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+			"LOWER(CONCAT(c.nome, ' ', c.sobrenome)) LIKE LOWER(CONCAT('%', :search, '%'))")
+	List<Cliente> findByNomeContainingIgnoreCase(@Param("search") String search);
+
+	List<Cliente> findByOficinaId(Long idOficina);
 }

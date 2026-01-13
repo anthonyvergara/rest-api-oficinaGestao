@@ -8,16 +8,15 @@ import org.springframework.stereotype.Component;
 
 import com.api.oficina.model.Oficina;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Component @Setter @Getter
+@Component
 public class OficinaDTO implements Dto<OficinaDTO, Oficina>{
 	
 	private Long id;
 	private String nomeOficina;
 	private Long companyNumber;
 	private Long vatNumber;
+	private String email;
+	private String telefone;
 
 
 	@Override
@@ -35,5 +34,53 @@ public class OficinaDTO implements Dto<OficinaDTO, Oficina>{
 		});
 		return lista;
 	}
-	
+
+	// Getters and Setters
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getNomeOficina() {
+		return nomeOficina;
+	}
+
+	public void setNomeOficina(String nomeOficina) {
+		this.nomeOficina = nomeOficina;
+	}
+
+	public Long getCompanyNumber() {
+		return companyNumber;
+	}
+
+	public void setCompanyNumber(Long companyNumber) {
+		this.companyNumber = companyNumber;
+	}
+
+	public Long getVatNumber() {
+		return vatNumber;
+	}
+
+	public void setVatNumber(Long vatNumber) {
+		this.vatNumber = vatNumber;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
 }
