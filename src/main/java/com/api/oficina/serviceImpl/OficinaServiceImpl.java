@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.api.oficina.dto.Dto;
 import com.api.oficina.dto.OficinaDTO;
+import com.api.oficina.dto.OficinaResponseDTO;
+import com.api.oficina.mapper.OficinaMapper;
 import com.api.oficina.model.DonoOficina;
 import com.api.oficina.model.Oficina;
 import com.api.oficina.infrastructure.repository.OficinaRepository;
@@ -15,28 +17,30 @@ import com.api.oficina.service.OficinaService;
 
 @Service
 public class OficinaServiceImpl implements OficinaService{
-	
+
 	private final OficinaRepository OFICINA_REPOSITORY;
 	private final Dto DTO;
-	
-	public OficinaServiceImpl(OficinaRepository oficinaRepository, OficinaDTO oficinaDTO) {
+	private final OficinaMapper OFICINA_MAPPER;
+
+	public OficinaServiceImpl(OficinaRepository oficinaRepository, OficinaDTO oficinaDTO, OficinaMapper oficinaMapper) {
 		this.OFICINA_REPOSITORY = oficinaRepository;
 		this.DTO = oficinaDTO;
+		this.OFICINA_MAPPER = oficinaMapper;
 	}
 
 	@Override
 	public List<OficinaDTO> listAll() {
 		List<Oficina> lista = (List<Oficina>) this.OFICINA_REPOSITORY.findAll();
-		
+
 		return this.DTO.listToDto(lista);
 	}
 
 	@Override
 	public OficinaDTO save(Oficina oficina, Long idDonoOficina) {
-		
+
 		Optional<DonoOficina> dono = Optional.of(this.OFICINA_REPOSITORY.findDonoOficinaById(idDonoOficina)
 				.orElseThrow(()-> new IllegalArgumentException("Oficina não existe!")));
-		
+
 		if(dono.isEmpty() || oficina.getNomeOficina().isBlank()) {
 			throw new RuntimeException();
 		}else {
@@ -44,17 +48,20 @@ public class OficinaServiceImpl implements OficinaService{
 			listaDono.add(dono.get());
 			oficina.setDonoOficina(listaDono);
 			this.OFICINA_REPOSITORY.save(oficina);
-			
+
 			return (OficinaDTO)this.DTO.convertToDto(oficina);
 		}
 	}
 
 	@Override
 	public OficinaDTO update(Oficina oficina) {
-		
 		if(oficina.getNomeOficina().isBlank()) {
 			throw new RuntimeException();
 		}else {
+			if(oficina.getEndereco() != null) {
+				oficina.getEndereco().setOficina(oficina);
+			}
+
 			this.OFICINA_REPOSITORY.save(oficina);
 			return (OficinaDTO)this.DTO.convertToDto(oficina);
 		}
@@ -64,7 +71,7 @@ public class OficinaServiceImpl implements OficinaService{
 	public void deleteDonoFromOficina(Long idOficina, Long idDono) {
 		Optional<Oficina> oficina = this.OFICINA_REPOSITORY.findById(idOficina);
 		Optional<DonoOficina> dono = this.OFICINA_REPOSITORY.findDonoOficinaById(idDono);
-		
+
 		if(oficina.isEmpty() || dono.isEmpty()) {
 			throw new RuntimeException();
 		}else {
@@ -75,7 +82,15 @@ public class OficinaServiceImpl implements OficinaService{
 			}
 			this.OFICINA_REPOSITORY.save(oficina.get());
 		}
-		
+
+	}
+
+	@Override
+	public OficinaResponseDTO getById(Long id) {
+		Oficina oficina = this.OFICINA_REPOSITORY.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException("Oficina não encontrada com ID: " + id));
+
+		return OFICINA_MAPPER.toResponseDTO(oficina);
 	}
 
 }

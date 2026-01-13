@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.oficina.dto.OficinaDTO;
+import com.api.oficina.dto.OficinaResponseDTO;
 import com.api.oficina.model.Oficina;
 import com.api.oficina.serviceImpl.OficinaServiceImpl;
 
@@ -33,7 +34,12 @@ public class OficinaController {
 	public ResponseEntity<List<OficinaDTO>> listAll(){
 		return new ResponseEntity<List<OficinaDTO>>(this.OFICINA_SERVICE.listAll(),HttpStatus.OK);
 	}
-	
+
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<OficinaResponseDTO> getById(@PathVariable(value = "id") Long id){
+		return new ResponseEntity<OficinaResponseDTO>(this.OFICINA_SERVICE.getById(id), HttpStatus.OK);
+	}
+
 	@PostMapping(value = "/donoOficina/{idDonoOficina}")
 	public ResponseEntity<OficinaDTO> save(@RequestBody Oficina oficina, @PathVariable(value = "idDonoOficina") Long id){
 		return new ResponseEntity<OficinaDTO>(this.OFICINA_SERVICE.save(oficina, id),HttpStatus.OK);
