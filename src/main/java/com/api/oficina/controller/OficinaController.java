@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.oficina.dto.OficinaDTO;
+import com.api.oficina.dto.OficinaInfoDTO;
 import com.api.oficina.dto.OficinaResponseDTO;
 import com.api.oficina.model.Oficina;
 import com.api.oficina.serviceImpl.OficinaServiceImpl;
@@ -56,5 +58,17 @@ public class OficinaController {
 														@PathVariable(value = "idDono") Long idDono){
 		this.OFICINA_SERVICE.deleteDonoFromOficina(idOficina, idDono);
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping(value = "/{id}/info")
+	public ResponseEntity<OficinaInfoDTO> getInfo(
+			@PathVariable(value = "id") Long id,
+			@RequestParam(required = false) String periodo,
+			@RequestParam(required = false) Integer mes,
+			@RequestParam(required = false) Integer ano,
+			@RequestParam(required = false) Integer quantidadeUltimasOrdens) {
+
+		OficinaInfoDTO info = this.OFICINA_SERVICE.getInfo(id, periodo, mes, ano, quantidadeUltimasOrdens);
+		return new ResponseEntity<>(info, HttpStatus.OK);
 	}
 }
