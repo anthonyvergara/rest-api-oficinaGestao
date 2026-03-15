@@ -35,6 +35,11 @@ public class ClienteController {
 	public ResponseEntity<List<ClienteDTO>> listAll(){
 		return new ResponseEntity<List<ClienteDTO>>(this.CLIENTE_SERVICE.listAll(), HttpStatus.OK);
 	}
+
+	@GetMapping(value = "/oficina/{idOficina}")
+	public ResponseEntity<List<ClienteDTO>> findByIdOficina(@PathVariable(value = "idOficina") Long idOficina){
+		return new ResponseEntity<List<ClienteDTO>>(this.CLIENTE_SERVICE.findByIdOficina(idOficina),HttpStatus.OK);
+	}
 	
 	@GetMapping(value = "/")
 	public ResponseEntity<List<ClienteDTO>> findByNameContains(@RequestParam String name){

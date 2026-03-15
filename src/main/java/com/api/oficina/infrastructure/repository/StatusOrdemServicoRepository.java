@@ -1,12 +1,9 @@
-package com.api.oficina.repository;
-
-import java.util.List;
+package com.api.oficina.infrastructure.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import com.api.oficina.model.Pagamento;
 import com.api.oficina.model.StatusOrdemServico;
 
 public interface StatusOrdemServicoRepository extends CrudRepository<StatusOrdemServico, Long>{

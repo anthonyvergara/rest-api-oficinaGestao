@@ -20,7 +20,7 @@ public class CalculoServicoPadrao implements CalculoServico{
 	public double calcular(List<DetalheServico> detalheServico) {
 		
 		double valorTotal  = detalheServico.stream()
-		.mapToDouble(value -> value.getValor())
+		.mapToDouble(value -> value.getValor() * value.getQuantidade())
 		.sum();
 		
 		valorTotal = ((valorTotal * vat)/100) + valorTotal;

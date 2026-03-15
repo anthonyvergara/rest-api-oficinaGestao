@@ -11,8 +11,8 @@ import com.api.oficina.component.Parcelas;
 import com.api.oficina.model.OrdemServico;
 import com.api.oficina.model.Parcela;
 import com.api.oficina.modelEnum.Status;
-import com.api.oficina.repository.OrdemServicoRepository;
-import com.api.oficina.repository.ParcelaRepository;
+import com.api.oficina.infrastructure.repository.OrdemServicoRepository;
+import com.api.oficina.infrastructure.repository.ParcelaRepository;
 import com.api.oficina.service.ParcelaService;
 import com.api.oficina.util.parcela.CalculoParcelamentoSemJuros;
 
@@ -66,14 +66,44 @@ public class ParcelaServiceImpl implements ParcelaService{
 	@Transactional
 	@Override
 	public List<Parcela> update(Long idOrdemServico, int quantidadeParcelas) {
-		
-		Optional<List<Parcela>> parcelasExistentes = Optional.of(this.PARCELAMENTO_REPOSITORY.listByIdOrdemServico(idOrdemServico)
-				.orElseThrow(() -> new IllegalArgumentException("Não existem parcelas para serem atualizadas!")));
-		
+		return update(idOrdemServico, quantidadeParcelas, null);
+	}
+
+	@Transactional
+	public List<Parcela> update(Long idOrdemServico, int quantidadeParcelas, LocalDate dataPrimeiraParcela) {
+
+		Optional<List<Parcela>> parcelasExistentes = this.PARCELAMENTO_REPOSITORY.listByIdOrdemServico(idOrdemServico);
+
+		// Se não existem parcelas, busca a ordem de serviço e cria novas parcelas
+		if(parcelasExistentes.isEmpty() || parcelasExistentes.get().isEmpty()) {
+			OrdemServico ordemServico = this.ORDEM_SERVICO_REPOSITORY.findById(idOrdemServico)
+					.orElseThrow(() -> new IllegalArgumentException("OrdemServico não existe!"));
+
+			// Se quantidadeParcelas for 0, não faz nada
+			if(quantidadeParcelas == 0) {
+				return new ArrayList<Parcela>();
+			}
+
+			// Atualiza a data da primeira parcela se fornecida
+			if(dataPrimeiraParcela != null) {
+				ordemServico.setDataPrimeiraParcela(dataPrimeiraParcela);
+				this.ORDEM_SERVICO_REPOSITORY.save(ordemServico);
+			}
+
+			// Cria novas parcelas
+			return gerarParcelamento(ordemServico, quantidadeParcelas);
+		}
+
 		List<Parcela> novaListaParcelas = new ArrayList<Parcela>();
 		
 		OrdemServico ordemServico = parcelasExistentes.get().get(0).getOrdemServico();
 		
+		// Atualiza a data da primeira parcela se fornecida
+		if(dataPrimeiraParcela != null) {
+			ordemServico.setDataPrimeiraParcela(dataPrimeiraParcela);
+			this.ORDEM_SERVICO_REPOSITORY.save(ordemServico);
+		}
+
 		int quantidadeParcelasPendentes = (int) parcelasExistentes.get().stream().filter(parcela -> parcela.getStatusParcela() != Status.PAGO).count();
 		
 		quantidadeParcelas =  quantidadeParcelas == 0 ? quantidadeParcelasPendentes : quantidadeParcelas;
@@ -89,8 +119,12 @@ public class ParcelaServiceImpl implements ParcelaService{
 	
 	private List<Parcela> gerarParcelamento(OrdemServico ordemServico, int numeroParcelas){
 		List<Double> valorParcelas = Parcelas.calcularParcela(ordemServico, new CalculoParcelamentoSemJuros(numeroParcelas));
-		List<LocalDate> datasParcelas = Parcelas.calcularDatas(LocalDate.now(), ordemServico.getTipoPagamento(), numeroParcelas);
-		
+
+		// Usa a data da primeira parcela da ordem de serviço se fornecida, senão usa null para calcular automaticamente
+		LocalDate dataInicioParcelas = ordemServico.getDataPrimeiraParcela();
+
+		List<LocalDate> datasParcelas = Parcelas.calcularDatas(dataInicioParcelas, ordemServico.getTipoPagamento(), numeroParcelas);
+
 		List<Parcela> listaParcelas = new ArrayList<Parcela>();
 		
 		for(int i = 0; i<numeroParcelas; i++) {

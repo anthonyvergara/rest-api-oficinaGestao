@@ -1,26 +1,24 @@
 package com.api.oficina.serviceImpl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import com.api.oficina.modelEnum.TipoPagamento;
 import org.springframework.stereotype.Service;
 
 import com.api.oficina.component.Invoice;
 import com.api.oficina.model.Cliente;
-import com.api.oficina.model.DetalheServico;
 import com.api.oficina.model.Oficina;
 import com.api.oficina.model.OrdemServico;
 import com.api.oficina.model.Pagamento;
-import com.api.oficina.model.StatusOrdemServico;
 import com.api.oficina.modelEnum.Status;
-import com.api.oficina.repository.ClienteRepository;
-import com.api.oficina.repository.OficinaRepository;
-import com.api.oficina.repository.OrdemServicoRepository;
+import com.api.oficina.infrastructure.repository.ClienteRepository;
+import com.api.oficina.infrastructure.repository.OficinaRepository;
+import com.api.oficina.infrastructure.repository.OrdemServicoRepository;
 import com.api.oficina.service.OrdemServicoService;
 import com.api.oficina.util.servico.CalculoServicoPadrao;
 
@@ -54,15 +52,15 @@ public class OrdemServicoImpl implements OrdemServicoService{
 
 	@Override
 	public List<OrdemServico> listAll() {
-		return (List<OrdemServico>) this.ORDEM_SERVICO_REPOSITORY.findAll();
+		return (List<OrdemServico>) this.ORDEM_SERVICO_REPOSITORY.findAllByDeletedAtIsNull();
 	}
 	
 	@Override
 	public List<OrdemServico> listAllByIdOficina(Long idOficina) {
 		
 		
-		List<OrdemServico> listaOrdemServico = this.ORDEM_SERVICO_REPOSITORY.findAllByOficina_Id(2L);
-		
+		List<OrdemServico> listaOrdemServico = this.ORDEM_SERVICO_REPOSITORY.findAllByOficina_IdAndDeletedAtIsNull(idOficina);
+
 		listaOrdemServico.forEach(ordem -> {
 			ordem.setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.update(ordem.getStatusOrdemServico()));
 		});
@@ -72,7 +70,7 @@ public class OrdemServicoImpl implements OrdemServicoService{
 	
 	@Override
 	public OrdemServico listById(Long id) {
-		Optional<OrdemServico> findById = Optional.of(this.ORDEM_SERVICO_REPOSITORY.findById(id)
+		Optional<OrdemServico> findById = Optional.of(this.ORDEM_SERVICO_REPOSITORY.findByIdAndDeletedAtIsNull(id)
 				.orElseThrow(() -> new IllegalArgumentException("Ordem Servico não existe!")));
 		findById.get().getParcela().sort(null);
 		return findById.get();
@@ -178,7 +176,8 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		if(periodoEntreDatas.getDays() > 1) { //SE CRIAÇAO DA ORDEM FOR MAIOR QUE 1 DIA - HAVERÁ IMPEDIMENTO DE DELETE
 			throw new RuntimeException("[ALERTA] Não foi possivel remover a Ordem de Servico. Por favor, entre em contato com um Administrador!");
 		}else {
-			this.ORDEM_SERVICO_REPOSITORY.deleteById(id);
+			ordemServico.setDeletedAt(LocalDateTime.now());
+			this.ORDEM_SERVICO_REPOSITORY.save(ordemServico);
 		}
 	}
 
@@ -197,6 +196,15 @@ public class OrdemServicoImpl implements OrdemServicoService{
 				.orElseThrow(() -> new IllegalArgumentException("Ordem de serviço não encontrada!"));
 
 		ordem.setObservacao(ordemServico.getObservacao());
+
+		if(ordem.getVat() > 0 && ordemServico.getVat() == 0) {
+			ordem.setValorTotal(Invoice.calcularServico(ordem.getDetalheServico(), new CalculoServicoPadrao(0)));
+		}
+
+		if(ordemServico.getVat() > 0){
+			ordem.setValorTotal(Invoice.calcularServico(ordem.getDetalheServico(), new CalculoServicoPadrao(ordemServico.getVat())));
+		}
+		ordem.setVat(ordemServico.getVat());
 
 		this.ORDEM_SERVICO_REPOSITORY.save(ordem);
 		return ordem;
