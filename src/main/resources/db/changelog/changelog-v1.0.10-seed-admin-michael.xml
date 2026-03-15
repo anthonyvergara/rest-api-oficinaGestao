@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="seed-admin-michael-v1" author="anthonyvergara">
+        <!-- Insert Oficina 56 (Clone of 55) -->
+        <insert tableName="oficina">
+            <column name="id" valueNumeric="56"/>
+            <column name="company_number" valueNumeric="106890652133"/>
+            <column name="nome_oficina" value="Motorcycle Fenix"/>
+            <column name="vat_number" valueNumeric="33634520812"/>
+            <column name="email" value="contato@admin.com"/>
+            <column name="telefone" value="4407858312007"/>
+        </insert>
+
+        <!-- Insert Usuario (Michael) linked to Oficina 56 -->
+        <insert tableName="usuario">
+            <column name="nome" value="Michael"/>
+            <column name="sobrenome" value="Vergara"/>
+            <column name="email" value="michael@admin.com"/>
+            <column name="username" value="michael"/>
+            <column name="password" value="$2a$10$Nf1hHiUFmMtvlqCPUcGtn.8DLQdJnajA1Pbjzj1SETPwsu/eGbtri"/>
+            <column name="role" value="ADMIN"/>
+            <column name="oficina_id" valueNumeric="56"/>
+            <column name="ativo" valueBoolean="true"/>
+            <column name="criado_em" valueDate="2025-11-30T05:41:30.042934"/>
+            <column name="atualizado_em" valueDate="2026-01-13T19:08:19.634585"/>
+        </insert>
+
+        <!-- Insert OficinaEndereco linked to Oficina 56 -->
+        <insert tableName="oficina_endereco">
+            <column name="id" valueNumeric="4"/>
+            <column name="cidade" value="London"/>
+            <column name="numero" valueNumeric="123"/>
+            <column name="postcode" value="N179SA"/>
+            <column name="rua" value="Rosebery Avenue"/>
+            <column name="oficina_id" valueNumeric="56"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
+
