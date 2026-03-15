@@ -1,6 +1,7 @@
 package com.api.oficina.serviceImpl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,15 +52,15 @@ public class OrdemServicoImpl implements OrdemServicoService{
 
 	@Override
 	public List<OrdemServico> listAll() {
-		return (List<OrdemServico>) this.ORDEM_SERVICO_REPOSITORY.findAll();
+		return (List<OrdemServico>) this.ORDEM_SERVICO_REPOSITORY.findAllByDeletedAtIsNull();
 	}
 	
 	@Override
 	public List<OrdemServico> listAllByIdOficina(Long idOficina) {
 		
 		
-		List<OrdemServico> listaOrdemServico = this.ORDEM_SERVICO_REPOSITORY.findAllByOficina_Id(idOficina);
-		
+		List<OrdemServico> listaOrdemServico = this.ORDEM_SERVICO_REPOSITORY.findAllByOficina_IdAndDeletedAtIsNull(idOficina);
+
 		listaOrdemServico.forEach(ordem -> {
 			ordem.setStatusOrdemServico(this.STATUS_ORDEM_SERVICO.update(ordem.getStatusOrdemServico()));
 		});
@@ -69,7 +70,7 @@ public class OrdemServicoImpl implements OrdemServicoService{
 	
 	@Override
 	public OrdemServico listById(Long id) {
-		Optional<OrdemServico> findById = Optional.of(this.ORDEM_SERVICO_REPOSITORY.findById(id)
+		Optional<OrdemServico> findById = Optional.of(this.ORDEM_SERVICO_REPOSITORY.findByIdAndDeletedAtIsNull(id)
 				.orElseThrow(() -> new IllegalArgumentException("Ordem Servico não existe!")));
 		findById.get().getParcela().sort(null);
 		return findById.get();
@@ -175,7 +176,8 @@ public class OrdemServicoImpl implements OrdemServicoService{
 		if(periodoEntreDatas.getDays() > 1) { //SE CRIAÇAO DA ORDEM FOR MAIOR QUE 1 DIA - HAVERÁ IMPEDIMENTO DE DELETE
 			throw new RuntimeException("[ALERTA] Não foi possivel remover a Ordem de Servico. Por favor, entre em contato com um Administrador!");
 		}else {
-			this.ORDEM_SERVICO_REPOSITORY.deleteById(id);
+			ordemServico.setDeletedAt(LocalDateTime.now());
+			this.ORDEM_SERVICO_REPOSITORY.save(ordemServico);
 		}
 	}
 

@@ -58,7 +58,7 @@ public class BookingServiceImpl implements BookingService {
                 + "Best regards,\n"
                 + booking.getCliente().getOficina().getNomeOficina();
 
-        this.SENDER.sendEmail(booking.getEmail(), "Payment Request – MOT Test Appointment", body, null);
+        //this.SENDER.sendEmail(booking.getEmail(), "Payment Request – MOT Test Appointment", body, null);
         return saved;
     }
 
@@ -95,7 +95,7 @@ public class BookingServiceImpl implements BookingService {
                 + "Best regards,\n"
                 + booking.getCliente().getOficina().getNomeOficina();
 
-        this.SENDER.sendEmail(booking.getEmail(), "Booking Confirmed – MOT Test Appointment", body, booking.getPdfBase64());
+        //this.SENDER.sendEmail(booking.getEmail(), "Booking Confirmed – MOT Test Appointment", body, booking.getPdfBase64());
 
         return booking;
     }

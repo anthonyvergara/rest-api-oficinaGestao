@@ -16,9 +16,16 @@ public interface OrdemServicoRepository extends CrudRepository<OrdemServico, Lon
 	@Query(value = "select p from OrdemServico p where p.invoiceNumber = :invoiceNumber")
 	public Optional<OrdemServico> findByInvoice(@Param("invoiceNumber") Long invoiceNumber);
 	
+	public List<OrdemServico> findAllByOficina_IdAndDeletedAtIsNull(Long oficinaId);
+
+	public List<OrdemServico> findAllByDeletedAtIsNull();
+
+	public Optional<OrdemServico> findByIdAndDeletedAtIsNull(Long id);
+
 	@Query(value =""" 
 			select * from ordem_servico os
-			WHERE os.cliente_id = %:idCliente%
+			WHERE os.cliente_id = :idCliente
+			AND os.deleted_at IS NULL
 			""", nativeQuery = true)
 	public List<OrdemServico> findOrdemServicoByIdCliente(@Param("idCliente") Long idCliente);
 	
