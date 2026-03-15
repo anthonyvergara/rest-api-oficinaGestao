@@ -18,10 +18,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
 
 @Component
-@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -63,8 +61,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception e) {
-            log.error("Erro ao processar token JWT: {}", e.getMessage());
-            log.error("Authorization header: [{}]", authHeader);
+            System.out.println("Erro ao processar token JWT: " + e.getMessage());
+            System.out.println("Authorization header: [" + authHeader + "]");
         }
 
         filterChain.doFilter(request, response);

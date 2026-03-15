@@ -66,7 +66,6 @@ public class ClienteServiceImpl implements ClienteService{
 				cliente.getEndereco().set(i, entityManager.merge(endereco));
 			}
 		}
-
 		for(int i = 0; i< cliente.getTelefone().size(); i++) {
 			Telefone telefone = cliente.getTelefone().get(i);
 			telefone.setPessoa(cliente);

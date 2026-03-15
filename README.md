@@ -15,7 +15,7 @@ Atualmente, estou focado em aprimorar minhas habilidades e conceitos em desenvol
 <br>
 
 ## 🔮 Futuro do Projeto
-No futuro, pretendo desenvolver o front-end da aplicação, proporcionando uma interface intuitiva e amigável para os usuários. Estou animado para continuar expandindo as funcionalidades e melhorando a experiência geral.
+Estou animado para continuar expandindo as funcionalidades e melhorando a experiência geral.
 
 
 |TECNOLOGIAS ATUAIS|          ☕️         |            ☕️         |              ☕️            |
