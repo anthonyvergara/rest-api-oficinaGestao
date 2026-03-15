@@ -16,4 +16,5 @@
     <include file="db/changelog/changelog-v1.0.7-booking-oficina-id.xml"/>
     <include file="db/changelog/changelog-v1.0.8-seed-data.xml"/>
     <include file="db/changelog/changelog-v1.0.9-seed-admin-data.xml"/>
+    <include file="db/changelog/changelog-v1.0.10-seed-admin-michael.xml"/>
 </databaseChangeLog>
