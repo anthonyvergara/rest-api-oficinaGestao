@@ -30,9 +30,9 @@ public class OficinaController {
 	public OficinaController(OficinaServiceImpl oficinaService) {
 		this.OFICINA_SERVICE = oficinaService;
 	}
-	
-	
-	@GetMapping(value = "")
+
+
+	@GetMapping(value = {"", "/"})
 	public ResponseEntity<List<OficinaDTO>> listAll(){
 		return new ResponseEntity<List<OficinaDTO>>(this.OFICINA_SERVICE.listAll(),HttpStatus.OK);
 	}
@@ -46,8 +46,8 @@ public class OficinaController {
 	public ResponseEntity<OficinaDTO> save(@RequestBody Oficina oficina, @PathVariable(value = "idDonoOficina") Long id){
 		return new ResponseEntity<OficinaDTO>(this.OFICINA_SERVICE.save(oficina, id),HttpStatus.OK);
 	}
-	
-	@PutMapping(value = "")
+
+	@PutMapping(value = {"", "/"})
 	public ResponseEntity<OficinaDTO> update(@RequestBody Oficina oficina){
 		
 		return new ResponseEntity<OficinaDTO>(this.OFICINA_SERVICE.update(oficina),HttpStatus.OK);
