@@ -9,4 +9,5 @@ public interface BookingService {
     Booking findById(Long id);
     Booking payBooking(Long id);
     Booking cancelBooking(Long id);
+    List<Booking> findByOficinaId(Long oficinaId);
 }

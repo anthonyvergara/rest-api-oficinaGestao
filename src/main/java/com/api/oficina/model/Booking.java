@@ -59,6 +59,11 @@ public class Booking implements Serializable {
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
+    @JsonIgnore
+    @ManyToOne()
+    @JoinColumn(name = "oficina_id")
+    private Oficina oficina;
+
     @Lob
     private byte[] pdfBase64;
 
@@ -82,6 +87,14 @@ public class Booking implements Serializable {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    public Oficina getOficina() {
+        return oficina;
+    }
+
+    public void setOficina(Oficina oficina) {
+        this.oficina = oficina;
     }
 
     public LocalDateTime getDate() {

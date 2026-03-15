@@ -13,4 +13,5 @@
     <include file="db/changelog/changelog-v1.0.4-pessoa-fields.xml"/>
     <include file="db/changelog/changelog-v1.0.5-oficina-contact-fields.xml"/>
     <include file="db/changelog/changelog-v1.0.6-audit-fields.xml"/>
+    <include file="db/changelog/changelog-v1.0.7-booking-oficina-id.xml"/>
 </databaseChangeLog>
