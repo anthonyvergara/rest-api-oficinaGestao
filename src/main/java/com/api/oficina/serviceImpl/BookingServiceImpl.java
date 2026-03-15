@@ -40,6 +40,7 @@ public class BookingServiceImpl implements BookingService {
         }
         booking.setStatus("PENDING");
         booking.setCliente(cliente);
+        booking.setOficina(cliente.getOficina());
 
         Booking saved = BOOKING_REPOSITORY.save(booking);
 
@@ -111,5 +112,11 @@ public class BookingServiceImpl implements BookingService {
         booking.setStatus("CANCELLED");
 
         return BOOKING_REPOSITORY.save(booking);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Booking> findByOficinaId(Long oficinaId) {
+        return BOOKING_REPOSITORY.findByOficinaId(oficinaId);
     }
 }
