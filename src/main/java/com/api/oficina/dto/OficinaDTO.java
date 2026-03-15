@@ -21,8 +21,9 @@ public class OficinaDTO implements Dto<OficinaDTO, Oficina>{
 
 	@Override
 	public OficinaDTO convertToDto(Oficina oficina) {
-		BeanUtils.copyProperties(oficina, this);
-		return this;
+		OficinaDTO dto = new OficinaDTO();
+		BeanUtils.copyProperties(oficina, dto);
+		return dto;
 	}
 
 	@Override
