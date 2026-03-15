@@ -96,7 +96,6 @@ public class ClienteServiceImpl implements ClienteService{
 		return DTO.listToDto(clientes);
 	}
 
-
 	@Transactional
 	@Override
 	public ClienteDTO update(Cliente cliente, Long idOficina) {
